@@ -1,0 +1,27 @@
+Package: leafsync
+Type: Package
+Title: Small Multiples for Leaflet Webmaps
+Version: 0.1.0
+Authors@R: c(
+    person("Tim", "Appelhans", role = c("aut", "cre"), email = "tim.appelhans@gmail.com"),
+    person("Kenton", "Russell", role = c("aut")),
+    person("Jan Pieter", "Wagmeester", role = c("ctb"), comment = "Leaflet.Sync plugin")
+  )
+Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
+Description: Create small multiples of several leaflet webmaps with (optional) 
+    synchronised panning and zooming control. When syncing is enabled all maps 
+    respond to mouse actions on one map. This alloes side-by-side comparsions
+    of different attributes of the same geometries. Syncing is fully customisable
+    so that any combination of maps can be synchronised.
+License: MIT + file LICENSE
+URL: https://github.com/r-spatial/leafsync
+BugReports: https://github.com/r-spatial/leafsync/issues
+Depends:
+    R (>= 3.1.0),
+    methods
+Imports:
+    htmltools (>= 0.3),
+    htmlwidgets
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0

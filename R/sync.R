@@ -16,46 +16,28 @@
 #' @param no.initial.sync whether to sync the initial view (default TRUE).
 #'
 #' @examples
-#' \dontrun{
-#' library(sp)
-#' library(raster)
-#' library(mapview)
+#' library(leaflet)
+#' library(leafsync)
 #'
-#' data(meuse)
-#' coordinates(meuse) <- ~x+y
-#' proj4string(meuse) <- CRS("+init=epsg:28992")
+#' m1 = leaflet() %>%
+#'   addTiles() %>%
+#'   addPolygons(data = gadmCHE)
 #'
-#' ## view different aspects of same data set
-#' m1 <- mapview(meuse, zcol = "soil", burst = TRUE)
-#' m2 <- mapview(meuse, zcol = "lead")
-#' m3 <- mapview(meuse, zcol = "landuse", map.types = "Esri.WorldImagery")
-#' m4 <- mapview(meuse, zcol = "dist.m")
+#' m2 = leaflet() %>%
+#'   addProviderTiles("Esri.WorldImagery") %>%
+#'   addCircleMarkers(data = breweries91,
+#'                    color = "black",
+#'                    opacity = 0.9,
+#'                    fillColor = "white",
+#'                    fillOpacity = 0.9)
 #'
-#' latticeView(m1, m2, m3, m4) # 4 panels
-#' sync(m1, m2, m3, m4) # 4 panels synchronised
-#' latticeView(m1, m2) # 2 panels, split vertical
-#' latticeView(m1, m2, ncol = 1) # 2 panels split horizontal
-#' sync(m1, m2, ncol = 1) # same but synchronised
-#' sync(m1, m2, m3, m4, sync = list(c(1, 2), c(3, 4))) # individual syncing
-#' sync(m1, m2, m3, m4, sync = list(c(1, 2, 4)))
+#' # synced
+#' sync(m1, m2)
+#' sync(m1, m2, no.initial.sync = TRUE)
 #'
-#' ## view all layers of raster stack
-#' map_list <- lapply(seq(nlayers(poppendorf)), function(i) {
-#'   mapview(poppendorf[[i]], layer.name = names(poppendorf)[i])
-#' })
-#'
-#' latticeView(map_list, ncol = 5)
-#'
-#' ## view multiple data sets
-#' m1 <- mapview(breweries, zcol = "founded")
-#' m2 <- mapview(trails, zcol = "district", burst = TRUE)
-#' m3 <- mapview(poppendorf[[5]], use.layer.names = TRUE)
-#' m4 <- mapview(franconia, col.regions = "black")
-#'
-#' latticeView(m1, m2, m3, m4) # not synced
-#' sync(m1, m2, m3, m4) # synced
-#' sync(m1, m2, m3, m4, no.initial.sync = FALSE) # all maps zoomed to m4 extent
-#' }
+#' # not synced
+#' latticeview(m1, m2)
+#' latticeview(m1, m2, ncol = 1)
 #'
 #' @export latticeView
 #' @name latticeView

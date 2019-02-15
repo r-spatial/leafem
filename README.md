@@ -10,7 +10,7 @@ status](https://travis-ci.org/r-spatial/leafsync.svg?branch=master)](https://tra
 
 `leafsync` is a plugin for
 [`leaflet`](https://github.com/rstudio/leaflet) to produce potentially
-synchronised small multiples of leaflet webmaps wrapping
+synchronised small multiples of leaflet web maps wrapping
 [`Leaflet.Sync`](https://github.com/jieter/Leaflet.Sync).
 
 ## Installation

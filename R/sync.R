@@ -16,6 +16,7 @@
 #' @param no.initial.sync whether to sync the initial view (default TRUE).
 #'
 #' @examples
+#' \dontrun{
 #' library(leaflet)
 #' library(leafsync)
 #'
@@ -38,6 +39,7 @@
 #' # not synced
 #' latticeview(m1, m2)
 #' latticeview(m1, m2, ncol = 1)
+#' }
 #'
 #' @export latticeView
 #' @name latticeView

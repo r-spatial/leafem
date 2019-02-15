@@ -42,6 +42,7 @@ is best to use the provided convenience function \code{sync}.
 }}
 
 \examples{
+\dontrun{
 library(leaflet)
 library(leafsync)
 
@@ -64,5 +65,6 @@ sync(m1, m2, no.initial.sync = TRUE)
 # not synced
 latticeview(m1, m2)
 latticeview(m1, m2, ncol = 1)
+}
 
 }

@@ -6,18 +6,23 @@
 \alias{sync}
 \title{View two or more (possibly synchronised) mapview or leaflet maps}
 \usage{
-latticeView(..., ncol = 2, sync = "none", sync.cursor = FALSE,
-  no.initial.sync = TRUE)
+latticeView(..., ncol = 2, full.height = TRUE, sync = "none",
+  sync.cursor = FALSE, no.initial.sync = TRUE)
 
 latticeview(...)
 
-sync(..., ncol = 2, sync = "all", sync.cursor = TRUE,
-  no.initial.sync = TRUE)
+sync(..., ncol = 2, full.height = TRUE, sync = "all",
+  sync.cursor = TRUE, no.initial.sync = TRUE)
 }
 \arguments{
 \item{...}{any number of mapview or leaflet objects or a list thereof}
 
 \item{ncol}{how many columns should be plotted}
+
+\item{full.height}{\code{logical}; should the produced lattice view be
+scaled to the complete height of the viewer (or browser); default to \code{TRUE}.
+If \code{FALSE}, the height of each panel falls back to the default
+sizing policy height of leaflet (400px).}
 
 \item{sync}{whether to synchronise zoom and pan for certain elements.
 Possible values are "all" (default) to sync all maps, "none" to disable

@@ -7,6 +7,9 @@
 status](https://www.r-pkg.org/badges/version/leafsync)](https://cran.r-project.org/package=leafsync)
 [![Travis build
 status](https://travis-ci.org/r-spatial/leafsync.svg?branch=master)](https://travis-ci.org/r-spatial/leafsync)
+[![monthly](http://cranlogs.r-pkg.org/badges/leafsync)](https://www.rpackages.io/package/leafsync)
+[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafsync)](https://www.rpackages.io/package/leafsync)
+[![CRAN](http://www.r-pkg.org/badges/version/leafsync?color=009999)](https://cran.r-project.org/package=leafsync)
 
 `leafsync` is a plugin for
 [`leaflet`](https://github.com/rstudio/leaflet) to produce potentially

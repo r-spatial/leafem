@@ -42,7 +42,7 @@ is best to use the provided convenience function \code{sync}.
 }}
 
 \examples{
-\dontrun{
+if (interactive()) {
 library(leaflet)
 library(leafsync)
 

@@ -16,7 +16,7 @@
 #' @param no.initial.sync whether to sync the initial view (default TRUE).
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' library(leaflet)
 #' library(leafsync)
 #'

@@ -1,10 +1,11 @@
 Package: leafsync
 Type: Package
 Title: Small Multiples for Leaflet Web Maps
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Tim", "Appelhans", role = c("aut", "cre"), email = "tim.appelhans@gmail.com"),
     person("Kenton", "Russell", role = c("aut")),
+    person("Christoph", "Stepper", role = c("ctb")),
     person("Jan Pieter", "Wagmeester", role = c("ctb"), comment = "Leaflet.Sync plugin")
   )
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>

@@ -1,54 +1,107 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# leafsync - (Synced) small multiples of leaflet maps
+# leafem - leaflet extensions for mapview
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/leafsync)](https://cran.r-project.org/package=leafsync)
+status](https://www.r-pkg.org/badges/version/leafem)](https://cran.r-project.org/package=leafem)
 [![Travis build
-status](https://travis-ci.org/r-spatial/leafsync.svg?branch=master)](https://travis-ci.org/r-spatial/leafsync)
-[![monthly](http://cranlogs.r-pkg.org/badges/leafsync)](https://www.rpackages.io/package/leafsync)
-[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafsync)](https://www.rpackages.io/package/leafsync)
-[![CRAN](http://www.r-pkg.org/badges/version/leafsync?color=009999)](https://cran.r-project.org/package=leafsync)
+status](https://travis-ci.org/r-spatial/leafem.svg?branch=master)](https://travis-ci.org/r-spatial/leafem)
+[![monthly](http://cranlogs.r-pkg.org/badges/leafem)](https://www.rpackages.io/package/leafem)
+[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)](https://www.rpackages.io/package/leafem)
+[![CRAN](http://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)
 
-`leafsync` is a plugin for
-[`leaflet`](https://github.com/rstudio/leaflet) to produce potentially
-synchronised small multiples of leaflet web maps wrapping
-[`Leaflet.Sync`](https://github.com/jieter/Leaflet.Sync).
+`leafem` provides extensions for package `leaflet` many of which are
+used by package `mapview`. The intention of this package is to enhance
+`leaflet` functionality to provide a more GIS-like feeling when plotting
+spatial data interactively.
 
 ## Installation
 
-You can install the released version of leafsync from
+You can install the released version of leafem from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("leafsync")
+install.packages("leafem")
 ```
 
-## Example
+## Extensions
+
+#### addFeatures
 
 ``` r
-library(sp)
-library(raster)
-library(mapview)
+library(leaflet)
 
-data(meuse)
-coordinates(meuse) <- ~x+y
-proj4string(meuse) <- CRS("+init=epsg:28992")
-
-## view different aspects of same data set
-m1 <- mapview(meuse, zcol = "soil", burst = TRUE)
-m2 <- mapview(meuse, zcol = "lead")
-m3 <- mapview(meuse, zcol = "landuse", map.types = "Esri.WorldImagery")
-m4 <- mapview(meuse, zcol = "dist.m")
-
-sync(m1, m2, m3, m4) # 4 panels synchronised
+leaflet() %>% addProviderTiles("OpenStreetMap") %>% addFeatures(data = breweries91)
 ```
 
-![](man/figures/README-sync.png)
+![](man/figures/README-features.png)
+
+#### addMouseCoordinates
+
+``` r
+leaflet() %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addMouseCoordinates()
+```
+
+![](man/figures/README-garnish.png)
+
+#### garnishMap
+
+``` r
+library(leaflet)
+
+m <- leaflet() %>% addProviderTiles("OpenStreetMap")
+garnishMap(m, addMouseCoordinates)
+```
+
+![](man/figures/README-garnish.png)
+
+#### addHomeButton
+
+``` r
+library(leaflet)
+library(raster)
+
+m <- leaflet() %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addCircleMarkers(data = breweries91) %>%
+  addHomeButton(extent(breweries91), "breweries91")
+m
+```
+
+![](man/figures/README-home.png)
+
+#### addImageQuery
+
+``` r
+library(leaflet)
+library(plainview)
+
+leaflet() %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addRasterImage(poppendorf[[1]], project = TRUE, group = "poppendorf",
+                 layerId = "poppendorf") %>%
+  addImageQuery(poppendorf[[1]], project = TRUE,
+                layerId = "poppendorf") %>%
+  addLayersControl(overlayGroups = "poppendorf")
+```
+
+![](man/figures/README-query.png)
+
+#### addLogo
+
+``` r
+img <- "https://www.r-project.org/logo/Rlogo.svg"
+
+leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/")
+```
+
+![](man/figures/README-logo.png)
 
 ### Code of Conduct
 
-Please note that the ‘leafsync’ project is released with a [Contributor
+Please note that the ‘leafem’ project is released with a [Contributor
 Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project
 you agree to abide by its terms.

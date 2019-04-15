@@ -1,29 +1,41 @@
-Package: leafsync
+Package: leafem
 Type: Package
-Title: Small Multiples for Leaflet Web Maps
+Title: Leaflet Extensions for Mapview
 Version: 0.1.1
-Authors@R: c(
-    person("Tim", "Appelhans", role = c("aut", "cre"), email = "tim.appelhans@gmail.com"),
-    person("Kenton", "Russell", role = c("aut")),
-    person("Christoph", "Stepper", role = c("ctb")),
-    person("Jan Pieter", "Wagmeester", role = c("ctb"), comment = "Leaflet.Sync plugin")
-  )
+Authors@R:
+    c(person(given = "Tim",
+             family = "Appelhans",
+             role = c("cre", "aut"),
+             email = "tim.appelhans@gmail.com"),
+      person(given = "Florian",
+             family = "Detsch",
+             role = "aut",
+             email = "fdetsch@web.de"),
+      person(given = "Christoph",
+             family = "Reudenbach",
+             role = "aut",
+             email = "reudenbach@geo.uni-marburg.de"),
+      person(given = "Kenton",
+             family = "Russell",
+             role = "ctb"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
-Description: Create small multiples of several leaflet web maps with (optional) 
-    synchronised panning and zooming control. When syncing is enabled all maps 
-    respond to mouse actions on one map. This allows side-by-side comparisons
-    of different attributes of the same geometries. Syncing can be adjusted
-    so that any combination of maps can be synchronised.
+Description: A small trove of extensions to enhance webmaps created with 
+    package 'leaflet'.
 License: MIT + file LICENSE
-URL: https://github.com/r-spatial/leafsync
-BugReports: https://github.com/r-spatial/leafsync/issues
+URL: https://github.com/r-spatial/leafem
+BugReports: https://github.com/r-spatial/leafem/issues
 Depends:
-    R (>= 3.1.0),
-    methods
+    R (>= 3.1.0)
 Imports:
     htmltools (>= 0.3),
     htmlwidgets,
-    leaflet (>= 2.0.1)
+    leaflet (>= 2.0.1),
+    raster,
+    sf,
+    sp
+Suggests:
+    plainview,
+    png
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0

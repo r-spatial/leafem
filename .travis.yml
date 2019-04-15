@@ -5,6 +5,17 @@ dist: xenial
 cache: packages
 latex: true
 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
+    packages:
+      - libproj-dev
+      - libgeos-dev
+      - libgdal-dev
+      - libudunits2-dev
+      - netcdf-bin # for stars netcdf dep
+
 r:
   - release
   - devel

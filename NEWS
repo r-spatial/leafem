@@ -1,9 +1,3 @@
-leafsync 0.1.1
+leafem 0.0.1
 
-new features:
-
-  * new argument `full.height` to control widget sizing. Default is `TRUE`. #1
-
-leafsync 0.1.0
-
-* Initial release
+initial commit

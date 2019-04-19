@@ -1,4 +1,31 @@
+#' add vector data to leaflet map directly from the file system
+#'
+#' @param map a mapview or leaflet object.
+#' @param file file path to the file to be added to \code{map}.
+#' @param group the group name for the file to be added to \code{map}.
+#'
+#' @examples
+#' library(leaflet)
+#' library(sf)
+#'
+#' destfile = tempfile(fileext = ".gpkg")
+#'
+#' st_write(st_as_sf(gadmCHE), dsn = destfile)
+#'
+#' leaflet() %>%
+#'   addTiles() %>%
+#'   leafem:::addLocalFile(destfile)
+#'
+#' @importFrom gdalUtils ogr2ogr
+#'
+#' @export addLocalFile
+#' @name addLocalFile
+#' @rdname addLocalFile
+#' @aliases addLocalFile
 addLocalFile = function(map, file, group = NULL) {
+
+  if (!requireNamespace("gdalUtils"))
+    stop("\nNeed package 'gdalUtils' to add file!", call. = FALSE)
 
   # file = "/home/timpanse/software/testing/gpkg/data1.gpkg"
 

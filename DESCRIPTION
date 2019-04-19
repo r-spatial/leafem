@@ -38,6 +38,7 @@ Imports:
     sf,
     sp
 Suggests:
+    gdalUtils,
     plainview,
     png
 Encoding: UTF-8

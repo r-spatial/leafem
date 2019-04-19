@@ -16,16 +16,11 @@
 #'   addTiles() %>%
 #'   leafem:::addLocalFile(destfile)
 #'
-#' @importFrom gdalUtils ogr2ogr
-#'
 #' @export addLocalFile
 #' @name addLocalFile
 #' @rdname addLocalFile
 #' @aliases addLocalFile
 addLocalFile = function(map, file, group = NULL) {
-
-  if (!requireNamespace("gdalUtils"))
-    stop("\nNeed package 'gdalUtils' to add file!", call. = FALSE)
 
   # file = "/home/timpanse/software/testing/gpkg/data1.gpkg"
 

@@ -2,7 +2,23 @@
 #'
 #' @param map a mapview or leaflet object.
 #' @param file file path to the file to be added to \code{map}.
+#' @param layerId the layer id.
 #' @param group the group name for the file to be added to \code{map}.
+#' @param popup name of the field to be shown as a popup.
+#' @param label name of the field to be shown as a tooltip.
+#' @param radius the size of the circle markers.
+#' @param stroke whether to draw stroke along the path
+#'   (e.g. the borders of polygons or circles).
+#' @param color stroke color.
+#' @param weight stroke width in pixels.
+#' @param opacity stroke opacity.
+#' @param fill whether to fill the path with color
+#'   (e.g. filling on polygons or circles).
+#' @param fillColor fill color.
+#' @param fillOpacity fill opacity.
+#' @param dashArray a string that defines the stroke dash pattern.
+#' @param options a list of extra options for tile layers, popups, paths
+#'   (circles, rectangles, polygons, ...), or other map elements.
 #'
 #' @examples
 #' library(leaflet)
@@ -20,9 +36,36 @@
 #' @name addLocalFile
 #' @rdname addLocalFile
 #' @aliases addLocalFile
-addLocalFile = function(map, file, group = NULL) {
+addLocalFile = function(map,
+                        file,
+                        layerId = NULL,
+                        group = NULL,
+                        popup = NULL,
+                        label = NULL,
+                        radius = 10,
+                        stroke = TRUE,
+                        color = "#03F",
+                        weight = 5,
+                        opacity = 0.5,
+                        fill = TRUE,
+                        fillColor = color,
+                        fillOpacity = 0.2,
+                        dashArray = NULL,
+                        options = NULL) {
 
-  # file = "/home/timpanse/software/testing/gpkg/data1.gpkg"
+  geom_type = gdalUtils::ogrinfo(file)
+  if (any(grepl("Line String", geom_type))) fill = FALSE
+
+  style_list = list(radius = radius,
+                    stroke = stroke,
+                    color = color,
+                    weight = weight,
+                    opacity = opacity,
+                    fill = fill,
+                    fillColor = color,
+                    fillOpacity = fillOpacity)
+
+  options = utils::modifyList(as.list(options), style_list)
 
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
@@ -40,11 +83,15 @@ addLocalFile = function(map, file, group = NULL) {
   pre <- paste0('var data = data || {}; data["', group, '"] = ')
   writeLines(pre, path_header)
 
-  gdalUtils::ogr2ogr(
-    src_datasource_name = file,
-    dst_datasource_name = path_layer,
-    f = "GeoJSON"
-  )
+  if (tools::file_ext(file) != "geojson") {
+    gdalUtils::ogr2ogr(
+      src_datasource_name = file,
+      dst_datasource_name = path_layer,
+      f = "GeoJSON"
+    )
+  } else {
+    file.copy(file, path_layer, overwrite = TRUE)
+  }
 
   if (.Platform$OS.type == "unix") {
     cmd = paste("cat", path_header, path_layer, ">", path_outfile)
@@ -73,7 +120,12 @@ addLocalFile = function(map, file, group = NULL) {
     map,
     leaflet::getMapData(map),
     'addFile',
-    group
+    layerId,
+    group,
+    popup,
+    label,
+    options,
+    style_list
   )
 
 }

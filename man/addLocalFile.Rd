@@ -4,14 +4,46 @@
 \alias{addLocalFile}
 \title{add vector data to leaflet map directly from the file system}
 \usage{
-addLocalFile(map, file, group = NULL)
+addLocalFile(map, file, layerId = NULL, group = NULL, popup = NULL,
+  label = NULL, radius = 10, stroke = TRUE, color = "#03F",
+  weight = 5, opacity = 0.5, fill = TRUE, fillColor = color,
+  fillOpacity = 0.2, dashArray = NULL, options = NULL)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}
 
 \item{file}{file path to the file to be added to \code{map}.}
 
+\item{layerId}{the layer id.}
+
 \item{group}{the group name for the file to be added to \code{map}.}
+
+\item{popup}{name of the field to be shown as a popup.}
+
+\item{label}{name of the field to be shown as a tooltip.}
+
+\item{radius}{the size of the circle markers.}
+
+\item{stroke}{whether to draw stroke along the path
+(e.g. the borders of polygons or circles).}
+
+\item{color}{stroke color.}
+
+\item{weight}{stroke width in pixels.}
+
+\item{opacity}{stroke opacity.}
+
+\item{fill}{whether to fill the path with color
+(e.g. filling on polygons or circles).}
+
+\item{fillColor}{fill color.}
+
+\item{fillOpacity}{fill opacity.}
+
+\item{dashArray}{a string that defines the stroke dash pattern.}
+
+\item{options}{a list of extra options for tile layers, popups, paths
+(circles, rectangles, polygons, ...), or other map elements.}
 }
 \description{
 add vector data to leaflet map directly from the file system

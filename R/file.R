@@ -62,7 +62,7 @@ addLocalFile = function(map,
                     weight = weight,
                     opacity = opacity,
                     fill = fill,
-                    fillColor = color,
+                    fillColor = fillColor,
                     fillOpacity = fillOpacity)
 
   options = utils::modifyList(as.list(options), style_list)

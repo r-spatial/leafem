@@ -18,7 +18,8 @@ addLocalFile(map, file, layerId = NULL, group = NULL, popup = NULL,
 
 \item{group}{the group name for the file to be added to \code{map}.}
 
-\item{popup}{name of the field to be shown as a popup.}
+\item{popup}{logical, whether to show the feature properties (fields) in
+popups.}
 
 \item{label}{name of the field to be shown as a tooltip.}
 

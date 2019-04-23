@@ -4,7 +4,8 @@
 #' @param file file path to the file to be added to \code{map}.
 #' @param layerId the layer id.
 #' @param group the group name for the file to be added to \code{map}.
-#' @param popup name of the field to be shown as a popup.
+#' @param popup logical, whether to show the feature properties (fields) in
+#'   popups.
 #' @param label name of the field to be shown as a tooltip.
 #' @param radius the size of the circle markers.
 #' @param stroke whether to draw stroke along the path

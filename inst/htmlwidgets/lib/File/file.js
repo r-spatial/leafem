@@ -10,8 +10,8 @@ LeafletWidget.methods.addFile = function(layerId,
   var pop;
   if (popup) {
     pop = function(feature, layer) {
-      var popUp = feature.properties[popup];
-      layer.bindPopup(String(popUp));
+      var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+      layer.bindPopup(popUp, { maxWidth: 2000 });
     };
   } else {
     pop = null;

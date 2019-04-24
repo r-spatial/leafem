@@ -101,7 +101,7 @@ leafletHomeButtonDependencies <- function() {
     htmltools::htmlDependency(
       "HomeButton",
       '0.0.1',
-      system.file("htmlwidgets/lib/HomeButton", package = "mapview"),
+      system.file("htmlwidgets/lib/HomeButton", package = "leafem"),
       script = c("home-button.js", 'easy-button-src.min.js'),
       stylesheet = 'home-button.css'
     ))

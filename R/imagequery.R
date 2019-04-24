@@ -120,7 +120,7 @@ addImageQuery = function(map,
                          version = "0.0.1",
                          name = "joda",
                          src = system.file("htmlwidgets/lib/joda",
-                                           package = "mapview"),
+                                           package = "leafem"),
                          script = "joda.js")
                        ))
 

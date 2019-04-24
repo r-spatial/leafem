@@ -1,16 +1,12 @@
 Package: leafem
 Type: Package
-Title: Leaflet Extensions for Mapview
+Title: 'leaflet' Extensions for 'mapview'
 Version: 0.0.1
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
              role = c("cre", "aut"),
              email = "tim.appelhans@gmail.com"),
-      person(given = "Florian",
-             family = "Detsch",
-             role = "aut",
-             email = "fdetsch@web.de"),
       person(given = "Christoph",
              family = "Reudenbach",
              role = "aut",

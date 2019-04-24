@@ -56,7 +56,7 @@ rasterPicker.getInfoLegend = function(leafletConfig) {
   }
   if (element===null) {
   // LOG ERROR or WARNING?
-    console.log("mapview: No control widget found in Leaflet setup. Can't show layer info.");
+    console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
   }
   return element;
 };
@@ -114,7 +114,7 @@ rasterPicker.getLayerData = function(rasterHitInfo, latlng, zoom) {
   if (typeof(window.data) === "object") {
     var valueData = window.data[rasterHitInfo.layerId];
     if (valueData === undefined) {
-      console.log("mapview: Failed to find data arrays for layerId '"+rasterHitInfo.layerId+"'");
+      console.log("leafem: Failed to find data arrays for layerId '"+rasterHitInfo.layerId+"'");
     } else {
       var data_x = valueData.length,
           data_y = valueData[0].length;
@@ -124,7 +124,7 @@ rasterPicker.getLayerData = function(rasterHitInfo, latlng, zoom) {
       layerData.value = valueData[Math.floor(ix)][Math.floor(iy)];
     }
   } else {
-    console.log("mapview: Failed to find window.data");
+    console.log("leafem: Failed to find window.data");
     layerData.value = "Lookup failed";
   }
   return layerData;

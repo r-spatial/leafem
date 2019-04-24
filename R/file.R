@@ -131,6 +131,111 @@ addLocalFile = function(map,
 
 }
 
+#' add raster tiles from a local folder
+#'
+#' @description
+#'   Add tiled raster data pyramids from a local folder that was created with
+#'   gdal2tiles.py (see \url{https://gdal.org/gdal2tiles.html} for details).
+#'
+#' @param map a mapview or leaflet object.
+#' @param folder the (top level) folder where the tiles (folders) reside.
+#' @param layerId the layer id.
+#' @param group the group name for the tile layer to be added to \code{map}.
+#' @param attribution the attribution text of the tile layer (HTML).
+#' @param options a list of extra options for tile layers.
+#'   See \code{\link[leaflet]{tileOptions}} for details. When the tiles
+#'   were created with \code{gdal2tiles.py} argument \code{tms} needs to be
+#'   set to \code{TRUE}.
+#' @param data the data object from which the argument values are derived;
+#'   by default, it is the data object provided to leaflet() initially,
+#'   but can be overridden.
+#'
+#' @export addTileFolder
+#' @name addTileFolder
+#' @rdname addTileFolder
+#' @aliases addTileFolder
+addTileFolder = function(map,
+                         folder,
+                         layerId = NULL,
+                         group = NULL,
+                         attribution = NULL,
+                         options = leaflet::tileOptions(),
+                         data = leaflet::getMapData(map)) {
+
+  if (inherits(map, "mapview")) map = mapview2leaflet(map)
+
+  fldrs = list.dirs(folder, recursive = FALSE)
+  bsn = basename(fldrs)
+
+  zooms = as.numeric(bsn)
+  mnzm = min(zooms)
+
+  fldr_mnzm = fldrs[basename(fldrs) == as.character(mnzm)]
+  fldrs_mnzm = list.dirs(fldr_mnzm, recursive = TRUE)[-1]
+
+  fldrs_mnzm_mn = fldrs_mnzm[which.min(as.numeric(basename(fldrs_mnzm)))]
+  fldrs_mnzm_mx = fldrs_mnzm[which.max(as.numeric(basename(fldrs_mnzm)))]
+
+  x_mn = min(as.numeric(basename(fldrs_mnzm_mn)))
+  x_mx = max(as.numeric(basename(fldrs_mnzm_mx)))
+
+  tiles_mn = list.files(fldrs_mnzm_mn)
+  y_mn = min(as.numeric(tools::file_path_sans_ext(tiles_mn)))
+  y_mn = (2^mnzm) - y_mn - 1
+
+  tiles_mx = list.files(fldrs_mnzm_mx)
+  y_mx = max(as.numeric(tools::file_path_sans_ext(tiles_mx)))
+  y_mx = (2^mnzm) - y_mx - 1
+
+  ll_mn = tilenum_to_lonlat(x_mn, y_mn + 1, mnzm)
+  ll_mx = tilenum_to_lonlat(x_mx, y_mx, mnzm)
+
+  m = leaflet::addTiles(
+    map = map,
+    urlTemplate = paste0(
+      "lib/",
+      basename(folder),
+      "-0.0.1/{z}/{x}/{y}.png"
+    ),
+    group = group,
+    options = options,
+    data = data
+  )
+
+  m$dependencies =  c(m$dependencies, tiledDataDependency(folder))
+
+  return(m)
+
+}
+
+
+tiledDataDependency <- function(tiles_dir) {
+  list(
+    htmltools::htmlDependency(
+      name = basename(tiles_dir),
+      version = "0.0.1",
+      src = c(file = tiles_dir)
+    )
+  )
+}
+
+
+degrees <- function(angle_rad) (angle_rad * 180) / pi
+
+tilenum_to_lonlat <- function(x, y, zoom){
+  n_tiles <- 2^zoom
+
+  lon_rad <- (((x / n_tiles) * 2) - 1) * pi
+
+  merc_lat <- (1 - ((y / n_tiles) * 2)) * pi
+  lat_rad <- atan(sinh(merc_lat))
+
+  list(lon = degrees(lon_rad),
+       lat = degrees(lat_rad))
+}
+
+
+
 leafletFileDependencies <- function() {
   list(
     htmltools::htmlDependency(

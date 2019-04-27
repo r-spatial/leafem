@@ -9,11 +9,19 @@ Authors@R:
              email = "tim.appelhans@gmail.com"),
       person(given = "Christoph",
              family = "Reudenbach",
-             role = "aut",
+             role = "ctb",
              email = "reudenbach@geo.uni-marburg.de"),
       person(given = "Kenton",
              family = "Russell",
-             role = "ctb"))
+             role = "ctb"),
+      person(given = "Jochen",
+             family = "Darley",
+             role = "ctb",
+             email = "Debugger@jedimasters.de"),
+      person(given = "Daniel",
+             family = "Montague",
+             role = c("ctb"), 
+             comment = "Leaflet.EasyButton plugin"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for package 'leaflet', many of which are used 
     by package 'mapview'. Focus is on functionality readily available in 

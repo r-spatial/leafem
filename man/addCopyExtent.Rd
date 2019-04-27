@@ -18,6 +18,8 @@ to the clipboard. The \code{copy.btn} argument expects a valid keycode
 to find the approprate codes for your keyboard.
 }
 \examples{
+  library(leaflet)
+
   leaflet() \%>\%
   addProviderTiles("CartoDB.Positron") \%>\%
     addCopyExtent(event.code = "KeyE") \%>\%

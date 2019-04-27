@@ -10,6 +10,8 @@
 #' @param event.code the JavaScript event.code for ley strokes.
 #'
 #' @examples
+#'   library(leaflet)
+#'
 #'   leaflet() %>%
 #'   addProviderTiles("CartoDB.Positron") %>%
 #'     addCopyExtent(event.code = "KeyE") %>%

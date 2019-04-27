@@ -20,7 +20,8 @@
 #'   # now click on the map (!) and zoom to anwhere in the map, then press 'e' on
 #'   # your keyboard. This will copy the current extent/bounding box as a JSON object
 #'   # to your clipboard which can then be parsed with:
-#'   jsonlite::fromJSON(<Ctrl+v>)
+#'
+#'   # jsonlite::fromJSON(<Ctrl+v>)
 #'
 #' @export addCopyExtent
 #' @name addCopyExtent

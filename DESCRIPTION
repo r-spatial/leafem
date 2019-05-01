@@ -42,6 +42,7 @@ Imports:
     sf,
     sp
 Suggests:
+    clipr,
     gdalUtils,
     plainview,
     png

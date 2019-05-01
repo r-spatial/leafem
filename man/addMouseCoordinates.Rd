@@ -3,12 +3,15 @@
 \name{addMouseCoordinates}
 \alias{addMouseCoordinates}
 \alias{removeMouseCoordinates}
+\alias{clip2sfc}
 \title{Add mouse coordinate information at top of map.}
 \usage{
 addMouseCoordinates(map, epsg = NULL, proj4string = NULL,
   native.crs = FALSE)
 
 removeMouseCoordinates(map)
+
+clip2sfc(x, clipboard = TRUE)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}
@@ -18,6 +21,13 @@ removeMouseCoordinates(map)
 \item{proj4string}{the proj4string to be shown.}
 
 \item{native.crs}{logical. whether to use the native crs in the coordinates box.}
+
+\item{x}{a charcter string with valid longitude and latitude values. Order
+matters! If missing and \code{clipboard = TRUE} (the default) contents
+will be read from the clipboard.}
+
+\item{clipboard}{whether to read contents from the clipboard. Default is
+\code{TRUE}.}
 }
 \description{
 This function adds a box displaying the current cursor location
@@ -47,6 +57,8 @@ though currently only copying of 'lon', 'lat' and 'zoom' are supported, not
 \section{Functions}{
 \itemize{
 \item \code{removeMouseCoordinates}: remove mouse coordinates information from a map
+
+\item \code{clip2sfc}: convert mouse coordinates from clipboard to sfc
 }}
 
 \examples{

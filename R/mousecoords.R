@@ -181,4 +181,37 @@ removeMouseCoordinates = function(map) {
   return(map)
 }
 
+#' convert mouse coordinates from clipboard to sfc
+#'
+#' @param x a charcter string with valid longitude and latitude values. Order
+#'   matters! If missing and \code{clipboard = TRUE} (the default) contents
+#'   will be read from the clipboard.
+#' @param clipboard whether to read contents from the clipboard. Default is
+#'   \code{TRUE}.
+#'
+#' @describeIn addMouseCoordinates convert mouse coordinates from clipboard to sfc
+#' @aliases clip2sfc
+#' @export clip2sfc
+clip2sfc = function(x, clipboard = TRUE) {
+  if (clipboard) {
+    if (!requireNamespace("clipr"))
+      stop("\nplease install.packages('clipr') to enable reading from clipboard")
+    lns = clipr::read_clip()
+    splt = strsplit(lns, " ")[[1]]
+    lnlt = regmatches(splt, regexpr("([0-9]+.[0-9]+)", splt))
+    x = as.numeric(lnlt[1])
+    y = as.numeric(lnlt[2])
+    sf::st_sfc(sf::st_point(c(x, y)), crs = 4326)
+  } else {
+    if (missing(x)) stop("\nneed some text or 'clipboard = TRUE'", call. = FALSE)
+    splt = strsplit(x, " ")[[1]]
+    lnlt = regmatches(splt, regexpr("([0-9]+.[0-9]+)", splt))
+    x = as.numeric(lnlt[1])
+    y = as.numeric(lnlt[2])
+    sf::st_sfc(sf::st_point(c(x, y)), crs = 4326)
+  }
+}
+
+
+
 ##############################################################################

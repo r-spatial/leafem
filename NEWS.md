@@ -1,3 +1,10 @@
+## leafem 0.0.2
+
+new features:
+
+  * addHomeButton now infers bounding box without having to pass extent object. Also it now handles vectors of c(xmin, ymin, xmax, ymax) - e.g. via sf::st_bbox().
+  * addLocalFile has gained argument `tms` to specify whether tiles are TMS tiles.
+
 ## leafem 0.0.1
 
 initial commit

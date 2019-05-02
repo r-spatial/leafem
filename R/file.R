@@ -139,6 +139,7 @@ addLocalFile = function(map,
 #'
 #' @param map a mapview or leaflet object.
 #' @param folder the (top level) folder where the tiles (folders) reside.
+#' @param tms whether the tiles are served as TMS tiles.
 #' @param layerId the layer id.
 #' @param group the group name for the tile layer to be added to \code{map}.
 #' @param attribution the attribution text of the tile layer (HTML).
@@ -156,39 +157,42 @@ addLocalFile = function(map,
 #' @aliases addTileFolder
 addTileFolder = function(map,
                          folder,
+                         tms = TRUE,
                          layerId = NULL,
                          group = NULL,
                          attribution = NULL,
                          options = leaflet::tileOptions(),
                          data = leaflet::getMapData(map)) {
 
+  options = utils::modifyList(options, list(tms = tms), keep.null = TRUE)
+
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
-  fldrs = list.dirs(folder, recursive = FALSE)
-  bsn = basename(fldrs)
-
-  zooms = as.numeric(bsn)
-  mnzm = min(zooms)
-
-  fldr_mnzm = fldrs[basename(fldrs) == as.character(mnzm)]
-  fldrs_mnzm = list.dirs(fldr_mnzm, recursive = TRUE)[-1]
-
-  fldrs_mnzm_mn = fldrs_mnzm[which.min(as.numeric(basename(fldrs_mnzm)))]
-  fldrs_mnzm_mx = fldrs_mnzm[which.max(as.numeric(basename(fldrs_mnzm)))]
-
-  x_mn = min(as.numeric(basename(fldrs_mnzm_mn)))
-  x_mx = max(as.numeric(basename(fldrs_mnzm_mx)))
-
-  tiles_mn = list.files(fldrs_mnzm_mn)
-  y_mn = min(as.numeric(tools::file_path_sans_ext(tiles_mn)))
-  y_mn = (2^mnzm) - y_mn - 1
-
-  tiles_mx = list.files(fldrs_mnzm_mx)
-  y_mx = max(as.numeric(tools::file_path_sans_ext(tiles_mx)))
-  y_mx = (2^mnzm) - y_mx - 1
-
-  ll_mn = tilenum_to_lonlat(x_mn, y_mn + 1, mnzm)
-  ll_mx = tilenum_to_lonlat(x_mx, y_mx, mnzm)
+  # fldrs = list.dirs(folder, recursive = FALSE)
+  # bsn = basename(fldrs)
+  #
+  # zooms = as.numeric(bsn)
+  # mnzm = min(zooms)
+  #
+  # fldr_mnzm = fldrs[basename(fldrs) == as.character(mnzm)]
+  # fldrs_mnzm = list.dirs(fldr_mnzm, recursive = TRUE)[-1]
+  #
+  # fldrs_mnzm_mn = fldrs_mnzm[which.min(as.numeric(basename(fldrs_mnzm)))]
+  # fldrs_mnzm_mx = fldrs_mnzm[which.max(as.numeric(basename(fldrs_mnzm)))]
+  #
+  # x_mn = min(as.numeric(basename(fldrs_mnzm_mn)))
+  # x_mx = max(as.numeric(basename(fldrs_mnzm_mx)))
+  #
+  # tiles_mn = list.files(fldrs_mnzm_mn)
+  # y_mn = min(as.numeric(tools::file_path_sans_ext(tiles_mn)))
+  # y_mn = (2^mnzm) - y_mn - 1
+  #
+  # tiles_mx = list.files(fldrs_mnzm_mx)
+  # y_mx = max(as.numeric(tools::file_path_sans_ext(tiles_mx)))
+  # y_mx = (2^mnzm) - y_mx - 1
+  #
+  # ll_mn = tilenum_to_lonlat(x_mn, y_mn + 1, mnzm)
+  # ll_mx = tilenum_to_lonlat(x_mx, y_mx, mnzm)
 
   m = leaflet::addTiles(
     map = map,

@@ -39,18 +39,20 @@ addHomeButton <- function(map, ext, layer.name = "layer",
   stopifnot(inherits(map, "leaflet"))
 
   # drop names in case extent of sf object
-  ext@xmin = unname(ext@xmin)
-  ext@xmax = unname(ext@xmax)
-  ext@ymin = unname(ext@ymin)
-  ext@ymax = unname(ext@ymax)
+  if (!missing(ext)) {
+    if (inherits(ext, "Extent")) {
+      ext = as.vector(ext)[c(1, 3, 2, 4)]
+    } else {
+      ext = as.vector(ext)
+    }
+  } else {
+    ext = c(0, 0, 0, 0)
+  }
 
   hb <- try(getCallEntryFromMap(map, "addHomeButton"), silent = TRUE)
   if (!inherits(hb, "try-error") & length(hb) == 1) {
     ext_coords <- unlist(map$x$calls[[hb]][["args"]][1:4])
-    ext_map <- raster::extent(ext_coords[1],
-                              ext_coords[3],
-                              ext_coords[2],
-                              ext_coords[4])
+    ext_map <- c(ext_coords[1], ext_coords[2], ext_coords[3], ext_coords[4])
     if (identical(ext, ext_map)) add = FALSE
   }
 
@@ -62,8 +64,8 @@ addHomeButton <- function(map, ext, layer.name = "layer",
 
     map$dependencies <- c(map$dependencies, leafletHomeButtonDependencies())
     leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
-                          ext@xmin, ext@ymin, ext@xmax, ext@ymax, label, txt,
-                          position)
+                          ext[1], ext[2], ext[3], ext[4],
+                          layer.name, label, txt, position)
   }
 
   else map

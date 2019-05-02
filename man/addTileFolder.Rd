@@ -4,7 +4,7 @@
 \alias{addTileFolder}
 \title{add raster tiles from a local folder}
 \usage{
-addTileFolder(map, folder, layerId = NULL, group = NULL,
+addTileFolder(map, folder, tms = TRUE, layerId = NULL, group = NULL,
   attribution = NULL, options = leaflet::tileOptions(),
   data = leaflet::getMapData(map))
 }
@@ -12,6 +12,8 @@ addTileFolder(map, folder, layerId = NULL, group = NULL,
 \item{map}{a mapview or leaflet object.}
 
 \item{folder}{the (top level) folder where the tiles (folders) reside.}
+
+\item{tms}{whether the tiles are served as TMS tiles.}
 
 \item{layerId}{the layer id.}
 

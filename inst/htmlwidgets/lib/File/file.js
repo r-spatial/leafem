@@ -35,5 +35,6 @@ LeafletWidget.methods.addFile = function(layerId,
     lab = null;
   }
 
-  this.layerManager.addLayer(layer, null, null, group);
+  map.layerManager.addLayer(layer, null, null, group);
+  map.fitBounds(layer.getBounds());
 };

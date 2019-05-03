@@ -12,7 +12,8 @@ addLocalFile(map, file, layerId = NULL, group = NULL, popup = NULL,
 \arguments{
 \item{map}{a mapview or leaflet object.}
 
-\item{file}{file path to the file to be added to \code{map}.}
+\item{file}{file path to the file to be added to \code{map}. NOTE: will be
+reprojected on-the-fly if not in "longlat".}
 
 \item{layerId}{the layer id.}
 

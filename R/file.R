@@ -1,7 +1,8 @@
 #' add vector data to leaflet map directly from the file system
 #'
 #' @param map a mapview or leaflet object.
-#' @param file file path to the file to be added to \code{map}.
+#' @param file file path to the file to be added to \code{map}. NOTE: will be
+#'   reprojected on-the-fly if not in "longlat".
 #' @param layerId the layer id.
 #' @param group the group name for the file to be added to \code{map}.
 #' @param popup logical, whether to show the feature properties (fields) in
@@ -57,6 +58,13 @@ addLocalFile = function(map,
   geom_type = gdalUtils::ogrinfo(file)
   if (any(grepl("Line String", geom_type))) fill = FALSE
 
+  srs_info = gdalUtils::gdalsrsinfo(destfile)
+  prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
+
+  prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
+  prj = gsub(" '", "", prj)
+  prj = gsub("'", "", prj)
+
   style_list = list(radius = radius,
                     stroke = stroke,
                     color = color,
@@ -85,11 +93,21 @@ addLocalFile = function(map,
   writeLines(pre, path_header)
 
   if (tools::file_ext(file) != "geojson") {
-    gdalUtils::ogr2ogr(
-      src_datasource_name = file,
-      dst_datasource_name = path_layer,
-      f = "GeoJSON"
-    )
+    if (sf::st_is_longlat(sf::st_crs(prj))) {
+      gdalUtils::ogr2ogr(
+        src_datasource_name = file,
+        dst_datasource_name = path_layer,
+        f = "GeoJSON"
+      )
+    }
+    if (!st_is_longlat(st_crs(prj))) {
+      gdalUtils::ogr2ogr(
+        src_datasource_name = file,
+        dst_datasource_name = path_layer,
+        t_srs = "+proj=longlat +datum=WGS84 +no_defs",
+        f = "GeoJSON"
+      )
+    }
   } else {
     file.copy(file, path_layer, overwrite = TRUE)
   }

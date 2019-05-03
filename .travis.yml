@@ -10,7 +10,7 @@ addons:
     sources:
       - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
-      - libgdal
+      - gdal-bin
       - libproj-dev
       - libgeos-dev
       - libgdal-dev

@@ -1,0 +1,124 @@
+---
+title: "Extra leaflet functionality in leafem"
+output:
+  rmarkdown::html_document:
+    toc: true
+    toc_float: yes
+    theme: united
+vignette: >
+  %\VignetteIndexEntry{1. extra leaflet functionality in leafem}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.width = 8.83, message = FALSE, warning = FALSE)
+```
+
+**leafem** provides a few extra `add*` functions for use with leaflet (and mapview).
+
+- `addMouseCoordinates` - add a box with mouse position, projection information and zoom level information
+- `addLogo` - add images to maps
+- `addHomeButton` - add zoom-to button to a map
+- `addFeatures` - add features to a map, regardless of features type unresposnive
+- `granishMap` - a "*one to rule them all*" function (similar to `*apply` family)
+- `addImageQuery` - to display raster values on mouse hover/click
+
+Here are some examples:
+
+## addMouseCoordinates
+
+let's add mouse position information along with detailed information about the layer's projection and zoom level information. By default, only `lon`, `lat` and `zoom` are shown. To also show info on the `epsg code` and the `proj4string` press and hold Ctrl and move the mouse. `addMouseCoordinates` also allows us to copy the info about the current mouse position to the clipboard by holding the Ctrl and left-clicking on the map. If we want this information from the clipboard to be used in our current R session, we can use `clip2sfc()` to convert it to a simple feature column of type `POINT`.
+
+```{r addmc default}
+library(mapview)
+library(leaflet)
+library(leafem)
+
+leaflet() %>% addTiles() %>% leafem::addMouseCoordinates()
+```
+
+------
+
+## addLogo
+
+can be used to add logos (or any type of image really) to a map
+
+```{r logo r}
+img <- "https://www.r-project.org/logo/Rlogo.svg"
+leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/")
+```
+
+<br>
+
+arguments `offset.x`, `offset.y` together with `position` give control about image placement. See `?addLogo` for details
+
+```{r logo banana}
+m <- mapview(breweries)
+
+addLogo(m, "https://jeroenooms.github.io/images/banana.gif",
+        position = "bottomleft",
+        offset.x = 5,
+        offset.y = 40,
+        width = 100,
+        height = 100)
+```
+
+------
+
+## addHomeButton
+
+can be used to add 'zoom-to-layer' buttons to a map. By default located in the bottom-right corner of the map (can be changed using argument `position`)
+
+```{r home}
+library(raster)
+
+leaflet() %>% 
+  addTiles() %>% 
+  addCircleMarkers(data = breweries91) %>% 
+  addHomeButton(ext = extent(breweries91), layer.name = "Breweries")
+```
+
+------
+
+## addFeatures
+
+is a type agnostic `add*` function which will call the approprate `leaflet::add*` function based on the provided feature type (points, lines, polygons). It is currently defined for handling objects from packages `sf` and `sp`. For `sf` objects, in addition to the standard feature types `POINT`, `MULTIPOINT`, `LINESTRING`, `MULTILINESTRING`, `POLYGON` and `MULTIPOLYGON` it can also handle features of type `sfc_GEOMETRY` which are a collection of mixed types.
+
+```{r addpols}
+library(leafem)
+
+leaflet() %>% addTiles() %>% addFeatures(breweries)
+```
+
+<br>
+
+The standard styling arguments for `leaflet::add*` functions can be used just like in the original `add*` function
+
+```{r addpols style}
+library(leafem)
+
+leaflet() %>% 
+  addTiles() %>% 
+  addFeatures(franconia, weight = 1, fillColor = "grey", color = "black",
+              opacity = 1, fillOpacity = 0.6)
+```
+
+<br>
+
+------
+
+## addImageQuery
+
+can be used to display raster image values when hovering over a layer:
+
+```{r imageq}
+library(plainview)
+
+leaflet() %>%
+  addTiles() %>%
+  addRasterImage(plainview::poppendorf[[4]], layerId = "popp") %>%
+  addImageQuery(plainview::poppendorf[[4]], layerId = "popp")
+```
+
+<br>

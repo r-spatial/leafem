@@ -58,7 +58,7 @@ addLocalFile = function(map,
   geom_type = gdalUtils::ogrinfo(file)
   if (any(grepl("Line String", geom_type))) fill = FALSE
 
-  srs_info = gdalUtils::gdalsrsinfo(destfile)
+  srs_info = gdalUtils::gdalsrsinfo(file)
   prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
 
   prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
@@ -100,7 +100,7 @@ addLocalFile = function(map,
         f = "GeoJSON"
       )
     }
-    if (!st_is_longlat(st_crs(prj))) {
+    if (!sf::st_is_longlat(sf::st_crs(prj))) {
       gdalUtils::ogr2ogr(
         src_datasource_name = file,
         dst_datasource_name = path_layer,

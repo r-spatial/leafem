@@ -166,12 +166,12 @@ CheckAdjustProjection <- function(x, method) {
       raster::projection(x) <- llcrs
     } else if (is.fact) {
       x <- raster::projectRaster(
-        x, raster::projectExtent(x, crs = sp::CRS(wmcrs)),
+        x, raster::projectExtent(x, crs = sp::CRS("+init=epsg:3857")),
         method = "ngb")
       x <- raster::as.factor(x)
     } else {
       x <- raster::projectRaster(
-        x, raster::projectExtent(x, crs = sp::CRS(wmcrs)),
+        x, raster::projectExtent(x, crs = sp::CRS("+init=epsg:3857")),
         method = method)
     }
 

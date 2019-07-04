@@ -36,6 +36,7 @@ addFeatures <- function(map,
                         ...) {
 
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)
+  if (!sf::st_crs(data)$epsg == 4326) data = sf::st_transform(data, sp::CRS(llcrs))
 
   switch(getSFClass(sf::st_geometry(data)),
          sfc_POINT           = addPointFeatures(map, data, pane, ...),

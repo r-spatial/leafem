@@ -17,7 +17,11 @@
 #' @param g integer. Index of the Green channel/band, between 1 and nlayers(x)
 #' @param b integer. Index of the Blue channel/band, between 1 and nlayers(x)
 #' @param quantiles the upper and lower quantiles used for color stretching.
-#' If set to NULL, no stretching is applied.
+#' If set to NULL, stretching is performed basing on `domain` argument.
+#' @param domain the upper and lower values used for color stretching.
+#' This is used only if `quantiles` is NULL.
+#' If bot `domain` and `quantiles` are set to NULL, stretching is applied
+#' basing on min-max values.
 #' @param maxpixels integer > 0. Maximum number of cells to use for the plot.
 #' If maxpixels < \code{ncell(x)}, sampleRegular is used before plotting.
 #' @param na.color the color to be used for NA pixels
@@ -60,6 +64,7 @@
 
 addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
                          quantiles = c(0.02, 0.98),
+                         domain = NULL,
                          maxpixels = 5e+05,
                          na.color = "#BEBEBE80",
                          method = c("bilinear", "ngb"),
@@ -103,6 +108,10 @@ addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
       z[z > 1] <- 1
       mat[, i] <- z
     }
+  } else if (!is.null(domain)) {
+    mat <- apply(mat, 2, scales::rescale, from = domain)
+    mat[mat < 0] <- 0
+    mat[mat > 1] <- 1
   } else {
     # If there is no stretch we just scale the data between 0 and 1
     mat <- apply(mat, 2, scales::rescale)

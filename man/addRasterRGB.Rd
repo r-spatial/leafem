@@ -6,12 +6,12 @@
 \title{Add an RGB image as a layer}
 \usage{
 addRasterRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02,
-  0.98), maxpixels = 5e+05, na.color = "#BEBEBE80",
+  0.98), domain = NULL, maxpixels = 5e+05, na.color = "#BEBEBE80",
   method = c("bilinear", "ngb"), ...)
 
 addStarsRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02, 0.98),
-  maxpixels = 5e+05, na.color = "#BEBEBE80", method = c("bilinear",
-  "ngb"), ...)
+  domain = NULL, maxpixels = 5e+05, na.color = "#BEBEBE80",
+  method = c("bilinear", "ngb"), ...)
 }
 \arguments{
 \item{map}{a map widget object created from `leaflet()``}
@@ -25,7 +25,12 @@ addStarsRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02, 0.98),
 \item{b}{integer. Index of the Blue channel/band, between 1 and nlayers(x)}
 
 \item{quantiles}{the upper and lower quantiles used for color stretching.
-If set to NULL, no stretching is applied.}
+If set to NULL, stretching is performed basing on `domain` argument.}
+
+\item{domain}{the upper and lower values used for color stretching.
+This is used only if `quantiles` is NULL.
+If bot `domain` and `quantiles` are set to NULL, stretching is applied
+basing on min-max values.}
 
 \item{maxpixels}{integer > 0. Maximum number of cells to use for the plot.
 If maxpixels < \code{ncell(x)}, sampleRegular is used before plotting.}

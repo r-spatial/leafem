@@ -36,7 +36,7 @@
 addHomeButton <- function(map, ext, layer.name = "layer",
                           position = 'bottomright', add = TRUE) {
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, "leaflet"))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
 
   # drop names in case extent of sf object
   if (!missing(ext)) {
@@ -80,7 +80,7 @@ addHomeButton <- function(map, ext, layer.name = "layer",
 #' @export removeHomeButton
 removeHomeButton <- function(map) {
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, "leaflet"))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
   leaflet::invokeMethod(map, NULL, 'removeHomeButton')
 }
 

@@ -70,7 +70,7 @@ addLogo <- function(map,
   # check for duplication?
   #  not sure of a good way to do this
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, "leaflet"))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
 
   if (!missing(url)) url <- paste0('"', url, '"')
 

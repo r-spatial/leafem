@@ -104,7 +104,6 @@ addStaticLabels = function(map,
   }
 
   if (inherits(map, c("leaflet", "leaflet_proxy"))) {
-    # browser()
     if (missing(data)) {
       data = attributes(map[["x"]])[["leafletData"]]
     } else {

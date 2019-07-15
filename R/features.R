@@ -33,10 +33,35 @@
 addFeatures <- function(map,
                         data,
                         pane = "overlayPane",
+                        group = NULL,
                         ...) {
 
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapview")))
+
+  if (inherits(map, "mapview")) {
+    if (missing(data)) {
+      data = map@object[[1]]
+      if (is.null(group)) {
+        group = getLayerNamesFromMap(map@map)[1]
+      } else {
+        group = NULL
+      }
+    } else {
+      data = sf::st_transform(data, sf::st_crs(map@object[[1]]))
+    }
+  }
+
+  # this should allow to use `addFeatures` directly on a leaflet map, without
+  # # specifying `data` (e.g., leaflet(indata) %>% addFeatures() )
+  if (inherits(map, c("leaflet", "leaflet_proxy"))) {
+    if (missing(data)) {
+      data = attributes(map[["x"]])[["leafletData"]]
+    }
+    data = checkAdjustProjection(data)
+  }
+
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)
-  if (!sf::st_crs(data)$epsg == 4326) data = sf::st_transform(data, sp::CRS(llcrs))
+
 
   switch(getSFClass(sf::st_geometry(data)),
          sfc_POINT           = addPointFeatures(map, data, pane, ...),

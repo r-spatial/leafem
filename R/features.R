@@ -41,23 +41,22 @@ addFeatures <- function(map,
   if (inherits(map, "mapview")) {
     if (missing(data)) {
       data = map@object[[1]]
-      if (is.null(group)) {
-        group = getLayerNamesFromMap(map@map)[1]
-      } else {
-        group = NULL
-      }
     } else {
-      data = sf::st_transform(data, sf::st_crs(map@object[[1]]))
+      if (!is.null(map@object[[1]])) {
+        data = sf::st_transform(data, sf::st_crs(map@object[[1]]))
+      }
     }
   }
 
-  # this should allow to use `addFeatures` directly on a leaflet map, without
-  # # specifying `data` (e.g., leaflet(indata) %>% addFeatures() )
+  # this allows using `addFeatures` directly on a leaflet pipe, without
+  # specifying `data` (e.g., leaflet(indata) %>% addFeatures())
   if (inherits(map, c("leaflet", "leaflet_proxy"))) {
     if (missing(data)) {
-      data = attributes(map[["x"]])[["leafletData"]]
+      data <- attributes(map[["x"]])[["leafletData"]]
     }
-    data = checkAdjustProjection(data)
+    if (is.null(list(...)$native.crs) || !list(...)$native.crs) {
+      data <- checkAdjustProjection(data)
+    }
   }
 
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)

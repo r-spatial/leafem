@@ -4,7 +4,7 @@
 \alias{addFeatures}
 \title{Type agnositc version of \code{leaflet::add*} functions.}
 \usage{
-addFeatures(map, data, pane = "overlayPane", group = NULL, ...)
+addFeatures(map, data, pane = "overlayPane", ...)
 }
 \arguments{
 \item{map}{A \code{leaflet} or \code{mapview} map.}

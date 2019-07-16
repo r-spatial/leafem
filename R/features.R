@@ -33,7 +33,6 @@
 addFeatures <- function(map,
                         data,
                         pane = "overlayPane",
-                        group = NULL,
                         ...) {
 
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapview")))

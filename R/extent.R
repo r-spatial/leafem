@@ -24,7 +24,6 @@
 #' mapview(indata) %>% addExtent(indata)
 #' mapview(indata) + viewExtent(indata)
 
-
 addExtent <- function(map,
                       data, ...) {
 

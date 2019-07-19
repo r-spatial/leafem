@@ -62,8 +62,8 @@ addLocalFile = function(map,
   # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
   #
   # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
-  # prj = gsub(" '", "", prj)
-  # prj = gsub("'", "", prj)
+  prj = gsub(" '", "", prj)
+  prj = gsub("'", "", prj)
 
   style_list = list(radius = radius,
                     stroke = stroke,

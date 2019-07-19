@@ -53,9 +53,9 @@ addFeatures <- function(map,
     if (missing(data)) {
       data <- attributes(map[["x"]])[["leafletData"]]
     }
-    if (is.null(list(...)$native.crs) || !list(...)$native.crs) {
-      data <- checkAdjustProjection(data)
-    }
+    # if (is.null(list(...)$native.crs) || !list(...)$native.crs) {
+    #   data <- checkAdjustProjection(data)
+    # }
   }
 
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)

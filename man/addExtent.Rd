@@ -29,10 +29,4 @@ leaflet() \%>\%
 leaflet(indata) \%>\%
   addProviderTiles("OpenStreetMap") \%>\%
   addExtent()
-
-# Usage in mapview
-
-library(mapview)
-mapview(indata) \%>\% addExtent(indata)
-mapview(indata) + viewExtent(indata)
 }

@@ -44,11 +44,11 @@ rasterCheckAdjustProjection <- function(x, method) {
 
   is.fact <- raster::is.factor(x)[1]
 
-  if (is.na(raster::projection(x))) {
-    warning(non_proj_warning)
-    raster::extent(x) <- scaleExtent(x)
-    raster::projection(x) <- llcrs
-  } else if (is.fact) {
+  # if (is.na(raster::projection(x))) {
+  #   warning(non_proj_warning)
+  #   raster::extent(x) <- scaleExtent(x)
+  #   raster::projection(x) <- llcrs
+  if (is.fact) {
     x <- raster::projectRaster(
       x, raster::projectExtent(x, crs = sp::CRS(wmcrs)),
       method = "ngb")
@@ -93,22 +93,22 @@ sfCheckAdjustProjection <- function(x) {
 # Check and potentially adjust projection of Spatial* objects =============
 spCheckAdjustProjection <- function(x) {
 
-  if (is.na(raster::projection(x))) {
-    warning(non_proj_warning)
-    if (class(x)[1] %in% c("SpatialPointsDataFrame", "SpatialPoints")) {
-      methods::slot(x, "coords") <- scaleCoordinates(coordinates(x)[, 1],
-                                                     coordinates(x)[, 2])
-    } else if (class(x)[1] %in% c("SpatialPolygonsDataFrame",
-                                  "SpatialPolygons")) {
-      x <- scalePolygonsCoordinates(x)
-    } else if (class(x)[1] %in% c("SpatialLinesDataFrame",
-                                  "SpatialLines")) {
-      x <- scaleLinesCoordinates(x)
-    }
+  # if (is.na(raster::projection(x))) {
+  #   warning(non_proj_warning)
+  #   if (class(x)[1] %in% c("SpatialPointsDataFrame", "SpatialPoints")) {
+  #     methods::slot(x, "coords") <- scaleCoordinates(coordinates(x)[, 1],
+  #                                                    coordinates(x)[, 2])
+  #   } else if (class(x)[1] %in% c("SpatialPolygonsDataFrame",
+  #                                 "SpatialPolygons")) {
+  #     x <- scalePolygonsCoordinates(x)
+  #   } else if (class(x)[1] %in% c("SpatialLinesDataFrame",
+  #                                 "SpatialLines")) {
+  #     x <- scaleLinesCoordinates(x)
+  #   }
+  #
+  #   raster::projection(x) <- llcrs
 
-    raster::projection(x) <- llcrs
-
-  } else if (!identical(raster::projection(x), llcrs)) {
+  if (!identical(raster::projection(x), llcrs)) {
     x <- sp::spTransform(x, CRSobj = llcrs)
   }
 

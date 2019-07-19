@@ -21,12 +21,6 @@
 #' leaflet(indata) %>%
 #'   addProviderTiles("OpenStreetMap") %>%
 #'   addExtent()
-#'
-#' # Usage in mapview
-#'
-#' library(mapview)
-#' mapview(indata) %>% addExtent(indata)
-#' mapview(indata) + viewExtent(indata)
 
 addExtent <- function(map,
                       data, ...) {
@@ -41,7 +35,7 @@ addExtent <- function(map,
     }
   }
 
-  data <- checkAdjustProjection(data)
+  # data <- checkAdjustProjection(data)
 
   if (inherits(data, "Spatial")) data = sf::st_as_sfc(data)
 

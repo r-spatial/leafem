@@ -82,7 +82,7 @@ addStaticLabels = function(map,
     if (missing(data)) {
       data = attributes(map[["x"]])[["leafletData"]]
     }
-    data = checkAdjustProjection(data)
+    # data = checkAdjustProjection(data)
   }
 
   if (is.null(data)) stop("argument \"data\" is missing, with no default")

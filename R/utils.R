@@ -17,6 +17,17 @@ getLayerControlEntriesFromMap <- function(map) {
   grep("addLayersControl", getCallMethods(map), fixed = TRUE, useBytes = TRUE)
 }
 
+# Get layer names of leaflet map ------------------------------------------
+
+getLayerNamesFromMap <- function(map) {
+
+  len <- getLayerControlEntriesFromMap(map)
+  len <- len[length(len)]
+  if (length(len) != 0) map$x$calls[[len]]$args[[2]] else NULL
+
+}
+
+
 
 getCallEntryFromMap <- function(map, call) {
   grep(call, getCallMethods(map), fixed = TRUE, useBytes = TRUE)
@@ -27,13 +38,14 @@ combineExtent = function(lst, sf = FALSE, crs = 4326) {
   # lst = list(breweries, st_as_sf(atlStorms2005), st_as_sf(gadmCHE))
   # bb = do.call(rbind, lapply(lst, sf::st_bbox))
   bb = do.call(rbind, lapply(seq(lst), function(i) {
-
+  if (!is.null(lst[[i]])) {
     if (!is.na(getProjection(lst[[i]]))) {
       sf::st_bbox(sf::st_transform(sf::st_as_sfc(sf::st_bbox(lst[[i]])),
                                    crs = crs))
     } else {
       sf::st_bbox(sf::st_as_sfc(sf::st_bbox(lst[[i]])))
     }
+  }
   }))
 
   bbmin = apply(bb, 2, min)
@@ -131,4 +143,37 @@ getProjection <- function(x) {
 
   return(prj)
 
+}
+
+getGeometryType <- function(x) {
+  # sf
+  if (inherits(x, "Spatial")) x = sf::st_as_sfc(x)
+  g <- sf::st_geometry(x)
+  if (inherits(g, "POINT") |
+      inherits(g, "MULTIPOINT") |
+      inherits(g, "sfc_POINT") |
+      inherits(g, "sfc_MULTIPOINT")) type <- "pt"
+  if (inherits(g, "LINESTRING") |
+      inherits(g, "MULTILINESTRING") |
+      inherits(g, "sfc_LINESTRING") |
+      inherits(g, "sfc_MULTILINESTRING")) type <- "ln"
+  if (inherits(g, "POLYGON") |
+      inherits(g, "MULTIPOLYGON") |
+      inherits(g, "sfc_POLYGON") |
+      inherits(g, "sfc_MULTIPOLYGON")) type <- "pl"
+  if (inherits(g, "sfc_GEOMETRY") |
+      inherits(g, "sfc_GEOMETRYCOLLECTION")) type <- "gc" #getGeometryType(sf::st_cast(g))
+  return(type)
+}
+
+### labels
+makeLabels <- function(x, zcol = NULL) {
+  if (inherits(x, "XY")) {
+    lab <- "1"
+  } else if (inherits(x, "sfc")) {
+    lab <- as.character(seq(length(x)))
+  } else if (inherits(x, "sf") & is.null(zcol)) {
+    lab <- rownames(x)
+  } else lab <- as.character(as.data.frame(x)[, zcol])
+  return(lab)
 }

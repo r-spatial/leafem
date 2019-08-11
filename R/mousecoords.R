@@ -58,7 +58,7 @@ addMouseCoordinates <- function(map,
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
 
-  if (native.crs | map$x$options$crs$crsClass == "L.CRS.Simple") {
+  if (native.crs) { # | map$x$options$crs$crsClass == "L.CRS.Simple") {
     txt_detailed <- paste0("
                            ' x: ' + (e.latlng.lng).toFixed(5) +
                            ' | y: ' + (e.latlng.lat).toFixed(5) +

@@ -58,10 +58,10 @@ addLocalFile = function(map,
   geom_type = gdalUtils::ogrinfo(file)
   if (any(grepl("Line String", geom_type))) fill = FALSE
 
-  srs_info = gdalUtils::gdalsrsinfo(file)
-  prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
-
-  prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
+  prj = gdalUtils::gdalsrsinfo(file, o = "proj4")
+  # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
+  #
+  # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
   prj = gsub(" '", "", prj)
   prj = gsub("'", "", prj)
 

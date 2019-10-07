@@ -45,7 +45,10 @@ Imports:
     raster,
     sf,
     sp, 
-    methods
+    methods,
+    base64enc,
+    scales,
+    png
 Suggests:
     clipr,
     gdalUtils,

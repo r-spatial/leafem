@@ -62,13 +62,15 @@
 #' @importFrom scales rescale
 #' @export
 
-addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
-                         quantiles = c(0.02, 0.98),
-                         domain = NULL,
-                         maxpixels = 5e+05,
-                         na.color = "#BEBEBE80",
-                         method = c("bilinear", "ngb"),
-                         ...) {
+addRasterRGB <- function(
+  map, x, r = 3, g = 2, b = 1,
+  quantiles = c(0.02, 0.98),
+  domain = NULL,
+  maxpixels = 5e+05,
+  na.color = "#BEBEBE80",
+  method = c("bilinear", "ngb"),
+  ...
+) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
   method = match.arg(method)
@@ -110,6 +112,7 @@ addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
     }
   } else if (!is.null(domain)) {
     mat <- apply(mat, 2, scales::rescale, from = domain)
+    # Stretch values outside colour range to band limits
     mat[mat < 0] <- 0
     mat[mat > 1] <- 1
   } else {
@@ -125,10 +128,14 @@ addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
 
   lyrs <- paste(r, g, b, sep = ".")
 
+  dotlst = list(...)
+  dotlst = utils::modifyList(dotlst, list(map = map, colors = p))
   out <- if (inherits(x, "Raster")) {
-    addRasterImage(map = map, x = xout[[r]], colors = p, ...)
+    dotlst = utils::modifyList(dotlst, list(x = xout[[r]]))
+    do.call(addRasterImage, dotlst)
   } else {
-    addStarsImage(map = map, x = xout, band = r, colors = p, ...)
+    dotlst = utils::modifyList(dotlst, list(x = xout))
+    do.call(addStarsImage, dotlst)
   }
 
   return(out)
@@ -137,6 +144,7 @@ addRasterRGB <- function(map, x, r = 3, g = 2, b = 1,
 
 #' @name addRasterRGB
 #' @rdname addRasterRGB
+#' @export
 addStarsRGB <- addRasterRGB
 
 

@@ -1,3 +1,4 @@
+         " bytes is greater than maximum ",
 #' Add stars layer to a leaflet map
 #'
 #' @param map a mapview or leaflet object.

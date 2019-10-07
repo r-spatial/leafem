@@ -46,11 +46,12 @@ from \code{\link{plotRGB}}.
 \code{AddRasterRGB} and \code{addStarsRGB} are aliases.
 }
 \examples{
-if (interactive()) {
-  library(raster)
-  library(stars)
-  library(plainview)
-  library(leaflet)
+\donttest{
+  require(raster)
+  require(stars)
+  require(plainview)
+  require(leaflet)
+  require(magrittr)
 
   leaflet() \%>\%
     addTiles(group = "OpenStreetMap") \%>\%

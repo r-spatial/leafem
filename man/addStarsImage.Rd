@@ -41,6 +41,10 @@ Ignored if project = FALSE. See projectRaster for details.}
 
 \item{maxBytes}{the maximum number of bytes to allow for the projected image
 (before base64 encoding); defaults to 4MB.}
+
+\item{data}{the data object from which the argument values are derived; by
+default, it is the \code{data} object provided to \code{leaflet()}
+initially, but can be overridden}
 }
 \description{
 Add stars layer to a leaflet map
@@ -50,9 +54,10 @@ This is an adaption of \code{\link{addRasterImage}}. See that documentation
 for details.
 }
 \examples{
-\dontrun{
-library(stars)
-library(leaflet)
+\donttest{
+require(stars)
+require(leaflet)
+require(magrittr)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 leaflet() \%>\%

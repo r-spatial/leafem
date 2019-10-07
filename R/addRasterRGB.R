@@ -29,11 +29,12 @@
 #' Tim Appelhans, Luigi Ranghetti
 #'
 #' @examples
-#' if (interactive()) {
-#'   library(raster)
-#'   library(stars)
-#'   library(plainview)
-#'   library(leaflet)
+#' \donttest{
+#'   require(raster)
+#'   require(stars)
+#'   require(plainview)
+#'   require(leaflet)
+#'   require(magrittr)
 #'
 #'   leaflet() %>%
 #'     addTiles(group = "OpenStreetMap") %>%

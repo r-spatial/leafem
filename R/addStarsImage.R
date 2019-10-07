@@ -43,61 +43,97 @@
 #' @importFrom base64enc base64encode
 #' @importFrom png writePNG
 #' @export addStarsImage
-addStarsImage <- function(map,
-                          x,
-                          band = 1,
-                          colors = "Spectral",
-                          opacity = 1,
-                          attribution = NULL,
-                          layerId = NULL,
-                          group = NULL,
-                          project = FALSE,
-                          method = c("bilinear", "ngb"),
-                          maxBytes = 4 * 1024 * 1024) {
+addStarsImage <- function(
+  map,
+  x,
+  band = 1,
+  colors = "Spectral",
+  opacity = 1,
+  attribution = NULL,
+  layerId = NULL,
+  group = NULL,
+  project = FALSE,
+  method = c("auto", "bilinear", "ngb"),
+  maxBytes = 4 * 1024 * 1024,
+  data = getMapData(map)
+) {
   stopifnot(inherits(x, "stars"))
+
+  raster_is_factor <- raster::is.factor(x)
+  method <- match.arg(method)
+  if (method == "auto") {
+    if (raster_is_factor) {
+      method <- "ngb"
+    } else {
+      method <- "bilinear"
+    }
+  }
+
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
   if (is.null(group)) group = "stars"
   if (is.null(layerId)) layerId = group
+
   if (project) {
+    # if we should project the data
     projected <- sf::st_transform(x, crs = 3857)
+
+    # if data is factor data, make the result factors as well.
+    if (raster_is_factor) {
+      projected <- raster::as.factor(projected)
+    }
   } else {
+    # do not project data
     projected <- x
   }
-  # bounds <- raster::extent(raster::projectExtent(raster::projectExtent(x, crs = sp::CRS(epsg3857)), crs = sp::CRS(epsg4326)))
-  bb = sf::st_as_sfc(sf::st_bbox(projected))
-  bounds = as.numeric(sf::st_bbox(sf::st_transform(bb, 4326)))
-  if (!is.function(colors)) {
-    colors <- leaflet::colorNumeric(colors, domain = NULL,
-                                    na.color = "#00000000", alpha = TRUE)
-  }
+
+  bb <- sf::st_as_sfc(sf::st_bbox(projected))
+  bounds <- as.numeric(sf::st_bbox(sf::st_transform(bb, 4326)))
+
   if(length(dim(projected)) == 2) {
     layer = projected[[1]]
   } else {
     layer = projected[[1]][, , band]
   }
+
+  if (!is.function(colors)) {
+    if (method == "ngb") {
+      # 'factors'
+      colors <- leaflet::colorFactor(
+        colors, domain = NULL, na.color = "#00000000", alpha = TRUE
+      )
+    } else {
+      # 'numeric'
+      colors <- leaflet::colorNumeric(
+        colors, domain = NULL, na.color = "#00000000", alpha = TRUE
+      )
+    }
+  }
+
   tileData <- as.numeric(layer) %>%
     colors() %>% grDevices::col2rgb(alpha = TRUE) %>% as.raw()
-  dim(tileData) <- c(4, as.numeric(nrow(projected)), as.numeric(ncol(projected)))
+  dim(tileData) <- c(4, nrow(projected), ncol(projected))
   pngData <- png::writePNG(tileData)
   if (length(pngData) > maxBytes) {
-    stop("Raster image too large; ",
-         length(pngData),
-         " bytes is greater than maximum ",
-         maxBytes,
-         " bytes")
+    stop(
+      "Raster image too large; ", length(pngData),
+      " bytes is greater than maximum ", maxBytes, " bytes"
+    )
   }
   encoded <- base64enc::base64encode(pngData)
   uri <- paste0("data:image/png;base64,", encoded)
+
   latlng <- list(
     list(bounds[4], bounds[1]),
     list(bounds[2], bounds[3])
   )
-  # map$dependencies <- c(map$dependencies,
-  #                       starsDataDependency(jFn = pathDatFn,
-  #                                           counter = 1,
-  #                                           group = jsgroup))
-  leaflet::invokeMethod(map, getMapData(map), "addRasterImage", uri, latlng,
-                        opacity, attribution, layerId, group) %>%
-    leaflet::expandLimits(c(bounds[2], bounds[4]),
-                          c(bounds[1], bounds[3]))
+
+  leaflet::invokeMethod(
+    map, data, "addRasterImage", uri, latlng,
+    opacity, attribution, layerId, group
+  ) %>%
+    leaflet::expandLimits(
+      c(bounds[2], bounds[4]),
+      c(bounds[1], bounds[3])
+    )
+
 }

@@ -22,15 +22,7 @@
 #' This is used only if `quantiles` is NULL.
 #' If bot `domain` and `quantiles` are set to NULL, stretching is applied
 #' basing on min-max values.
-#' @param maxpixels integer > 0. Maximum number of cells to use for the plot.
-#' If maxpixels < \code{ncell(x)}, sampleRegular is used before plotting.
 #' @param na.color the color to be used for NA pixels
-#' @param method Method used to compute
-#' values for the resampled layer that is passed on to leaflet. mapview does
-#' projection on-the-fly to ensure correct display and therefore needs to know
-#' how to do this projection. The default is 'bilinear' (bilinear interpolation),
-#' which is appropriate for continuous variables. The other option, 'ngb'
-#' (nearest neighbor), is useful for categorical variables.
 #' @param ... additional arguments passed on to \code{\link{addRasterImage}}
 #'
 #' @author
@@ -63,34 +55,26 @@
 #' @export
 
 addRasterRGB <- function(
-  map, x, r = 3, g = 2, b = 1,
+  map,
+  x,
+  r = 3, g = 2, b = 1,
   quantiles = c(0.02, 0.98),
   domain = NULL,
-  maxpixels = 5e+05,
   na.color = "#BEBEBE80",
-  method = c("bilinear", "ngb"),
   ...
 ) {
 
-  if (inherits(map, "mapview")) map = mapview2leaflet(map)
-  method = match.arg(method)
-
   if (inherits(x, "Raster")) {
 
-    x <- rasterCheckSize(x, maxpixels)
-    xout <- CheckAdjustProjection(x, method)
-
-    mat <- cbind(xout[[r]][],
-                 xout[[g]][],
-                 xout[[b]][])
+    mat <- cbind(x[[r]][],
+                 x[[g]][],
+                 x[[b]][])
 
   } else if (inherits(x, "stars")) {
 
-    xout <- CheckAdjustProjection(x, method)
-
-    mat <- cbind(as.vector(xout[[1]][, , r]),
-                 as.vector(xout[[1]][, , g]),
-                 as.vector(xout[[1]][, , b]))
+    mat <- cbind(as.vector(x[[1]][, , r]),
+                 as.vector(x[[1]][, , g]),
+                 as.vector(x[[1]][, , b]))
 
   } else {
 
@@ -131,10 +115,10 @@ addRasterRGB <- function(
   dotlst = list(...)
   dotlst = utils::modifyList(dotlst, list(map = map, colors = p))
   out <- if (inherits(x, "Raster")) {
-    dotlst = utils::modifyList(dotlst, list(x = xout[[r]]))
+    dotlst = utils::modifyList(dotlst, list(x = x[[r]]))
     do.call(addRasterImage, dotlst)
   } else {
-    dotlst = utils::modifyList(dotlst, list(x = xout))
+    dotlst = utils::modifyList(dotlst, list(x = x))
     do.call(addStarsImage, dotlst)
   }
 
@@ -158,54 +142,3 @@ scaleExtent <- function(x) {
   return(raster::extent(c(x_sc, y_sc)))
 }
 
-# Check raster size ------------------------------------------------------------
-rasterCheckSize <- function(x, maxpixels) {
-  if (maxpixels < raster::ncell(x)) {
-    warning(paste("maximum number of pixels for Raster* viewing is",
-                  maxpixels, "; \nthe supplied Raster* has", ncell(x), "\n",
-                  "... decreasing Raster* resolution to", maxpixels, "pixels\n",
-                  "to view full resolution set 'maxpixels = ", ncell(x), "'"))
-    x <- raster::sampleRegular(x, maxpixels, asRaster = TRUE, useGDAL = TRUE)
-  }
-  return(x)
-}
-
-# Project Raster* / stars objects for mapView-----------------------------------
-CheckAdjustProjection <- function(x, method) {
-
-  if (inherits(x, "Raster")) {
-
-    is.fact <- raster::is.factor(x)[1]
-
-    if (is.na(raster::projection(x))) {
-      warning("supplied layer has no projection information and is shown without background map")
-      raster::extent(x) <- scaleExtent(x)
-      raster::projection(x) <- llcrs
-    } else if (is.fact) {
-      x <- raster::projectRaster(
-        x, raster::projectExtent(x, crs = sp::CRS("+init=epsg:3857")),
-        method = "ngb")
-      x <- raster::as.factor(x)
-    } else {
-      x <- raster::projectRaster(
-        x, raster::projectExtent(x, crs = sp::CRS("+init=epsg:3857")),
-        method = method)
-    }
-
-  } else if (inherits(x, "stars")) {
-
-    if (method == "ngb") {
-      x <- stars::st_warp(x, crs = 3857, method = "near")
-    } else {
-      dest <- stars::st_warp(x, crs = 3857, method = "near")
-      dest[[1]] = NA_real_ * dest[[1]] # blank out values
-      x <- stars::st_warp(
-        x, dest,
-        crs = 3857, use_gdal = TRUE, method = method)
-    }
-
-  }
-
-  return(x)
-
-}

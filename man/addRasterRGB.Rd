@@ -6,12 +6,10 @@
 \title{Add an RGB image as a layer}
 \usage{
 addRasterRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02,
-  0.98), domain = NULL, maxpixels = 5e+05, na.color = "#BEBEBE80",
-  method = c("bilinear", "ngb"), ...)
+  0.98), domain = NULL, na.color = "#BEBEBE80", ...)
 
 addStarsRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02, 0.98),
-  domain = NULL, maxpixels = 5e+05, na.color = "#BEBEBE80",
-  method = c("bilinear", "ngb"), ...)
+  domain = NULL, na.color = "#BEBEBE80", ...)
 }
 \arguments{
 \item{map}{a map widget object created from `leaflet()``}
@@ -32,17 +30,7 @@ This is used only if `quantiles` is NULL.
 If bot `domain` and `quantiles` are set to NULL, stretching is applied
 basing on min-max values.}
 
-\item{maxpixels}{integer > 0. Maximum number of cells to use for the plot.
-If maxpixels < \code{ncell(x)}, sampleRegular is used before plotting.}
-
 \item{na.color}{the color to be used for NA pixels}
-
-\item{method}{Method used to compute
-values for the resampled layer that is passed on to leaflet. mapview does
-projection on-the-fly to ensure correct display and therefore needs to know
-how to do this projection. The default is 'bilinear' (bilinear interpolation),
-which is appropriate for continuous variables. The other option, 'ngb'
-(nearest neighbor), is useful for categorical variables.}
 
 \item{...}{additional arguments passed on to \code{\link{addRasterImage}}}
 }

@@ -6,8 +6,8 @@
 \usage{
 addStarsImage(map, x, band = 1, colors = "Spectral", opacity = 1,
   attribution = NULL, layerId = NULL, group = NULL,
-  project = FALSE, method = c("bilinear", "ngb"), maxBytes = 4 * 1024
-  * 1024)
+  project = FALSE, method = c("auto", "bilinear", "ngb"),
+  maxBytes = 4 * 1024 * 1024, data = getMapData(map))
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}

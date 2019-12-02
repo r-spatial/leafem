@@ -104,6 +104,9 @@ addPointFeatures.leaflet <- function(map,
              ...)
 }
 
+### Point Features leaflet_proxy
+addPointFeatures.leaflet_proxy <- addPointFeatures.leaflet
+
 ### Point Features mapdeck
 addPointFeatures.mapdeck <- function(map,
                                      data,
@@ -133,6 +136,9 @@ addLineFeatures.leaflet <- function(map,
              ...)
 }
 
+### Line Features leaflet_proxy
+addLineFeatures.leaflet_proxy <- addLineFeatures.leaflet
+
 ### Line Features mapdeck
 addLineFeatures.mapdeck <- function(map,
                                     data,
@@ -160,6 +166,9 @@ addPolygonFeatures.leaflet <- function(map,
              options = leaflet::leafletOptions(pane = pane),
              ...)
 }
+
+### Point Features leaflet_proxy
+addPolygonFeatures.leaflet_proxy <- addPolygonFeatures.leaflet
 
 ### Polygon Features mapdeck
 addPolygonFeatures.mapdeck <- function(map,

@@ -63,7 +63,7 @@ garnishMap <- function(map, ...) {
 
     for (i in seq(fn_lst)) {
       vec <- arg_nms[[i]]
-      map <- do.call(fn_lst[[i]], append(list(map), arg_lst[vec]))
+      map <- do.call(fn_lst[[i]], append(list(map = map), arg_lst[vec]))
     }
     return(map)
   }

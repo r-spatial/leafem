@@ -4,10 +4,24 @@
 \alias{addLocalFile}
 \title{add vector data to leaflet map directly from the file system}
 \usage{
-addLocalFile(map, file, layerId = NULL, group = NULL, popup = NULL,
-  label = NULL, radius = 10, stroke = TRUE, color = "#03F",
-  weight = 5, opacity = 0.5, fill = TRUE, fillColor = color,
-  fillOpacity = 0.2, dashArray = NULL, options = NULL)
+addLocalFile(
+  map,
+  file,
+  layerId = NULL,
+  group = NULL,
+  popup = NULL,
+  label = NULL,
+  radius = 10,
+  stroke = TRUE,
+  color = "#03F",
+  weight = 5,
+  opacity = 0.5,
+  fill = TRUE,
+  fillColor = color,
+  fillOpacity = 0.2,
+  dashArray = NULL,
+  options = NULL
+)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}

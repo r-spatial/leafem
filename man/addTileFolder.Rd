@@ -4,9 +4,16 @@
 \alias{addTileFolder}
 \title{add raster tiles from a local folder}
 \usage{
-addTileFolder(map, folder, tms = TRUE, layerId = NULL, group = NULL,
-  attribution = NULL, options = leaflet::tileOptions(),
-  data = leaflet::getMapData(map))
+addTileFolder(
+  map,
+  folder,
+  tms = TRUE,
+  layerId = NULL,
+  group = NULL,
+  attribution = NULL,
+  options = leaflet::tileOptions(),
+  data = leaflet::getMapData(map)
+)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}

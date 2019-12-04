@@ -4,8 +4,13 @@
 \alias{updateLayersControl}
 \title{Update the layer controls when adding layers to an existing map.}
 \usage{
-updateLayersControl(map, addBaseGroups = character(0),
-  addOverlayGroups = character(0), position = "topleft", ...)
+updateLayersControl(
+  map,
+  addBaseGroups = character(0),
+  addOverlayGroups = character(0),
+  position = "topleft",
+  ...
+)
 }
 \arguments{
 \item{map}{A \code{leaflet} or \code{mapview} map.}

@@ -53,17 +53,23 @@ garnishMap <- function(map, ...) {
     args <- !funs
 
     arg_lst <- ls[args]
-    nms <- names(arg_lst)[names(arg_lst) != ""]
+    # nms <- names(arg_lst)[names(arg_lst) != ""]
+    #
+    # arg_nms <- lapply(fn_lst, function(i) {
+    #   ma <- match.arg(c("map", nms), names(as.list(args(i))),
+    #                   several.ok = TRUE)
+    #   ma[!ma %in% "map"]
+    # })
 
-    arg_nms <- lapply(fn_lst, function(i) {
-      ma <- match.arg(c("map", nms), names(as.list(args(i))),
-                      several.ok = TRUE)
-      ma[!ma %in% "map"]
-    })
-
-    for (i in seq(fn_lst)) {
-      vec <- arg_nms[[i]]
-      map <- do.call(fn_lst[[i]], append(list(map = map), arg_lst[vec]))
+    for (i in fn_lst) {
+      # vec <- arg_nms[[i]]
+      args_i = try(
+        match.arg(names(arg_lst), names(as.list(i)), several.ok = TRUE)
+        , silent = TRUE
+      )
+      if (!inherits(args_i, "try-error")) {
+        map <- do.call(i, append(list(map = map), ls[args_i]))
+      }
     }
     return(map)
   }

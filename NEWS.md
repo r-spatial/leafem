@@ -1,4 +1,4 @@
-## leafem 0.0.4
+## leafem 0.0.5
 
 new features:
 
@@ -6,6 +6,10 @@ new features:
   * addLocalFile has gained argument `tms` to specify whether tiles are TMS tiles.
   * new function `updateLayersControl` to update (or add) layers control when adding new base or overlay layers to an existing map.
   * added support for 'mapdeck' maps in addFeatures.
+  
+miscellaneous:
+
+  * garnishMap now uses match.arg and try to be more robust.
 
 ## leafem 0.0.1
 

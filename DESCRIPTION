@@ -47,12 +47,16 @@ Imports:
     raster,
     sf,
     sp, 
-    methods
+    methods,
+    base64enc,
+    scales (>= 1.0.0),
+    magrittr,
+    png
 Suggests:
     clipr,
     gdalUtils,
     plainview,
-    png
+    stars
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2

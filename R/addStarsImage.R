@@ -31,9 +31,9 @@
 #'
 #' @examples
 #' \donttest{
-#' require(stars)
-#' require(leaflet)
-#' require(magrittr)
+#' library(stars)
+#' library(leaflet)
+#'
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' leaflet() %>%
@@ -46,7 +46,6 @@
 #' @importFrom sf st_as_sfc st_bbox st_transform
 #' @importFrom base64enc base64encode
 #' @importFrom png writePNG
-#' @importFrom magrittr "%>%"
 #' @export addStarsImage
 addStarsImage <- function(
   map,
@@ -114,8 +113,12 @@ addStarsImage <- function(
     }
   }
 
-  tileData <- as.numeric(layer) %>%
-    colors() %>% grDevices::col2rgb(alpha = TRUE) %>% as.raw()
+  clrs = colors(as.numeric(layer))
+  clrs = grDevices::col2rgb(clrs, alpha = TRUE)
+  tileData = as.raw(clrs)
+
+  # tileData <- as.numeric(layer) %>%
+  #   colors() %>% grDevices::col2rgb(alpha = TRUE) %>% as.raw()
   dim(tileData) <- c(4, nrow(projected), ncol(projected))
   pngData <- png::writePNG(tileData)
   if (length(pngData) > maxBytes) {
@@ -132,13 +135,15 @@ addStarsImage <- function(
     list(bounds[2], bounds[3])
   )
 
-  leaflet::invokeMethod(
+  map = leaflet::invokeMethod(
     map, data, "addRasterImage", uri, latlng,
     opacity, attribution, layerId, group
-  ) %>%
-    leaflet::expandLimits(
-      c(bounds[2], bounds[4]),
-      c(bounds[1], bounds[3])
-    )
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
 
 }

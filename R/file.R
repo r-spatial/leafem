@@ -244,6 +244,7 @@ tiledDataDependency <- function(tiles_dir) {
 
 degrees <- function(angle_rad) (angle_rad * 180) / pi
 
+# copyright Miles McBain
 tilenum_to_lonlat <- function(x, y, zoom){
   n_tiles <- 2^zoom
 

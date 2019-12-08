@@ -25,7 +25,13 @@ Authors@R:
       person(given = "Lorenzo",
              family = "Busetto",
              role = c("ctb"), 
-             email = "lbusett@gmail.com"))           
+             email = "lbusett@gmail.com"),
+      person(given = "Luigi",
+             family = "Ranghetti",
+             role = c("ctb")),
+      person(given = "Miles",
+             family = "McBain",
+             role = c("ctb")))           
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
     many of which are used by package 'mapview'. 

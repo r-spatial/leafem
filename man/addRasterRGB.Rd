@@ -5,11 +5,29 @@
 \alias{addStarsRGB}
 \title{Add an RGB image as a layer}
 \usage{
-addRasterRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02,
-  0.98), domain = NULL, na.color = "#BEBEBE80", ...)
+addRasterRGB(
+  map,
+  x,
+  r = 3,
+  g = 2,
+  b = 1,
+  quantiles = c(0.02, 0.98),
+  domain = NULL,
+  na.color = "#BEBEBE80",
+  ...
+)
 
-addStarsRGB(map, x, r = 3, g = 2, b = 1, quantiles = c(0.02, 0.98),
-  domain = NULL, na.color = "#BEBEBE80", ...)
+addStarsRGB(
+  map,
+  x,
+  r = 3,
+  g = 2,
+  b = 1,
+  quantiles = c(0.02, 0.98),
+  domain = NULL,
+  na.color = "#BEBEBE80",
+  ...
+)
 }
 \arguments{
 \item{map}{a map widget object created from `leaflet()``}

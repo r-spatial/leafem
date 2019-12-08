@@ -4,10 +4,20 @@
 \alias{addStarsImage}
 \title{Add stars layer to a leaflet map}
 \usage{
-addStarsImage(map, x, band = 1, colors = "Spectral", opacity = 1,
-  attribution = NULL, layerId = NULL, group = NULL,
-  project = FALSE, method = c("auto", "bilinear", "ngb"),
-  maxBytes = 4 * 1024 * 1024, data = getMapData(map))
+addStarsImage(
+  map,
+  x,
+  band = 1,
+  colors = "Spectral",
+  opacity = 1,
+  attribution = NULL,
+  layerId = NULL,
+  group = NULL,
+  project = FALSE,
+  method = c("auto", "bilinear", "ngb"),
+  maxBytes = 4 * 1024 * 1024,
+  data = getMapData(map)
+)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}
@@ -55,9 +65,9 @@ for details.
 }
 \examples{
 \donttest{
-require(stars)
-require(leaflet)
-require(magrittr)
+library(stars)
+library(leaflet)
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 leaflet() \%>\%

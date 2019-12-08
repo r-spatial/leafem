@@ -30,9 +30,10 @@
 garnishMap <- function(map, ...) {
 
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, c("leaflet","leaflet_proxy", "mapdeck")))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
 
-  ls <- list(...)
+  ls = list(...)
+  # if (is.null(names(ls))) ls <- unlist(ls, recursive = FALSE)
 
   funs <- sapply(ls, is.function)
 
@@ -45,21 +46,30 @@ garnishMap <- function(map, ...) {
       return(tst)
     })
     fn_lst <- fn_lst[!sapply(fn_lst, is.null)]
+    # mvopts_funs = sapply(mapviewOptions(console = FALSE), is.function)
+    # mvopts_funs_nms = names(mapviewOptions(console = FALSE)[mvopts_funs])
+    # fn_lst = fn_lst[!names(fn_lst) %in% mvopts_funs_nms]
 
     args <- !funs
 
     arg_lst <- ls[args]
-    nms <- names(arg_lst)[names(arg_lst) != ""]
+    # nms <- names(arg_lst)[names(arg_lst) != ""]
+    #
+    # arg_nms <- lapply(fn_lst, function(i) {
+    #   ma <- match.arg(c("map", nms), names(as.list(args(i))),
+    #                   several.ok = TRUE)
+    #   ma[!ma %in% "map"]
+    # })
 
-    arg_nms <- lapply(fn_lst, function(i) {
-      ma <- match.arg(c("map", nms), names(as.list(args(i))),
-                      several.ok = TRUE)
-      ma[!ma %in% "map"]
-    })
-
-    for (i in seq(fn_lst)) {
-      vec <- arg_nms[[i]]
-      map <- do.call(fn_lst[[i]], append(list(map), arg_lst[vec]))
+    for (i in fn_lst) {
+      # vec <- arg_nms[[i]]
+      args_i = try(
+        match.arg(names(arg_lst), names(as.list(i)), several.ok = TRUE)
+        , silent = TRUE
+      )
+      if (!inherits(args_i, "try-error")) {
+        map <- do.call(i, append(list(map = map), ls[args_i]))
+      }
     }
     return(map)
   }
@@ -70,7 +80,8 @@ garnishMap <- function(map, ...) {
 ### decorateMap(map, list(addCircleMarkers), list(list(data = breweries91)))
 decorateMap <- function(map, funs, args) {
   for (i in seq(funs)) {
-    map <- do.call("garnishMap", c(list(map), funs[[i]], args[[i]]))
+    map <- do.call("garnishMap", c(list(map), funs[[i]], args))
   }
   return(map)
 }
+

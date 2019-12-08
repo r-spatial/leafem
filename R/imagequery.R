@@ -7,7 +7,7 @@
 #' be queried. Standard query is on 'mousmove', but can be changed to 'click'.
 #' Note that for this to work, the \code{layerId} needs to be the same as the
 #' one that was set in \code{\link[leaflet]{addRasterImage}} or
-#' \code{link{addStrasImage}}. Currently only works for
+#' \code{\link{addStarsImage}}. Currently only works for
 #' numeric values (i.e. numeric/integer and factor values are supported).
 #'
 #' @param map the map with the RasterLayer to be queried.
@@ -16,7 +16,7 @@
 #' @param group the group of the RasterLayer to be queried.
 #' @param layerId the layerId of the RasterLayer to be queried. Needs to be the
 #'   same as supplied in \code{\link[leaflet]{addRasterImage}} or
-#'   \code{link{addStrasImage}}.
+#'   \code{\link{addStarsImage}}.
 #' @param project whether to project the RasterLayer to conform with leaflets
 #'   expected crs. Defaults to \code{TRUE} and things are likely to go haywire
 #'   if set to \code{FALSE}.

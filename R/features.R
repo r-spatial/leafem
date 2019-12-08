@@ -35,7 +35,7 @@ addFeatures <- function(map,
                         pane = "overlayPane",
                         ...) {
 
-  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapview")))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapview", "mapdeck")))
 
   if (inherits(map, "mapview")) {
     if (missing(data)) {
@@ -88,10 +88,14 @@ addFeatures <- function(map,
 mw = 800
 
 ### Point Features
-addPointFeatures <- function(map,
-                             data,
-                             pane,
-                             ...) {
+addPointFeatures = function(map, ...) UseMethod("addPointFeatures")
+
+
+### Point Features leaflet
+addPointFeatures.leaflet <- function(map,
+                                     data,
+                                     pane,
+                                     ...) {
   garnishMap(map, leaflet::addCircleMarkers,
              data = sf::st_zm(sf::st_cast(data, "POINT")),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
@@ -100,11 +104,30 @@ addPointFeatures <- function(map,
              ...)
 }
 
+### Point Features leaflet_proxy
+addPointFeatures.leaflet_proxy <- addPointFeatures.leaflet
+
+### Point Features mapdeck
+addPointFeatures.mapdeck <- function(map,
+                                     data,
+                                     ...) {
+  garnishMap(
+    map
+    , mapdeck::add_pointcloud
+    , data = data #sf::st_zm(sf::st_cast(data, "POINT"))
+    , ...
+  )
+}
+
+
 ### Line Features
-addLineFeatures <- function(map,
-                            data,
-                            pane,
-                            ...) {
+addLineFeatures = function(map, ...) UseMethod("addLineFeatures")
+
+### Line Features leaflet
+addLineFeatures.leaflet <- function(map,
+                                    data,
+                                    pane,
+                                    ...) {
   garnishMap(map, leaflet::addPolylines,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
@@ -113,17 +136,50 @@ addLineFeatures <- function(map,
              ...)
 }
 
-### PolygonFeatures
-addPolygonFeatures <- function(map,
-                               data,
-                               pane,
-                               ...) {
+### Line Features leaflet_proxy
+addLineFeatures.leaflet_proxy <- addLineFeatures.leaflet
+
+### Line Features mapdeck
+addLineFeatures.mapdeck <- function(map,
+                                    data,
+                                    ...) {
+  garnishMap(
+    map
+    , mapdeck::add_path
+    , data = sf::st_zm(data)
+    , ...
+  )
+}
+
+### Polygon Features
+addPolygonFeatures = function(map, ...) UseMethod("addPolygonFeatures")
+
+### Polygon Features leaflet
+addPolygonFeatures.leaflet <- function(map,
+                                       data,
+                                       pane,
+                                       ...) {
   garnishMap(map, leaflet::addPolygons,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
              options = leaflet::leafletOptions(pane = pane),
              ...)
+}
+
+### Point Features leaflet_proxy
+addPolygonFeatures.leaflet_proxy <- addPolygonFeatures.leaflet
+
+### Polygon Features mapdeck
+addPolygonFeatures.mapdeck <- function(map,
+                                       data,
+                                       ...) {
+  garnishMap(
+    map
+    , mapdeck::add_polygon
+    , data = sf::st_zm(data)
+    , ...
+  )
 }
 
 ### GeometryCollections

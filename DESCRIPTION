@@ -1,7 +1,7 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.0.2
+Version: 0.0.5
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -27,8 +27,9 @@ Authors@R:
              role = c("ctb"), 
              email = "lbusett@gmail.com"))           
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
-Description: Provides extensions for package 'leaflet', many of which are used 
-    by package 'mapview'. Focus is on functionality readily available in 
+Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
+    many of which are used by package 'mapview'. 
+    Focus is on functionality readily available in 
     Geographic Information Systems such as 'Quantum GIS'. Includes functions
     to display coordinates of mouse pointer position, query image values via 
     mouse pointer and zoom-to-layer buttons. Additionally, provides a feature 
@@ -42,6 +43,7 @@ Imports:
     htmltools (>= 0.3),
     htmlwidgets,
     leaflet (>= 2.0.1),
+    mapdeck,
     raster,
     sf,
     sp, 
@@ -57,4 +59,4 @@ Suggests:
     stars
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

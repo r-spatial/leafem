@@ -65,6 +65,16 @@ addRasterRGB <- function(
   ...
 ) {
 
+  # this allows using `addRasterRGB` directly on a leaflet pipe, without
+  # specifying `data` (e.g., leaflet(plainview::poppendorf) %>%
+  #  addProviderTiles("OpenStreetMap") %>% addRasterRGB())
+  #
+  if (inherits(map, c("leaflet", "leaflet_proxy"))) {
+    if (missing(x)) {
+      x <- attributes(map[["x"]])[["leafletData"]]
+    }
+  }
+
   if (inherits(x, "Raster")) {
 
     mat <- cbind(x[[r]][],

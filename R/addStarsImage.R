@@ -46,7 +46,7 @@
 #' @importFrom sf st_as_sfc st_bbox st_transform
 #' @importFrom base64enc base64encode
 #' @importFrom png writePNG
-#' @export addStarsImage
+#' @export
 addStarsImage <- function(
   map,
   x,
@@ -61,6 +61,17 @@ addStarsImage <- function(
   maxBytes = 4 * 1024 * 1024,
   data = getMapData(map)
 ) {
+
+  # this allows using `addStarsImage` directly on a leaflet pipe, without
+  # specifying `x` (e.g., leaflet(read_stars(tif)) %>%
+  # addProviderTiles("OpenStreetMap") %>% addStarsImage())
+  #
+  if (inherits(map, c("leaflet", "leaflet_proxy"))) {
+    if (missing(x)) {
+      x <- attributes(map[["x"]])[["leafletData"]]
+    }
+  }
+
   stopifnot(inherits(x, "stars"))
 
   raster_is_factor <- raster::is.factor(x)

@@ -42,33 +42,24 @@ garnishMap <- function(map, ...) {
   } else {
     fn_lst <- lapply(ls[funs], function(i) {
       tst <- try(match.fun(i), silent = TRUE)
-      if (class(tst) == "try-error") tst <- NULL
+      if (inherits(tst, "try-error")) tst <- NULL
       return(tst)
     })
     fn_lst <- fn_lst[!sapply(fn_lst, is.null)]
-    # mvopts_funs = sapply(mapviewOptions(console = FALSE), is.function)
-    # mvopts_funs_nms = names(mapviewOptions(console = FALSE)[mvopts_funs])
-    # fn_lst = fn_lst[!names(fn_lst) %in% mvopts_funs_nms]
-
-    args <- !funs
-
-    arg_lst <- ls[args]
-    # nms <- names(arg_lst)[names(arg_lst) != ""]
-    #
-    # arg_nms <- lapply(fn_lst, function(i) {
-    #   ma <- match.arg(c("map", nms), names(as.list(args(i))),
-    #                   several.ok = TRUE)
-    #   ma[!ma %in% "map"]
-    # })
 
     for (i in fn_lst) {
-      # vec <- arg_nms[[i]]
       args_i = try(
-        match.arg(names(arg_lst), names(as.list(i)), several.ok = TRUE)
+        match.arg(names(ls), names(as.list(i)), several.ok = TRUE)
         , silent = TRUE
       )
       if (!inherits(args_i, "try-error")) {
-        map <- do.call(i, append(list(map = map), ls[args_i]))
+        maptry = try(
+          do.call(i, append(list(map = map), ls[args_i]))
+          , silent = TRUE
+        )
+        if (!inherits(maptry, "try-error")) {
+          map <- maptry
+        }
       }
     }
     return(map)

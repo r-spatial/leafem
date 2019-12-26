@@ -96,6 +96,7 @@ addPointFeatures.leaflet <- function(map,
                                      data,
                                      pane,
                                      ...) {
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   garnishMap(map, leaflet::addCircleMarkers,
              data = sf::st_zm(sf::st_cast(data, "POINT")),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
@@ -106,6 +107,9 @@ addPointFeatures.leaflet <- function(map,
 
 ### Point Features leaflet_proxy
 addPointFeatures.leaflet_proxy <- addPointFeatures.leaflet
+
+### Point Features mapview
+addPointFeatures.mapview = addPointFeatures.leaflet
 
 ### Point Features mapdeck
 addPointFeatures.mapdeck <- function(map,
@@ -128,6 +132,7 @@ addLineFeatures.leaflet <- function(map,
                                     data,
                                     pane,
                                     ...) {
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   garnishMap(map, leaflet::addPolylines,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
@@ -138,6 +143,9 @@ addLineFeatures.leaflet <- function(map,
 
 ### Line Features leaflet_proxy
 addLineFeatures.leaflet_proxy <- addLineFeatures.leaflet
+
+### Line Features mapview
+addLineFeatures.mapview = addLineFeatures.leaflet
 
 ### Line Features mapdeck
 addLineFeatures.mapdeck <- function(map,
@@ -159,6 +167,7 @@ addPolygonFeatures.leaflet <- function(map,
                                        data,
                                        pane,
                                        ...) {
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   garnishMap(map, leaflet::addPolygons,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
@@ -167,8 +176,11 @@ addPolygonFeatures.leaflet <- function(map,
              ...)
 }
 
-### Point Features leaflet_proxy
+### Polygon Features leaflet_proxy
 addPolygonFeatures.leaflet_proxy <- addPolygonFeatures.leaflet
+
+### Polygon Features mapview
+addPolygonFeatures.mapview = addPolygonFeatures.leaflet
 
 ### Polygon Features mapdeck
 addPolygonFeatures.mapdeck <- function(map,

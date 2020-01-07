@@ -232,6 +232,53 @@ addTileFolder = function(map,
 }
 
 
+## flatgeobuf
+addFgb = function(map,
+                  file,
+                  group = NULL) {
+
+  if (is.null(group))
+    group = basename(tools::file_path_sans_ext(file))
+
+  path_layer = tempfile()
+  dir.create(path_layer)
+  path_layer = paste0(path_layer, "/", group, "_layer.fgb")
+
+  file.copy(file, path_layer, overwrite = TRUE)
+
+  map$dependencies = c(
+    map$dependencies
+    , fgbDependencies()
+  )
+
+  map$dependencies = c(
+    map$dependencies
+    , fileAttachment(path_layer, group)
+  )
+
+  leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , "addFlatGeoBuf"
+    , group
+  )
+
+}
+
+fgbDependencies = function() {
+  list(
+    htmltools::htmlDependency(
+      "FlatGeoBuf"
+      , '0.0.1'
+      , system.file("htmlwidgets/lib/FlatGeoBuf", package = "leafem")
+      , script = c(
+        'fgb.js'
+        , 'flatgeobuf-geojson.min.js'
+      )
+    )
+  )
+}
+
 tiledDataDependency <- function(tiles_dir) {
   list(
     htmltools::htmlDependency(
@@ -280,4 +327,15 @@ fileDependency <- function(fn, group) {
       version = '0.0.1',
       src = c(file = data_dir),
       script = data_file))
+}
+
+fileAttachment = function(fn, group) {
+  data_dir <- dirname(fn)
+  data_file <- basename(fn)
+  list(
+    htmltools::htmlDependency(
+      name = group,
+      version = '0.0.1',
+      src = c(file = data_dir),
+      attachment = data_file))
 }

@@ -235,7 +235,20 @@ addTileFolder = function(map,
 ## flatgeobuf
 addFgb = function(map,
                   file,
-                  group = NULL) {
+                  layerId = NULL,
+                  group = NULL,
+                  popup = NULL,
+                  label = NULL,
+                  radius = 10,
+                  stroke = TRUE,
+                  color = "#03F",
+                  weight = 5,
+                  opacity = 0.5,
+                  fill = TRUE,
+                  fillColor = color,
+                  fillOpacity = 0.2,
+                  dashArray = NULL,
+                  options = NULL) {
 
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
@@ -245,6 +258,17 @@ addFgb = function(map,
   path_layer = paste0(path_layer, "/", group, "_layer.fgb")
 
   file.copy(file, path_layer, overwrite = TRUE)
+
+  style_list = list(radius = radius,
+                    stroke = stroke,
+                    color = color,
+                    weight = weight,
+                    opacity = opacity,
+                    fill = fill,
+                    fillColor = fillColor,
+                    fillOpacity = fillOpacity)
+
+  options = utils::modifyList(as.list(options), style_list)
 
   map$dependencies = c(
     map$dependencies
@@ -261,6 +285,7 @@ addFgb = function(map,
     , leaflet::getMapData(map)
     , "addFlatGeoBuf"
     , group
+    , style_list
   )
 
 }

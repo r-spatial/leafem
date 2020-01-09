@@ -24,7 +24,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group, style) {
 //fetch('https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb')
 //.then(handleResponse)
 
-  var layer = fetch(data_fl)
+  fetch(data_fl)
   .then(handleResponse);
 
   //map.fitBounds(layer.getBounds());

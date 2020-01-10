@@ -286,6 +286,8 @@ addFgb = function(map,
     , leaflet::getMapData(map)
     , "addFlatGeoBuf"
     , group
+    , popup
+    , label
     , style_list
     , gl
   )

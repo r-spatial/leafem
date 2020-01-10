@@ -1,4 +1,8 @@
-LeafletWidget.methods.addFlatGeoBuf = function (group, style, gl) {
+LeafletWidget.methods.addFlatGeoBuf = function (group,
+                                                popup,
+                                                label,
+                                                style,
+                                                gl) {
 
   var map = this;
   var data_fl = document.getElementById(group + '-1-attachment' ).href;
@@ -19,10 +23,30 @@ LeafletWidget.methods.addFlatGeoBuf = function (group, style, gl) {
               }).glLayer, null, null, group);
             it.next().then(handleResult);
           } else {
-            map.layerManager.addLayer(
-              L.geoJSON(result.value, {
-                style: style
-             }), null, null, group);
+
+            if (popup) {
+              //pop = function(feature, layer) {
+              //  var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+              //  layer.bindPopup(popUp, { maxWidth: 2000 });
+              pop = function(feature, layer) {
+                layer.bindPopup(feature.properties[popup]);
+              };
+            } else {
+              pop = null;
+            }
+
+            lyr = L.geoJSON(result.value, {
+              style: style,
+              onEachFeature: pop
+            });
+
+            if (label) {
+              lyr.bindTooltip(function (layer) {
+                 return layer.feature.properties[label];
+              }, {sticky: true});
+            }
+
+            map.layerManager.addLayer(lyr, null, null, group);
             it.next().then(handleResult);
           }
         }
@@ -34,7 +58,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group, style, gl) {
 //fetch('https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb')
 //.then(handleResponse)
 
-  fetch(data_fl)
+  fetch(data_fl) //, {mode: 'no-cors'})
   .then(handleResponse);
 
   //map.fitBounds(layer.getBounds());

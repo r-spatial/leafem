@@ -235,6 +235,7 @@ addTileFolder = function(map,
 ## flatgeobuf
 addFgb = function(map,
                   file,
+                  gl = FALSE,
                   layerId = NULL,
                   group = NULL,
                   popup = NULL,
@@ -286,6 +287,7 @@ addFgb = function(map,
     , "addFlatGeoBuf"
     , group
     , style_list
+    , gl
   )
 
 }

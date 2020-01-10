@@ -16,7 +16,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group, style, gl) {
                 map: map,
                 data: result.value,
                 className: group
-              }), null, null, group);
+              }).glLayer, null, null, group);
             it.next().then(handleResult);
           } else {
             map.layerManager.addLayer(

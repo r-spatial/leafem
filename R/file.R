@@ -289,6 +289,7 @@ addFgb = function(map,
     , popup
     , label
     , style_list
+    , options
     , gl
   )
 

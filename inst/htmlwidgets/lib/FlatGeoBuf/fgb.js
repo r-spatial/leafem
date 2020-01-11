@@ -2,6 +2,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
                                                 popup,
                                                 label,
                                                 style,
+                                                options,
                                                 gl) {
 
   var map = this;
@@ -29,20 +30,23 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
               //  var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
               //  layer.bindPopup(popUp, { maxWidth: 2000 });
               pop = function(feature, layer) {
-                layer.bindPopup(feature.properties[popup]);
+                layer.bindPopup(feature.properties[popup].toString());
               };
             } else {
               pop = null;
             }
 
             lyr = L.geoJSON(result.value, {
+              pointToLayer: function (feature, latlng) {
+                  return L.circleMarker(latlng, options);
+              },
               style: style,
               onEachFeature: pop
             });
 
             if (label) {
               lyr.bindTooltip(function (layer) {
-                 return layer.feature.properties[label];
+                 return layer.feature.properties[label].toString();
               }, {sticky: true});
             }
 

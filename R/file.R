@@ -234,7 +234,8 @@ addTileFolder = function(map,
 
 ## flatgeobuf
 addFgb = function(map,
-                  file,
+                  file = NULL,
+                  url = NULL,
                   gl = FALSE,
                   layerId = NULL,
                   group = NULL,
@@ -251,47 +252,82 @@ addFgb = function(map,
                   dashArray = NULL,
                   options = NULL) {
 
+  if (is.null(file) & is.null(url))
+    stop("need either file or url!\n", call. = FALSE)
+
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
 
-  path_layer = tempfile()
-  dir.create(path_layer)
-  path_layer = paste0(path_layer, "/", group, "_layer.fgb")
+  if (!is.null(file)) {
+    path_layer = tempfile()
+    dir.create(path_layer)
+    path_layer = paste0(path_layer, "/", group, "_layer.fgb")
 
-  file.copy(file, path_layer, overwrite = TRUE)
+    file.copy(file, path_layer, overwrite = TRUE)
 
-  style_list = list(radius = radius,
-                    stroke = stroke,
-                    color = color,
-                    weight = weight,
-                    opacity = opacity,
-                    fill = fill,
-                    fillColor = fillColor,
-                    fillOpacity = fillOpacity)
+    style_list = list(radius = radius,
+                      stroke = stroke,
+                      color = color,
+                      weight = weight,
+                      opacity = opacity,
+                      fill = fill,
+                      fillColor = fillColor,
+                      fillOpacity = fillOpacity)
 
-  options = utils::modifyList(as.list(options), style_list)
+    options = utils::modifyList(as.list(options), style_list)
 
-  map$dependencies = c(
-    map$dependencies
-    , fgbDependencies()
-  )
+    map$dependencies = c(
+      map$dependencies
+      , fgbDependencies()
+    )
 
-  map$dependencies = c(
-    map$dependencies
-    , fileAttachment(path_layer, group)
-  )
+    map$dependencies = c(
+      map$dependencies
+      , fileAttachment(path_layer, group)
+    )
 
-  leaflet::invokeMethod(
-    map
-    , leaflet::getMapData(map)
-    , "addFlatGeoBuf"
-    , group
-    , popup
-    , label
-    , style_list
-    , options
-    , gl
-  )
+    leaflet::invokeMethod(
+      map
+      , leaflet::getMapData(map)
+      , "addFlatGeoBuf"
+      , group
+      , url
+      , popup
+      , label
+      , style_list
+      , options
+      , gl
+    )
+  } else {
+    style_list = list(radius = radius,
+                      stroke = stroke,
+                      color = color,
+                      weight = weight,
+                      opacity = opacity,
+                      fill = fill,
+                      fillColor = fillColor,
+                      fillOpacity = fillOpacity)
+
+    options = utils::modifyList(as.list(options), style_list)
+
+    map$dependencies = c(
+      map$dependencies
+      , fgbDependencies()
+    )
+
+    leaflet::invokeMethod(
+      map
+      , leaflet::getMapData(map)
+      , "addFlatGeoBuf"
+      , group
+      , url
+      , popup
+      , label
+      , style_list
+      , options
+      , gl
+    )
+  }
 
 }
 

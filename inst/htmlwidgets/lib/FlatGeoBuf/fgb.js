@@ -1,4 +1,5 @@
 LeafletWidget.methods.addFlatGeoBuf = function (group,
+                                                url,
                                                 popup,
                                                 label,
                                                 style,
@@ -6,7 +7,14 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
                                                 gl) {
 
   var map = this;
-  var data_fl = document.getElementById(group + '-1-attachment' ).href;
+
+  var data_fl = document.getElementById(group + '-1-attachment');
+
+  if (data_fl === null) {
+    data_fl = url;
+  } else {
+    data_fl = data_fl.href;
+  }
 
   function handleResponse(response) {
     // use fgb JavaScript API to iterate stream into results (features as geojson)

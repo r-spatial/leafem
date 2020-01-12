@@ -26,12 +26,16 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
           } else {
 
             if (popup) {
-              //pop = function(feature, layer) {
-              //  var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
-              //  layer.bindPopup(popUp, { maxWidth: 2000 });
-              pop = function(feature, layer) {
-                layer.bindPopup(feature.properties[popup].toString());
-              };
+              if (popup === true) {
+                pop = function(feature, layer) {
+                  var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+                  layer.bindPopup(popUp, { maxWidth: 2000 });
+                };
+              } else {
+                pop = function(feature, layer) {
+                  layer.bindPopup(feature.properties[popup].toString());
+                };
+              }
             } else {
               pop = null;
             }

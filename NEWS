@@ -1,4 +1,4 @@
-leafem 0.0.6
+leafem 0.0.7
 
 new features:
 
@@ -8,6 +8,7 @@ new features:
   * added support for 'mapdeck' maps in addFeatures.
   * added methods addStarsImage (moved from mapview) and addRasterRGB. Thanks to Luigi Ranghetti (https://github.com/r-spatial/leafem/pull/1).
   * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto (https://github.com/r-spatial/leafem/pull/2).
+  * new function `addFgb` to add flatgeobuf files from file or url.
   
 miscellaneous:
 

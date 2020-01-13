@@ -5,8 +5,8 @@
 #'   reprojected on-the-fly if not in "longlat".
 #' @param layerId the layer id.
 #' @param group the group name for the file to be added to \code{map}.
-#' @param popup logical, whether to show the feature properties (fields) in
-#'   popups.
+#' @param popup either a logical of whether to show the feature properties
+#'   (fields) in popups or the name of the field to show in popups.
 #' @param label name of the field to be shown as a tooltip.
 #' @param radius the size of the circle markers.
 #' @param stroke whether to draw stroke along the path
@@ -54,6 +54,8 @@ addLocalFile = function(map,
                         fillOpacity = 0.2,
                         dashArray = NULL,
                         options = NULL) {
+
+  if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
   geom_type = gdalUtils::ogrinfo(file)
   if (any(grepl("Line String", geom_type))) fill = FALSE
@@ -232,7 +234,51 @@ addTileFolder = function(map,
 }
 
 
-## flatgeobuf
+#' add a flatgeobuf file to leaflet map
+#'
+#' @description
+#'   flatgeobuf is a performant binary geo-spatial file format suitable for
+#'   serving large data. For more details see
+#'   \url{https://github.com/bjornharrtell/flatgeobuf} and the respective
+#'   documentation for the GDAL/OGR driver at
+#'   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
+#'   \cr
+#'   In contrast to classical ways of serving data from R onto a leaflet map,
+#'   flatgeobuf will stream the data chunk by chunk so that rendering of the map
+#'   is more or less instantaneous. The map is responsive while data is still
+#'   being streamed so that popup queries, zooming and panning will work even
+#'   though not all data has been rendered yet. This makes for a rather pleasant
+#'   user experience as we don't have to wait for all data to be added to the map
+#'   before interacting with it.
+#'
+#' @param map a mapview or leaflet object.
+#' @param file file path to the .fgb file to be added to \code{map}.
+#'   If set, \code{url} is ignored.
+#' @param url url of the data to be added to \code{map}. Only respected if
+#'   \code{file = NULL}.
+#' @param layerId the layer id.
+#' @param group the group name for the file to be added to \code{map}.
+#' @param popup either a logical of whether to show the feature properties
+#'   (fields) in popups or the name of the field to show in popups.
+#' @param label name of the field to be shown as a tooltip.
+#' @param radius the size of the circle markers.
+#' @param stroke whether to draw stroke along the path
+#'   (e.g. the borders of polygons or circles).
+#' @param color stroke color.
+#' @param weight stroke width in pixels.
+#' @param opacity stroke opacity.
+#' @param fill whether to fill the path with color
+#'   (e.g. filling on polygons or circles).
+#' @param fillColor fill color.
+#' @param fillOpacity fill opacity.
+#' @param dashArray a string that defines the stroke dash pattern.
+#' @param options a list of extra options for tile layers, popups, paths
+#'   (circles, rectangles, polygons, ...), or other map elements.
+#'
+#' @export addFgb
+#' @name addFgb
+#' @rdname addFgb
+#' @aliases addFgb
 addFgb = function(map,
                   file = NULL,
                   url = NULL,
@@ -251,6 +297,8 @@ addFgb = function(map,
                   fillOpacity = 0.2,
                   dashArray = NULL,
                   options = NULL) {
+
+  if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
   if (is.null(file) & is.null(url))
     stop("need either file or url!\n", call. = FALSE)

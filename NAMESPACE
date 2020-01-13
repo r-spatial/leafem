@@ -3,6 +3,7 @@
 export(addCopyExtent)
 export(addExtent)
 export(addFeatures)
+export(addFgb)
 export(addHomeButton)
 export(addImageQuery)
 export(addLocalFile)

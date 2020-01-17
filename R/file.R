@@ -275,6 +275,29 @@ addTileFolder = function(map,
 #' @param options a list of extra options for tile layers, popups, paths
 #'   (circles, rectangles, polygons, ...), or other map elements.
 #'
+#' @examples
+#'  if (interactive()) {
+#'    library(leaflet)
+#'    library(leafem)
+#'
+#'    # via URL
+#'    leaflet() %>%
+#'      addTiles() %>%
+#'      leafem:::addFgb(
+#'        url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+#'        , group = "counties"
+#'        , label = "NAME"
+#'        , popup = TRUE
+#'        , fillColor = "blue"
+#'        , fillOpacity = 0.6
+#'        , color = "black"
+#'        , weight = 1
+#'      ) %>%
+#'        addLayersControl(overlayGroups = c("counties")) %>%
+#'        addMouseCoordinates() %>%
+#'        setView(lng = -105.644, lat = 51.618, zoom = 3)
+#'  }
+#'
 #' @export addFgb
 #' @name addFgb
 #' @rdname addFgb

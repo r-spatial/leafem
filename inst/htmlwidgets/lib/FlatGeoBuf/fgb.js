@@ -3,10 +3,10 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
                                                 popup,
                                                 label,
                                                 style,
-                                                options,
-                                                gl) {
+                                                options) {
 
   var map = this;
+  var gl = false;
 
   var data_fl = document.getElementById(group + '-1-attachment');
 

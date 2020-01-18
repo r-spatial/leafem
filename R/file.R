@@ -281,10 +281,12 @@ addTileFolder = function(map,
 #'    library(leafem)
 #'
 #'    # via URL
+#'    url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+#'
 #'    leaflet() %>%
 #'      addTiles() %>%
 #'      leafem:::addFgb(
-#'        url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+#'        url = url
 #'        , group = "counties"
 #'        , label = "NAME"
 #'        , popup = TRUE
@@ -305,7 +307,6 @@ addTileFolder = function(map,
 addFgb = function(map,
                   file = NULL,
                   url = NULL,
-                  gl = FALSE,
                   layerId = NULL,
                   group = NULL,
                   popup = NULL,
@@ -367,7 +368,6 @@ addFgb = function(map,
       , label
       , style_list
       , options
-      , gl
     )
   } else {
     style_list = list(radius = radius,
@@ -396,7 +396,6 @@ addFgb = function(map,
       , label
       , style_list
       , options
-      , gl
     )
   }
 

@@ -8,7 +8,6 @@ addFgb(
   map,
   file = NULL,
   url = NULL,
-  gl = FALSE,
   layerId = NULL,
   group = NULL,
   popup = NULL,
@@ -87,10 +86,12 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
    library(leafem)
 
    # via URL
+   url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+
    leaflet() \%>\%
      addTiles() \%>\%
      leafem:::addFgb(
-       url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+       url = url
        , group = "counties"
        , label = "NAME"
        , popup = TRUE

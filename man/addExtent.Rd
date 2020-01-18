@@ -17,16 +17,14 @@ addExtent(map, data, ...)
 This function adds the bounding box of a spatial object to a leaflet or mapview map.
 }
 \examples{
-library(sf)
 library(leaflet)
-indata <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 
 # Usage in leaflet
 leaflet() \%>\%
   addProviderTiles("OpenStreetMap") \%>\%
-  addExtent(indata)
+  addExtent(gadmCHE)
 
-leaflet(indata) \%>\%
+leaflet(gadmCHE) \%>\%
   addProviderTiles("OpenStreetMap") \%>\%
   addExtent()
 }

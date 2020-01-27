@@ -77,7 +77,7 @@ addStarsImage <- function(
   if (any(attr(attr(x, "dimensions"), "raster")$affine != 0) |
       attr(attr(x, "dimensions"), "raster")$curvilinear)
     warning(
-      "cannot handle curvilinear or sheared stars images. Rendering regular gird."
+      "cannot handle curvilinear or sheared stars images. Rendering regular grid."
       , call. = FALSE
     )
 

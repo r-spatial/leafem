@@ -74,6 +74,13 @@ addStarsImage <- function(
 
   stopifnot(inherits(x, "stars"))
 
+  if (any(attr(attr(x, "dimensions"), "raster")$affine != 0) |
+      attr(attr(x, "dimensions"), "raster")$curvilinear)
+    warning(
+      "cannot handle curvilinear or sheared stars images. Rendering regular gird."
+      , call. = FALSE
+    )
+
   raster_is_factor <- raster::is.factor(x)
   method <- match.arg(method)
   if (method == "auto") {

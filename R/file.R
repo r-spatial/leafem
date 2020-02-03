@@ -281,7 +281,7 @@ addTileFolder = function(map,
 #'    library(leafem)
 #'
 #'    # via URL
-#'    url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb"
+#'    url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/3.0.1/test/data/UScounties.fgb"
 #'
 #'    leaflet() %>%
 #'      addTiles() %>%

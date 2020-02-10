@@ -69,7 +69,6 @@ from \code{\link{plotRGB}}.
   require(stars)
   require(plainview)
   require(leaflet)
-  require(magrittr)
 
   leaflet() \%>\%
     addTiles(group = "OpenStreetMap") \%>\%

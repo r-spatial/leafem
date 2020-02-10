@@ -5,13 +5,7 @@
 \alias{removeHomeButton}
 \title{Add a home button / zoom-to-layer button to a map.}
 \usage{
-addHomeButton(
-  map,
-  ext,
-  layer.name = "layer",
-  position = "bottomright",
-  add = TRUE
-)
+addHomeButton(map, ext, group = "layer", position = "bottomright", add = TRUE)
 
 removeHomeButton(map)
 }
@@ -20,7 +14,7 @@ removeHomeButton(map)
 
 \item{ext}{the \code{\link{extent}} / \code{\link{bbox}} to zoom to.}
 
-\item{layer.name}{the name of the layer to be zoomed to (or any character
+\item{group}{the name of the group/layer to be zoomed to (or any character
 string)}
 
 \item{position}{the position of the button (one of 'topleft', 'topright',
@@ -41,10 +35,18 @@ provided \code{\link{extent}} / \code{\link{bbox}}.
 library(leaflet)
 library(raster)
 
+## pass a group name only
 m <- leaflet() \%>\%
   addProviderTiles("OpenStreetMap") \%>\%
-  addCircleMarkers(data = breweries91) \%>\%
-  addHomeButton(extent(breweries91), "breweries91")
+  addCircleMarkers(data = breweries91, group = "breweries91") \%>\%
+  addHomeButton(group = "breweries91")
+m
+
+## pass a raster extent - group can now be an arbitrary label
+m <- leaflet() \%>\%
+  addProviderTiles("OpenStreetMap") \%>\%
+  addCircleMarkers(data = breweries91, group = "breweries91") \%>\%
+  addHomeButton(ext = extent(breweries91), group = "Brew")
 m
 
 ## remove the button

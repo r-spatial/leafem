@@ -8,7 +8,7 @@
 #'
 #' @param map a mapview or leaflet object.
 #' @param ext the \code{\link{extent}} / \code{\link{bbox}} to zoom to.
-#' @param layer.name the name of the layer to be zoomed to (or any character
+#' @param group the name of the group/layer to be zoomed to (or any character
 #' string)
 #' @param position the position of the button (one of 'topleft', 'topright',
 #' 'bottomleft', 'bottomright'). Defaults to 'bottomright'.
@@ -18,10 +18,18 @@
 #' library(leaflet)
 #' library(raster)
 #'
+#' ## pass a group name only
 #' m <- leaflet() %>%
 #'   addProviderTiles("OpenStreetMap") %>%
-#'   addCircleMarkers(data = breweries91) %>%
-#'   addHomeButton(extent(breweries91), "breweries91")
+#'   addCircleMarkers(data = breweries91, group = "breweries91") %>%
+#'   addHomeButton(group = "breweries91")
+#' m
+#'
+#' ## pass a raster extent - group can now be an arbitrary label
+#' m <- leaflet() %>%
+#'   addProviderTiles("OpenStreetMap") %>%
+#'   addCircleMarkers(data = breweries91, group = "breweries91") %>%
+#'   addHomeButton(ext = extent(breweries91), group = "Brew")
 #' m
 #'
 #' ## remove the button
@@ -33,7 +41,7 @@
 #' @name addHomeButton
 #' @rdname addHomeButton
 #' @aliases addHomeButton
-addHomeButton <- function(map, ext, layer.name = "layer",
+addHomeButton <- function(map, ext, group = "layer",
                           position = 'bottomright', add = TRUE) {
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
@@ -58,14 +66,14 @@ addHomeButton <- function(map, ext, layer.name = "layer",
 
   if (add) {
     if (class(extent) == "matrix") ext <- raster::extent(ext)
-    label <- paste("Zoom to", layer.name)
+    label <- paste("Zoom to", group)
 
-    txt <- paste('<strong>', layer.name, '</strong>')
+    txt <- paste('<strong>', group, '</strong>')
 
     map$dependencies <- c(map$dependencies, leafletHomeButtonDependencies())
     leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
                           ext[1], ext[2], ext[3], ext[4],
-                          layer.name, label, txt, position)
+                          group, label, txt, position)
   }
 
   else map

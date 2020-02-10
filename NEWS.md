@@ -1,8 +1,8 @@
-## leafem 0.0.7
+## leafem 0.1.0
 
 new features:
 
-  * addHomeButton now infers bounding box without having to pass extent object. Also it now handles vectors of c(xmin, ymin, xmax, ymax) - e.g. via sf::st_bbox().
+  * addHomeButton now infers bounding box from group argument without having to pass extent object. Also it now handles vectors of c(xmin, ymin, xmax, ymax) - e.g. via sf::st_bbox(). This is a backward-breaking change!
   * addLocalFile has gained argument `tms` to specify whether tiles are TMS tiles.
   * new function `updateLayersControl` to update (or add) layers control when adding new base or overlay layers to an existing map (https://twitter.com/mdsumner/status/1194596180061118465).
   * added support for 'mapdeck' maps in addFeatures.
@@ -12,7 +12,7 @@ new features:
   
 miscellaneous:
 
-  * garnishMap now uses match.arg and try to be more robust.
+  * garnishMap now uses match.arg and tries to be more robust.
 
 ## leafem 0.0.1
 

@@ -97,7 +97,11 @@ addStarsImage <- function(
 
   if (project) {
     # if we should project the data
-    projected <- sf::st_transform(x, crs = 3857)
+    if (utils::packageVersion("stars") >= "0.4-1") {
+      projected = stars::st_warp(x, crs = 3857)
+    } else {
+      projected <- sf::st_transform(x, crs = 3857)
+    }
 
     # if data is factor data, make the result factors as well.
     if (raster_is_factor) {

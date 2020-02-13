@@ -81,7 +81,7 @@ addStarsImage <- function(
       , call. = FALSE
     )
 
-  raster_is_factor <- raster::is.factor(x)
+  raster_is_factor <- is.factor(x[[1]])
   method <- match.arg(method)
   if (method == "auto") {
     if (raster_is_factor) {
@@ -104,9 +104,9 @@ addStarsImage <- function(
     }
 
     # if data is factor data, make the result factors as well.
-    if (raster_is_factor) {
-      projected <- raster::as.factor(projected)
-    }
+    #if (raster_is_factor) {
+    #  projected <- raster::as.factor(projected)
+    #}
   } else {
     # do not project data
     projected <- x

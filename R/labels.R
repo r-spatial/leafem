@@ -93,7 +93,7 @@ addStaticLabels = function(map,
                   textOnly = TRUE,
                   offset = c(0, 20))
 
-  dots = utils::modifyList(dots, min_opts)
+  dots = utils::modifyList(min_opts, dots)
   # dots = utils::modifyList(leafletOptions(), dots)
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)

@@ -28,8 +28,8 @@ rasterPicker.old = function(e, x, data) {
     }
 };
 
-rasterPicker.pick = function(event, leafletConfig, digits, prefix) {
-  var rasterLayers = this.getRasterLayers(leafletConfig);
+rasterPicker.pick = function(event, layerId, bounds, digits, prefix) {
+  var rasterLayers = this.getRasterLayers(layerId, bounds);
   var pickedLayerData = {};
   // collect values of clicked raster layers
   var rasterHitInfos = this.getLayerIdHits(rasterLayers, event.latlng);
@@ -38,48 +38,30 @@ rasterPicker.pick = function(event, leafletConfig, digits, prefix) {
     pickedLayerData[rasterHitInfo.layerId] = this.getLayerData(rasterHitInfo, event.latlng /*, event.zoom?*/);
   }
   // render collected hit values
-  var outputWidget = this.getInfoLegend(leafletConfig);
+  var outputWidget = this.getInfoLegend();
   outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
 };
 
-rasterPicker.getInfoLegend = function(leafletConfig) {
-  var elementId = null;
-  for (var call_key in leafletConfig.calls) {
-    var call = leafletConfig.calls[call_key];
-    if (call.method == "addControl" && call.args.length>2 && call.args[2] === "imageValues") {
-      elementId = call.args[2];
-    }
-  }
-  var element = null;
-  if (elementId!==null) {
-    element = window.document.getElementById(elementId);
-  }
-  if (element===null) {
+rasterPicker.getInfoLegend = function() {
+  var element = window.document.getElementById("imageValues");
+  if (element === null) {
   // LOG ERROR or WARNING?
     console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
   }
   return element;
 };
 
-rasterPicker.getRasterLayers = function(leafletConfig) {
+rasterPicker.getRasterLayers = function(layerIds, bounds) {
   var rasterLayers = [];
-  for (var call_key in leafletConfig.calls) {
-    var call = leafletConfig.calls[call_key];
-    if (call.method == "addRasterImage" && call.args.length>=5) {
-      /* Parameters:
-         0. image data
-         1. latlng bounds
-         2. number?
-         3. ?
-         4. layerId
-         5. groupId
-       */
+  // If layerIds is no Array, make it an Array to use `forEach`
+  if (!(layerIds instanceof Array)) {layerIds = [layerIds];}
+  // Loop through every layerId and push to rasterLayers
+  layerIds.forEach(function(layerId) {
       rasterLayers.push({
-        layerId: call.args[4],
-        bounds: call.args[1]
+        layerId: layerId,
+        bounds: bounds
       });
-    }
-  }
+  });
   // TODO check if layer is hidden?
   return rasterLayers;
 };
@@ -134,7 +116,7 @@ rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
   var text = "";
   for (var layer_key in pickedLayerData) {
     var layer = pickedLayerData[layer_key];
-    if (layer.value === undefined) {
+    if (layer.value === undefined || layer.value === null) {
       continue;
     }
     if(digits === null) {

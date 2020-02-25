@@ -121,24 +121,13 @@ addImageQuery = function(map,
                          name = "joda",
                          src = system.file("htmlwidgets/lib/joda",
                                            package = "leafem"),
-                         script = "joda.js")
+                         script = c("joda.js",
+                                    "addImageQuery-bindings.js"))
                        ))
 
-  map = htmlwidgets::onRender(
-    map,
-    htmlwidgets::JS(
-      paste0(
-        'function(el, x, data) {
-        var map = this;
-        map.on("', type, '", function (e) {
-          rasterPicker.pick(e, x, ', digits, ', "', prefix, ' ");
-        });
-      }'
-      )
-    )
-  )
+  bounds <- as.numeric(sf::st_bbox(projected))
 
-  return(map)
+  leaflet::invokeMethod(map, NULL, "addImageQuery", layerId, bounds, type, digits, prefix)
 }
 
 ##############################################################################

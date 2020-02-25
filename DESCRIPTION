@@ -32,7 +32,11 @@ Authors@R:
              role = c("ctb")),
       person(given = "Miles",
              family = "McBain",
-             role = c("ctb")))           
+             role = c("ctb")),
+      person(given = "Sebastian",
+             family = "Gatscha",
+             role = "ctb",
+             email = "sebastian_gatscha@gmx.at"))           
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
     many of which are used by package 'mapview'. 

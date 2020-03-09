@@ -114,7 +114,7 @@ addImageQuery = function(map,
   map$dependencies <- c(map$dependencies,
                         starsDataDependency(jFn = pathDatFn,
                                             counter = 1,
-                                            group = jsgroup))
+                                            group = layerId))
   map$dependencies = c(map$dependencies,
                        list(htmltools::htmlDependency(
                          version = "0.0.1",

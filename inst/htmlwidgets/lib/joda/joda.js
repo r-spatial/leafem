@@ -28,18 +28,43 @@ rasterPicker.old = function(e, x, data) {
     }
 };
 
+var eventLatLng = {};
 rasterPicker.pick = function(event, layerId, bounds, digits, prefix) {
   var rasterLayers = this.getRasterLayers(layerId, bounds);
   var pickedLayerData = {};
   // collect values of clicked raster layers
   var rasterHitInfos = this.getLayerIdHits(rasterLayers, event.latlng);
+  // Return if nothing was found.
+  if (rasterHitInfos.length === 0) return;
+  // If no event is triggered yet, add e.latlng to Object
+  var rendernew = true;
+  if (Object.keys(eventLatLng).length === 0) {
+    Object.assign(eventLatLng, event.latlng);
+  } else {
+    // If Raster was already queried, check if e.latlng has changed?
+    if (eventLatLng.lat === event.latlng.lat && eventLatLng.lng === event.latlng.lng) {
+      // Still same latlng-event
+      rendernew = false;
+    }  else {
+      // New latlng-event and update Object
+      Object.assign(eventLatLng, event.latlng);
+      rendernew = true;
+    }
+  }
+
   for (var rasterHitInfo_key in rasterHitInfos) {
     var rasterHitInfo = rasterHitInfos[rasterHitInfo_key];
     pickedLayerData[rasterHitInfo.layerId] = this.getLayerData(rasterHitInfo, event.latlng /*, event.zoom?*/);
   }
   // render collected hit values
   var outputWidget = this.getInfoLegend();
-  outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
+
+  // Add values to innherHTML. Either refresh the value or append a value.
+  if (rendernew) {
+    outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
+  } else {
+    outputWidget.innerHTML = outputWidget.innerHTML + "<br>" + this.renderInfo(pickedLayerData, digits, prefix);
+  }
 };
 
 rasterPicker.getInfoLegend = function() {
@@ -119,10 +144,10 @@ rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
     if (layer.value === undefined || layer.value === null) {
       continue;
     }
-    if(digits === null) {
-      text += prefix+ "<strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</br>";
+    if(digits === "null" || digits === null) {
+      text += prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</br>";
     } else {
-      text += prefix+ "<strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</br>";
+      text += prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</br>";
     }
     /*text += "<br/> (lat,lng=" + layer.lat + "," + layer.lng + ")";
     text += "<br/> (x,y=" + layer.index.x + "," + layer.index.y + ")";

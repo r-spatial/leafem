@@ -10,7 +10,7 @@ LeafletWidget.methods.addImageQuery = function(layerId, bounds, type, digits, pr
       ];
 
     map.on(type, function(e) {
-        rasterPicker.pick(e, layerId, boundsarr, digits, prefix);
+      rasterPicker.pick(e, layerId, boundsarr, digits, prefix, map);
     });
   }).call(this);
 };

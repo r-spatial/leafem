@@ -29,8 +29,8 @@ rasterPicker.old = function(e, x, data) {
 };
 
 var eventLatLng = {};
-rasterPicker.pick = function(event, layerId, bounds, digits, prefix, map) {
-  if (!(map.layerManager.getVisibleGroups().includes(layerId))) {
+rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
+  if (!visible) {
     var outputWidget = this.getInfoLegend(layerId);
     outputWidget.innerHTML = "";
     return;

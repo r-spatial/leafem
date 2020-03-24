@@ -15,6 +15,7 @@ addImageQuery(
   digits,
   position = "topright",
   prefix = "Layer",
+  className = "",
   ...
 )
 }
@@ -43,6 +44,8 @@ to 'mousemove'.}
 \item{position}{where to place the display field. Default is 'topright'.}
 
 \item{prefix}{a character string to be shown as prefix for the layerId.}
+
+\item{className}{a character string to append to the control legend.}
 
 \item{...}{currently not used.}
 }

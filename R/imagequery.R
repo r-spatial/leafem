@@ -96,8 +96,9 @@ addImageQuery = function(map,
 
   ## check for existing layerpicker control
   ctrlid = getCallEntryFromMap(map, "addControl")
+  ctrl_nm = paste("imageValues", layerId, sep = "-")
   imctrl = unlist(sapply(ctrlid, function(i) {
-    "imageValues" %in% map$x$calls[[i]]$args
+    ctrl_nm %in% map$x$calls[[i]]$args
   }))
   ctrlid = ctrlid[imctrl]
 
@@ -106,7 +107,7 @@ addImageQuery = function(map,
     map = leaflet::addControl(
       map,
       html = "",
-      layerId = 'imageValues',
+      layerId = ctrl_nm,
       position = position
     )
   }

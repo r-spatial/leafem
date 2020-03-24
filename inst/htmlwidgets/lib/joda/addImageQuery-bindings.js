@@ -10,7 +10,11 @@ LeafletWidget.methods.addImageQuery = function(layerId, bounds, type, digits, pr
       ];
 
     map.on(type, function(e) {
-        rasterPicker.pick(e, layerId, boundsarr, digits, prefix);
+      var visible = true;
+      if (!(map.layerManager.getVisibleGroups().includes(layerId))) {
+        visible = false;
+      }
+      rasterPicker.pick(e, layerId, boundsarr, digits, prefix, visible);
     });
   }).call(this);
 };

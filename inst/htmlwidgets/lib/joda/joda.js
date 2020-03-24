@@ -29,7 +29,13 @@ rasterPicker.old = function(e, x, data) {
 };
 
 var eventLatLng = {};
-rasterPicker.pick = function(event, layerId, bounds, digits, prefix) {
+rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
+  if (!visible) {
+    var outputWidget = this.getInfoLegend(layerId);
+    outputWidget.innerHTML = "";
+    return;
+  }
+
   var rasterLayers = this.getRasterLayers(layerId, bounds);
   var pickedLayerData = {};
   // collect values of clicked raster layers
@@ -57,18 +63,20 @@ rasterPicker.pick = function(event, layerId, bounds, digits, prefix) {
     pickedLayerData[rasterHitInfo.layerId] = this.getLayerData(rasterHitInfo, event.latlng /*, event.zoom?*/);
   }
   // render collected hit values
-  var outputWidget = this.getInfoLegend();
+
+  var outputWidget = this.getInfoLegend(layerId);
+  outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
 
   // Add values to innherHTML. Either refresh the value or append a value.
-  if (rendernew) {
-    outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
+  /*if (rendernew) {
+
   } else {
     outputWidget.innerHTML = outputWidget.innerHTML + "<br>" + this.renderInfo(pickedLayerData, digits, prefix);
-  }
+  }*/
 };
 
-rasterPicker.getInfoLegend = function() {
-  var element = window.document.getElementById("imageValues");
+rasterPicker.getInfoLegend = function(layerId) {
+  var element = window.document.getElementById("imageValues" + "-" + layerId);
   if (element === null) {
   // LOG ERROR or WARNING?
     console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
@@ -145,9 +153,9 @@ rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
       continue;
     }
     if(digits === "null" || digits === null) {
-      text += prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</br>";
+      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</small>";
     } else {
-      text += prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</br>";
+      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</small>";
     }
     /*text += "<br/> (lat,lng=" + layer.lat + "," + layer.lng + ")";
     text += "<br/> (x,y=" + layer.index.x + "," + layer.index.y + ")";

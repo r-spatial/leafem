@@ -28,11 +28,10 @@ rasterPicker.old = function(e, x, data) {
     }
 };
 
-var eventLatLng = {};
 rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
+  var outputWidget = this.getInfoLegend(layerId);
   if (!visible) {
-    var outputWidget = this.getInfoLegend(layerId);
-    outputWidget.innerHTML = "";
+    $(outputWidget).hide();
     return;
   }
 
@@ -41,38 +40,16 @@ rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
   // collect values of clicked raster layers
   var rasterHitInfos = this.getLayerIdHits(rasterLayers, event.latlng);
   // Return if nothing was found.
-  if (rasterHitInfos.length === 0) return;
-  // If no event is triggered yet, add e.latlng to Object
-  var rendernew = true;
-  if (Object.keys(eventLatLng).length === 0) {
-    Object.assign(eventLatLng, event.latlng);
-  } else {
-    // If Raster was already queried, check if e.latlng has changed?
-    if (eventLatLng.lat === event.latlng.lat && eventLatLng.lng === event.latlng.lng) {
-      // Still same latlng-event
-      rendernew = false;
-    }  else {
-      // New latlng-event and update Object
-      Object.assign(eventLatLng, event.latlng);
-      rendernew = true;
-    }
+  if (rasterHitInfos.length === 0) {
+    $(outputWidget).hide();
+    return;
   }
-
   for (var rasterHitInfo_key in rasterHitInfos) {
     var rasterHitInfo = rasterHitInfos[rasterHitInfo_key];
     pickedLayerData[rasterHitInfo.layerId] = this.getLayerData(rasterHitInfo, event.latlng /*, event.zoom?*/);
   }
   // render collected hit values
-
-  var outputWidget = this.getInfoLegend(layerId);
   outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
-
-  // Add values to innherHTML. Either refresh the value or append a value.
-  /*if (rendernew) {
-
-  } else {
-    outputWidget.innerHTML = outputWidget.innerHTML + "<br>" + this.renderInfo(pickedLayerData, digits, prefix);
-  }*/
 };
 
 rasterPicker.getInfoLegend = function(layerId) {
@@ -84,17 +61,11 @@ rasterPicker.getInfoLegend = function(layerId) {
   return element;
 };
 
-rasterPicker.getRasterLayers = function(layerIds, bounds) {
-  var rasterLayers = [];
-  // If layerIds is no Array, make it an Array to use `forEach`
-  if (!(layerIds instanceof Array)) {layerIds = [layerIds];}
-  // Loop through every layerId and push to rasterLayers
-  layerIds.forEach(function(layerId) {
-      rasterLayers.push({
+rasterPicker.getRasterLayers = function(layerId, bounds) {
+  var rasterLayers = [{
         layerId: layerId,
         bounds: bounds
-      });
-  });
+      }];
   // TODO check if layer is hidden?
   return rasterLayers;
 };
@@ -151,16 +122,14 @@ rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
     var layer = pickedLayerData[layer_key];
     if (layer.value === undefined || layer.value === null) {
       continue;
+    } else {
+      $(document.getElementById("imageValues" + "-" + layer_key)).show();
     }
     if(digits === "null" || digits === null) {
       text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</small>";
     } else {
       text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</small>";
     }
-    /*text += "<br/> (lat,lng=" + layer.lat + "," + layer.lng + ")";
-    text += "<br/> (x,y=" + layer.index.x + "," + layer.index.y + ")";
-    text += "</li>\n";*/
   }
-  /*return "<ul>"+text+"</ul>";*/
   return text;
 };

@@ -25,6 +25,7 @@
 #' @param digits the number of digits to be shown in the display field.
 #' @param position where to place the display field. Default is 'topright'.
 #' @param prefix a character string to be shown as prefix for the layerId.
+#' @param className a character string to append to the control legend.
 #' @param ... currently not used.
 #'
 #' @return
@@ -62,6 +63,7 @@ addImageQuery = function(map,
                          digits,
                          position = 'topright',
                          prefix = 'Layer',
+                         className = "",
                          ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -108,7 +110,8 @@ addImageQuery = function(map,
       map,
       html = "",
       layerId = ctrl_nm,
-      position = position
+      position = position,
+      className = paste("info legend", className)
     )
   }
 

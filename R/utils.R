@@ -138,7 +138,9 @@ getProjection <- function(x) {
   if (inherits(x, c("Raster", "Spatial"))) {
     prj <- raster::projection(x)
   } else {
-    prj <- sf::st_crs(x)[["wkt"]]
+    # prj <- sf::st_crs(x)[["proj4string"]] # crashing with sf >= 0.9
+    # prj <- sf::st_crs(x)[["wkt"]] # works with sf >= 0.9, but not working with older sf versions
+    prj <- sf::st_crs(x)$proj4string # see https://www.r-spatial.org/r/2020/03/17/wkt.html
   }
 
   return(prj)

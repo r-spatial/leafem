@@ -2,7 +2,7 @@
 % Please edit documentation in R/file.R
 \name{addTileFolder}
 \alias{addTileFolder}
-\title{add raster tiles from a local folder}
+\title{Add raster tiles from a local folder}
 \usage{
 addTileFolder(
   map,

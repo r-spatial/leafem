@@ -2,7 +2,7 @@
 % Please edit documentation in R/file.R
 \name{addFgb}
 \alias{addFgb}
-\title{add a flatgeobuf file to leaflet map}
+\title{Add a flatgeobuf file to leaflet map}
 \usage{
 addFgb(
   map,

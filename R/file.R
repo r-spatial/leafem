@@ -1,4 +1,4 @@
-#' add vector data to leaflet map directly from the file system
+#' Add vector data to leaflet map directly from the file system
 #'
 #' @param map a mapview or leaflet object.
 #' @param file file path to the file to be added to \code{map}. NOTE: will be
@@ -23,16 +23,19 @@
 #'   (circles, rectangles, polygons, ...), or other map elements.
 #'
 #' @examples
-#' library(leaflet)
-#' library(sf)
+#' if (interactive()) {
+#'   library(leafem)
+#'   library(leaflet)
+#'   library(sf)
 #'
-#' destfile = tempfile(fileext = ".gpkg")
+#'   destfile = tempfile(fileext = ".gpkg")
 #'
-#' st_write(st_as_sf(gadmCHE), dsn = destfile)
+#'   st_write(st_as_sf(gadmCHE), dsn = destfile)
 #'
-#' leaflet() %>%
-#'   addTiles() %>%
-#'   leafem:::addLocalFile(destfile)
+#'   leaflet() %>%
+#'     addTiles() %>%
+#'     addLocalFile(destfile, popup = TRUE)
+#' }
 #'
 #' @export addLocalFile
 #' @name addLocalFile
@@ -152,7 +155,7 @@ addLocalFile = function(map,
 
 }
 
-#' add raster tiles from a local folder
+#' Add raster tiles from a local folder
 #'
 #' @description
 #'   Add tiled raster data pyramids from a local folder that was created with
@@ -234,7 +237,7 @@ addTileFolder = function(map,
 }
 
 
-#' add a flatgeobuf file to leaflet map
+#' Add a flatgeobuf file to leaflet map
 #'
 #' @description
 #'   flatgeobuf is a performant binary geo-spatial file format suitable for

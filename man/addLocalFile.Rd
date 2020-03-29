@@ -2,7 +2,7 @@
 % Please edit documentation in R/file.R
 \name{addLocalFile}
 \alias{addLocalFile}
-\title{add vector data to leaflet map directly from the file system}
+\title{Add vector data to leaflet map directly from the file system}
 \usage{
 addLocalFile(
   map,
@@ -62,18 +62,21 @@ reprojected on-the-fly if not in "longlat".}
 (circles, rectangles, polygons, ...), or other map elements.}
 }
 \description{
-add vector data to leaflet map directly from the file system
+Add vector data to leaflet map directly from the file system
 }
 \examples{
-library(leaflet)
-library(sf)
+if (interactive()) {
+  library(leafem)
+  library(leaflet)
+  library(sf)
 
-destfile = tempfile(fileext = ".gpkg")
+  destfile = tempfile(fileext = ".gpkg")
 
-st_write(st_as_sf(gadmCHE), dsn = destfile)
+  st_write(st_as_sf(gadmCHE), dsn = destfile)
 
-leaflet() \%>\%
-  addTiles() \%>\%
-  leafem:::addLocalFile(destfile)
+  leaflet() \%>\%
+    addTiles() \%>\%
+    addLocalFile(destfile, popup = TRUE)
+}
 
 }

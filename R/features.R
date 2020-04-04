@@ -154,7 +154,7 @@ addLineFeatures.mapdeck <- function(map,
   garnishMap(
     map
     , mapdeck::add_path
-    , data = sf::st_zm(data)
+    , data = data
     , ...
   )
 }
@@ -189,7 +189,7 @@ addPolygonFeatures.mapdeck <- function(map,
   garnishMap(
     map
     , mapdeck::add_polygon
-    , data = sf::st_zm(data)
+    , data = data
     , ...
   )
 }

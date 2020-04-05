@@ -1,3 +1,9 @@
+## leafem 0.1.1
+
+bugfixes:
+  
+  * don't use st_zm for addFeatures.mapdeck
+
 ## leafem 0.1.0
 
 new features:

@@ -1,3 +1,9 @@
+leafem 0.1.1
+
+bugfixes:
+  
+  * don't use st_zm for addFeatures.mapdeck
+
 leafem 0.1.0
 
 new features:
@@ -10,7 +16,7 @@ new features:
   * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto #2.
   * new function `addFgb` to add flatgeobuf files from file or url.
   * addImageQuery now much more robust. Also works with leaflet_proxy objects now. Thanks to Sebastian Gatscha #9, #12, #13
-
+  
 miscellaneous:
 
   * garnishMap now uses match.arg and tries to be more robust.

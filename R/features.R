@@ -117,7 +117,7 @@ addPointFeatures.mapdeck <- function(map,
                                      ...) {
   garnishMap(
     map
-    , mapdeck::add_pointcloud
+    , mapdeck::add_scatterplot
     , data = data #sf::st_zm(sf::st_cast(data, "POINT"))
     , ...
   )

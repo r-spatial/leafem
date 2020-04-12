@@ -57,8 +57,7 @@ Imports:
     mapdeck,
     raster,
     sf,
-    sp, 
-    methods,
+    sp,
     base64enc,
     scales (>= 1.0.0),
     png

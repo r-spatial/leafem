@@ -96,8 +96,8 @@ addPointFeatures.leaflet <- function(map,
                                      data,
                                      pane,
                                      ...) {
-  if ("gl" %in% names(list(...))) gl = list(...)$gl else gl = FALSE
-  if (gl) {
+  if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
+  if (wgl) {
     if (!requireNamespace("leafgl")) {
       stop("please remotes::install_github('r-spatial/leafgl')",
            "to use webgl rendering",
@@ -105,7 +105,12 @@ addPointFeatures.leaflet <- function(map,
     }
   }
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  garnishMap(map, ifelse(gl, leafgl::addGlPoints, leaflet::addCircleMarkers),
+  if (wgl) {
+    renderfun = leafgl::addGlPoints
+  } else {
+    renderfun = leaflet::addCircleMarkers
+  }
+  garnishMap(map, renderfun,
              data = sf::st_zm(sf::st_cast(data, "POINT")),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
@@ -140,8 +145,8 @@ addLineFeatures.leaflet <- function(map,
                                     data,
                                     pane,
                                     ...) {
-  if ("gl" %in% names(list(...))) gl = list(...)$gl else gl = FALSE
-  if (gl) {
+  if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
+  if (wgl) {
     if (!requireNamespace("leafgl")) {
       stop("please remotes::install_github('r-spatial/leafgl')",
            "to use webgl rendering",
@@ -149,7 +154,12 @@ addLineFeatures.leaflet <- function(map,
     }
   }
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  garnishMap(map, ifelse(gl, leafgl::addGlPolylines, leaflet::addPolylines),
+  if (wgl) {
+    renderfun = leafgl::addGlPolylines
+  } else {
+    renderfun = leaflet::addPolylines
+  }
+  garnishMap(map, renderfun,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
@@ -183,8 +193,8 @@ addPolygonFeatures.leaflet <- function(map,
                                        data,
                                        pane,
                                        ...) {
-  if ("gl" %in% names(list(...))) gl = list(...)$gl else gl = FALSE
-  if (gl) {
+  if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
+  if (wgl) {
     if (!requireNamespace("leafgl")) {
       stop("please remotes::install_github('r-spatial/leafgl')",
            "to use webgl rendering",
@@ -192,7 +202,12 @@ addPolygonFeatures.leaflet <- function(map,
     }
   }
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  garnishMap(map, ifelse(gl, leafgl::addGlPolygons, leaflet::addPolygons),
+  if (wgl) {
+    renderfun = leafgl::addGlPolygons
+  } else {
+    renderfun = leaflet::addPolygons
+  }
+  garnishMap(map, renderfun,
              data = sf::st_zm(data),
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),

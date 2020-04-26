@@ -60,6 +60,9 @@ addFeatures <- function(map,
 
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)
 
+  if (any(grepl("Z|M", colnames(sf::st_coordinates(head(data, 1)))))) {
+    data = sf::st_zm(data)
+  }
 
   switch(getSFClass(sf::st_geometry(data)),
          sfc_POINT           = addPointFeatures(map, data, pane, ...),
@@ -104,6 +107,10 @@ addPointFeatures.leaflet <- function(map,
            call. = FALSE)
     }
   }
+
+  if (inherits(sf::st_geometry(data), "sfc_MULTIPOINT"))
+    data = suppressWarnings(sf::st_cast(data, "POINT"))
+
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   if (wgl) {
     renderfun = leafgl::addGlPoints
@@ -111,7 +118,7 @@ addPointFeatures.leaflet <- function(map,
     renderfun = leaflet::addCircleMarkers
   }
   garnishMap(map, renderfun,
-             data = sf::st_zm(sf::st_cast(data, "POINT")),
+             data = data,
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
              options = leaflet::leafletOptions(pane = pane),
@@ -131,7 +138,7 @@ addPointFeatures.mapdeck <- function(map,
   garnishMap(
     map
     , mapdeck::add_scatterplot
-    , data = data #sf::st_zm(sf::st_cast(data, "POINT"))
+    , data = sf::st_cast(data, "POINT")
     , ...
   )
 }
@@ -160,7 +167,7 @@ addLineFeatures.leaflet <- function(map,
     renderfun = leaflet::addPolylines
   }
   garnishMap(map, renderfun,
-             data = sf::st_zm(data),
+             data = data,
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
              options = leaflet::leafletOptions(pane = pane),
@@ -208,7 +215,7 @@ addPolygonFeatures.leaflet <- function(map,
     renderfun = leaflet::addPolygons
   }
   garnishMap(map, renderfun,
-             data = sf::st_zm(data),
+             data = data,
              popupOptions = leaflet::popupOptions(maxWidth = mw,
                                                   closeOnClick = TRUE),
              options = leaflet::leafletOptions(pane = pane),

@@ -48,14 +48,19 @@ garnishMap <- function(map, ...) {
     fn_lst <- fn_lst[!sapply(fn_lst, is.null)]
 
     for (i in fn_lst) {
-      args_i = tryCatch(
+      args_i = try(
         match.arg(names(ls), names(as.list(i)), several.ok = TRUE)
-        , error = function(e) print(e)
+        , silent = TRUE
       )
-      map = tryCatch(
-        do.call(i, append(list(map = map), ls[args_i]))
-        , error = function(e) print(e)
-      )
+      if (!inherits(args_i, "try-error")) {
+        maptry = try(
+          do.call(i, append(list(map = map), ls[args_i]))
+          , silent = TRUE
+        )
+        if (!inherits(maptry, "try-error")) {
+          map <- maptry
+        }
+      }
     }
     return(map)
   }

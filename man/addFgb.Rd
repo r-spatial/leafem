@@ -73,9 +73,9 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
   \cr
   In contrast to classical ways of serving data from R onto a leaflet map,
-  flatgeobuf will stream the data chunk by chunk so that rendering of the map
+  flatgeobuf can stream the data chunk by chunk so that rendering of the map
   is more or less instantaneous. The map is responsive while data is still
-  being streamed so that popup queries, zooming and panning will work even
+  loading so that popup queries, zooming and panning will work even
   though not all data has been rendered yet. This makes for a rather pleasant
   user experience as we don't have to wait for all data to be added to the map
   before interacting with it.

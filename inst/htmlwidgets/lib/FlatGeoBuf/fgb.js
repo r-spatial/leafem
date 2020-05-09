@@ -1,4 +1,5 @@
-LeafletWidget.methods.addFlatGeoBuf = function (group,
+LeafletWidget.methods.addFlatGeoBuf = function (layerId,
+                                                group,
                                                 url,
                                                 popup,
                                                 label,
@@ -8,7 +9,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
   var map = this;
   var gl = false;
 
-  var data_fl = document.getElementById(group + '-1-attachment');
+  var data_fl = document.getElementById(layerId + '-1-attachment');
 
   if (data_fl === null) {
     data_fl = url;

@@ -85,17 +85,19 @@ addLocalFile = function(map,
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
 
+  if (is.null(layerId)) layerId = group
+
   path_header = tempfile()
   dir.create(path_header)
-  path_header = paste0(path_header, "/", group, "_header.json")
+  path_header = paste0(path_header, "/", layerId, "_header.json")
   path_layer = tempfile()
   dir.create(path_layer)
-  path_layer = paste0(path_layer, "/", group, "_layer.json")
+  path_layer = paste0(path_layer, "/", layerId, "_layer.json")
   dir_out = tempfile()
   dir.create(dir_out)
-  path_outfile = file.path(dir_out, paste0(group, ".js"))
+  path_outfile = file.path(dir_out, paste0(layerId, ".js"))
 
-  pre <- paste0('var data = data || {}; data["', group, '"] = ')
+  pre <- paste0('var data = data || {}; data["', layerId, '"] = ')
   writeLines(pre, path_header)
 
   if (tools::file_ext(file) != "geojson") {
@@ -247,9 +249,9 @@ addTileFolder = function(map,
 #'   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
 #'   \cr
 #'   In contrast to classical ways of serving data from R onto a leaflet map,
-#'   flatgeobuf will stream the data chunk by chunk so that rendering of the map
+#'   flatgeobuf can stream the data chunk by chunk so that rendering of the map
 #'   is more or less instantaneous. The map is responsive while data is still
-#'   being streamed so that popup queries, zooming and panning will work even
+#'   loading so that popup queries, zooming and panning will work even
 #'   though not all data has been rendered yet. This makes for a rather pleasant
 #'   user experience as we don't have to wait for all data to be added to the map
 #'   before interacting with it.
@@ -333,10 +335,12 @@ addFgb = function(map,
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
 
+  if (is.null(layerId)) layerId = group
+
   if (!is.null(file)) {
     path_layer = tempfile()
     dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", group, "_layer.fgb")
+    path_layer = paste0(path_layer, "/", layerId, "_layer.fgb")
 
     file.copy(file, path_layer, overwrite = TRUE)
 
@@ -358,13 +362,14 @@ addFgb = function(map,
 
     map$dependencies = c(
       map$dependencies
-      , fileAttachment(path_layer, group)
+      , fileAttachment(path_layer, layerId)
     )
 
     leaflet::invokeMethod(
       map
       , leaflet::getMapData(map)
       , "addFlatGeoBuf"
+      , layerId
       , group
       , url
       , popup
@@ -393,6 +398,7 @@ addFgb = function(map,
       map
       , leaflet::getMapData(map)
       , "addFlatGeoBuf"
+      , layerId
       , group
       , url
       , popup
@@ -457,23 +463,23 @@ leafletFileDependencies <- function() {
   )
 }
 
-fileDependency <- function(fn, group) {
+fileDependency <- function(fn, layerId) {
   data_dir <- dirname(fn)
   data_file <- basename(fn)
   list(
     htmltools::htmlDependency(
-      name = group,
+      name = layerId,
       version = '0.0.1',
       src = c(file = data_dir),
       script = data_file))
 }
 
-fileAttachment = function(fn, group) {
+fileAttachment = function(fn, layerId) {
   data_dir <- dirname(fn)
   data_file <- basename(fn)
   list(
     htmltools::htmlDependency(
-      name = group,
+      name = layerId,
       version = '0.0.1',
       src = c(file = data_dir),
       attachment = data_file))

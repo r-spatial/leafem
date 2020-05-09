@@ -23,7 +23,7 @@ LeafletWidget.methods.addFile = function(layerId,
     pop = null;
   }
 
-  var layer = L.geoJSON(data[group], {
+  var layer = L.geoJSON(data[layerId], {
     pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, options);
     },
@@ -41,6 +41,6 @@ LeafletWidget.methods.addFile = function(layerId,
     lab = null;
   }
 
-  map.layerManager.addLayer(layer, null, null, group);
+  map.layerManager.addLayer(layer, null, layerId, group);
   map.fitBounds(layer.getBounds());
 };

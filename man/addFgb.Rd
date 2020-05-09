@@ -17,7 +17,7 @@ addFgb(
   color = "#03F",
   weight = 5,
   opacity = 0.5,
-  fill = TRUE,
+  fill = FALSE,
   fillColor = color,
   fillOpacity = 0.2,
   dashArray = NULL,

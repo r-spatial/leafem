@@ -42,7 +42,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 };
               } else {
                 pop = function(feature, layer) {
-                  layer.bindPopup(feature.properties[popup].toString());
+                  if (popup.length === 1) {
+                    layer.bindPopup(feature.properties[popup].toString());
+                  }
                 };
               }
             } else {

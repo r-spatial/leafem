@@ -44,6 +44,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 pop = function(feature, layer) {
                   if (popup.length === 1) {
                     layer.bindPopup(feature.properties[popup].toString());
+                  } else {
+                    null;
                   }
                 };
               }

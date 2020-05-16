@@ -95,7 +95,8 @@ function json2table(json, classes) {
   var tab = "";
 
   for (i = 0; i < cols.length; i++) {
-    tab += "<tr><th>" + cols[i] + "&emsp;</th>" + "<td align='right'>" + vals[i] + "&emsp;</td></tr>";
+    tab += "<tr><th>" + cols[i] + "&emsp;</th>" +
+    "<td align='right'>" + vals[i] + "&emsp;</td></tr>";
   }
 
   return "<table>" + tab + "</table>";

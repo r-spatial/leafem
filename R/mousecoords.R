@@ -56,7 +56,7 @@ addMouseCoordinates <- function(map,
                                 native.crs = FALSE) {
 
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
 
   if (native.crs) { # | map$x$options$crs$crsClass == "L.CRS.Simple") {
     txt_detailed <- paste0("
@@ -215,3 +215,125 @@ clip2sfc = function(x, clipboard = TRUE) {
 
 
 ##############################################################################
+addMouseCoordinatesMD <- function(map,
+                                  epsg = NULL,
+                                  proj4string = NULL,
+                                  native.crs = FALSE) {
+
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
+
+  map$dependencies <- c(map$dependencies, mouseCoordsDependenciesMD())
+  mapdeck::invoke_method(map, 'addMouseCoordinatesMD')
+
+}
+
+mouseCoordsDependenciesMD = function() {
+  list(
+    htmltools::htmlDependency(
+      "mouseCoordsMD"
+      , '0.0.1'
+      , system.file("htmlwidgets/lib/mouseCoords", package = "leafem")
+      , script = c("addMouseCoordinatesMD.js")
+    )
+  )
+}
+
+
+#   if (native.crs) { # | map$x$options$crs$crsClass == "L.CRS.Simple") {
+#     txt_detailed <- paste0("
+#                            ' x: ' + (e.latlng.lng).toFixed(5) +
+#                            ' | y: ' + (e.latlng.lat).toFixed(5) +
+#                            ' | epsg: ", epsg, " ' +
+#                            ' | proj4: ", proj4string, " ' +
+#                            ' | zoom: ' + map.getZoom() + ' '")
+#   } else {
+#     txt_detailed <- paste0("
+#                            ' lon: ' + (e.latLng.lng).toFixed(5) +
+#                            ' | lat: ' + (e.latLng.lat).toFixed(5) +
+#                            ' | zoom: ' + map.getZoom() +
+#                            ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +
+#                            ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +
+#                            ' | epsg: 3857 ' +
+#                            ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs '")
+#   }
+#
+#   txt_basic <- paste0("
+#                       ' lon: ' + (e.latLng.lng).toFixed(5) +
+#                       ' | lat: ' + (e.latLng.lat).toFixed(5) +
+#                       ' | zoom: ' + map.getZoom() + ' '")
+#
+#   map$dependencies = c(
+#     map$dependencies,
+#     clipboardDependency()
+#   )
+#
+#   map <- htmlwidgets::onRender(
+#     map,
+#     paste0(
+#       "
+#       function(el, x, data) {
+#       // get the leaflet map
+#       //var map = document.querySelector('.mapdeckmap');
+#       var map = window[el.id+'map']._map.getMap();
+#       console.log(map);
+#       // we need a new div element because we have to handle
+#       // the mouseover output separately
+#       function addElement () {
+#       // generate new div Element
+#       var newDiv = document.createElement('div');
+#       // append at end of leaflet htmlwidget container
+#       el.append(newDiv);
+#       //provide ID and style
+#       newDiv.classList.add('lnlt');
+#       newDiv.style.cssText = 'position: relative; bottomleft: 0px; background-color: rgba(255, 255, 255, 0.7); box-shadow: 0 0 2px #bbb; background-clip: padding-box; margin: 0; padding-left: 5px; color: #333; font: 9px/1.5 \"Helvetica Neue\", Arial, Helvetica, sans-serif; z-index: 700; height: 10px;';
+#       return newDiv;
+#       }
+#
+#
+#       // check for already existing lnlt class to not duplicate
+#       var lnlt = document.querySelector('.lnlt');
+#
+#       if(lnlt === null) {
+#       lnlt = addElement();
+#
+#       // grab the special div we generated in the beginning
+#       // and put the mousmove output there
+#
+#       map.on('mousemove', function (e) {
+#       if (e.originalEvent.ctrlKey) {
+#       if (document.querySelector('.lnlt') === null) lnlt = addElement();
+#       lnlt.innerText(", txt_detailed, ");
+#       } else {
+#       if (document.querySelector('.lnlt') === null) lnlt = addElement();
+#       lnlt.innerText(", txt_basic, ");
+#       }
+#       });
+#
+#       // remove the lnlt div when mouse leaves map
+#       map.on('mouseout', function (e) {
+#       var strip = document.querySelector('.lnlt');
+#       strip.remove();
+#       });
+#
+#       };
+#
+#       //$(el).keypress(67, function(e) {
+#       map.on('preclick', function(e) {
+#       if (e.originalEvent.ctrlKey) {
+#       if (document.querySelector('.lnlt') === null) lnlt = addElement();
+#       lnlt.text(", txt_basic, ");
+#       var txt = document.querySelector('.lnlt').textContent;
+#       console.log(txt);
+#       //txt.innerText.focus();
+#       //txt.select();
+#       setClipboardText('\"' + txt + '\"');
+#       }
+#       });
+#
+#       }
+#       "
+#     )
+#   )
+#   map
+# }

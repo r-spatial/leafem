@@ -1,8 +1,8 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.1.0
-Date: 2020-02-10
+Version: 0.1.1
+Date: 2020-04-05
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -57,8 +57,7 @@ Imports:
     mapdeck,
     raster,
     sf,
-    sp, 
-    methods,
+    sp,
     base64enc,
     scales (>= 1.0.0),
     png

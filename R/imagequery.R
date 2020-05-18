@@ -81,7 +81,13 @@ addImageQuery = function(map,
   datFn <- tmp[[4]][1]
 
   if (project) {
-    if (inherits(x, "stars")) projected <- sf::st_transform(x, crs = 4326)
+    if (inherits(x, "stars")) {
+      if (utils::packageVersion("stars") >= "0.4-1") {
+        projected = stars::st_warp(x, crs = 4326)
+      } else {
+        projected <- sf::st_transform(x, crs = 4326)
+      }
+    }
     if (inherits(x, "Raster")) projected <- raster::projectRaster(
       x,
       raster::projectExtent(x, crs = sp::CRS(llcrs)),

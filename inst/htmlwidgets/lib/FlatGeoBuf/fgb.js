@@ -1,4 +1,5 @@
-LeafletWidget.methods.addFlatGeoBuf = function (group,
+LeafletWidget.methods.addFlatGeoBuf = function (layerId,
+                                                group,
                                                 url,
                                                 popup,
                                                 label,
@@ -8,7 +9,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
   var map = this;
   var gl = false;
 
-  var data_fl = document.getElementById(group + '-1-attachment');
+  var data_fl = document.getElementById(layerId + '-1-attachment');
 
   if (data_fl === null) {
     data_fl = url;
@@ -36,12 +37,17 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
             if (popup) {
               if (popup === true) {
                 pop = function(feature, layer) {
-                  var popUp = '<pre>'+JSON.stringify(feature.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>';
+                  // var popUp = '<pre>'+JSON.stringify(feature.properties,null,1).replace(/[\{\}\,"]/g,'')+'&emsp;</pre>';
+                  var popUp = json2table(feature.properties, "tab");
                   layer.bindPopup(popUp, { maxWidth: 2000 });
                 };
               } else {
                 pop = function(feature, layer) {
-                  layer.bindPopup(feature.properties[popup].toString());
+                  if (popup.length === 1) {
+                    layer.bindPopup(feature.properties[popup].toString());
+                  } else {
+                    null;
+                  }
                 };
               }
             } else {
@@ -80,3 +86,19 @@ LeafletWidget.methods.addFlatGeoBuf = function (group,
   //map.fitBounds(layer.getBounds());
   //map.layerManager.addLayer(layer, null, null, group);
 };
+
+
+function json2table(json, classes) {
+  var cols = Object.keys(json);
+  var vals = Object.values(json);
+
+  var tab = "";
+
+  for (i = 0; i < cols.length; i++) {
+    tab += "<tr><th>" + cols[i] + "&emsp;</th>" +
+    "<td align='right'>" + vals[i] + "&emsp;</td></tr>";
+  }
+
+  return "<table>" + tab + "</table>";
+
+}

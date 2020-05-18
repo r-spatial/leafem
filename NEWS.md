@@ -1,3 +1,9 @@
+## leafem 0.1.1
+
+bugfixes:
+  
+  * don't use st_zm for addFeatures.mapdeck
+
 ## leafem 0.1.0
 
 new features:
@@ -6,9 +12,10 @@ new features:
   * addLocalFile has gained argument `tms` to specify whether tiles are TMS tiles.
   * new function `updateLayersControl` to update (or add) layers control when adding new base or overlay layers to an existing map (https://twitter.com/mdsumner/status/1194596180061118465).
   * added support for 'mapdeck' maps in addFeatures.
-  * added methods addStarsImage (moved from mapview) and addRasterRGB. Thanks to Luigi Ranghetti (https://github.com/r-spatial/leafem/pull/1).
-  * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto (https://github.com/r-spatial/leafem/pull/2).
+  * added methods addStarsImage (moved from mapview) and addRasterRGB. Thanks to Luigi Ranghetti #1.
+  * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto #2.
   * new function `addFgb` to add flatgeobuf files from file or url.
+  * addImageQuery now much more robust. Also works with leaflet_proxy objects now. Thanks to Sebastian Gatscha #9, #12, #13
   
 miscellaneous:
 

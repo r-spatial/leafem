@@ -38,33 +38,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
           } else {
 
             if (popup) {
-              if (popup === true) {
-                pop = function(feature, layer) {
-                  popUp = json2table(feature.properties, className);
-                  layer.bindPopup(popUp, { maxWidth: 2000 });
-                };
-              } else if (typeof(popup) === "string") {
-                pop = function(feature, layer) {
-                  if (popup in feature.properties) {
-                    popup = popup.split();
-                    popUp = json2table(
-                      pick(feature.properties, popup),
-                      className
-                    );
-                  } else {
-                    popUp = popup;
-                  }
-                  layer.bindPopup(popUp, { maxWidth: 2000 });
-                };
-              } else {
-                pop = function(feature, layer) {
-                  popUp = json2table(
-                    pick(feature.properties, popup),
-                    className
-                  );
-                  layer.bindPopup(popUp, { maxWidth: 2000 });
-                };
-              }
+              pop = makePopup(popup, className);
             } else {
               pop = null;
             }
@@ -97,6 +71,37 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   //map.fitBounds(layer.getBounds());
   //map.layerManager.addLayer(layer, null, null, group);
 };
+
+function makePopup(popup, className) {
+  if (popup === true) {
+    pop = function(feature, layer) {
+      popUp = json2table(feature.properties, className);
+      layer.bindPopup(popUp, { maxWidth: 2000 });
+    };
+  } else if (typeof(popup) === "string") {
+    pop = function(feature, layer) {
+      if (popup in feature.properties) {
+        popup = popup.split();
+        popUp = json2table(
+          pick(feature.properties, popup),
+          className
+        );
+      } else {
+        popUp = popup;
+      }
+      layer.bindPopup(popUp, { maxWidth: 2000 });
+    };
+  } else {
+    pop = function(feature, layer) {
+      popUp = json2table(
+        pick(feature.properties, popup),
+        className
+      );
+      layer.bindPopup(popUp, { maxWidth: 2000 });
+    };
+  }
+  return pop;
+}
 
 
 function json2table(json, cls) {

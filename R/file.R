@@ -134,7 +134,7 @@ addLocalFile = function(map,
     map$dependencies,
     fileDependency(
       fn = path_outfile,
-      group = group
+      layerId = layerId
     )
   )
 
@@ -279,6 +279,8 @@ addTileFolder = function(map,
 #' @param dashArray a string that defines the stroke dash pattern.
 #' @param options a list of extra options for tile layers, popups, paths
 #'   (circles, rectangles, polygons, ...), or other map elements.
+#' @param className optional class name for the popup (table). Can be used
+#'   to define css for the popup.
 #'
 #' @examples
 #'  if (interactive()) {
@@ -295,6 +297,7 @@ addTileFolder = function(map,
 #'        , group = "counties"
 #'        , label = "NAME"
 #'        , popup = TRUE
+#'        , fill = TRUE
 #'        , fillColor = "blue"
 #'        , fillOpacity = 0.6
 #'        , color = "black"
@@ -325,7 +328,8 @@ addFgb = function(map,
                   fillColor = color,
                   fillOpacity = 0.2,
                   dashArray = NULL,
-                  options = NULL) {
+                  options = NULL,
+                  className = NULL) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -376,6 +380,7 @@ addFgb = function(map,
       , label
       , style_list
       , options
+      , className
     )
   } else {
     style_list = list(radius = radius,
@@ -405,6 +410,7 @@ addFgb = function(map,
       , label
       , style_list
       , options
+      , className
     )
   }
 

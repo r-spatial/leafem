@@ -4,7 +4,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 popup,
                                                 label,
                                                 style,
-                                                options) {
+                                                options,
+                                                className) {
 
   var map = this;
   var gl = false;
@@ -16,6 +17,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   } else {
     data_fl = data_fl.href;
   }
+
+  var popUp;
 
   function handleResponse(response) {
     // use fgb JavaScript API to iterate stream into results (features as geojson)
@@ -37,17 +40,29 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             if (popup) {
               if (popup === true) {
                 pop = function(feature, layer) {
-                  // var popUp = '<pre>'+JSON.stringify(feature.properties,null,1).replace(/[\{\}\,"]/g,'')+'&emsp;</pre>';
-                  var popUp = json2table(feature.properties, "tab");
+                  popUp = json2table(feature.properties, className);
+                  layer.bindPopup(popUp, { maxWidth: 2000 });
+                };
+              } else if (typeof(popup) === "string") {
+                pop = function(feature, layer) {
+                  if (popup in feature.properties) {
+                    popup = popup.split();
+                    popUp = json2table(
+                      pick(feature.properties, popup),
+                      className
+                    );
+                  } else {
+                    popUp = popup;
+                  }
                   layer.bindPopup(popUp, { maxWidth: 2000 });
                 };
               } else {
                 pop = function(feature, layer) {
-                  if (popup.length === 1) {
-                    layer.bindPopup(feature.properties[popup].toString());
-                  } else {
-                    null;
-                  }
+                  popUp = json2table(
+                    pick(feature.properties, popup),
+                    className
+                  );
+                  layer.bindPopup(popUp, { maxWidth: 2000 });
                 };
               }
             } else {
@@ -74,11 +89,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
         }
     }
     it.next().then(handleResult);
-}
-
-// using fetch API to get readable stream
-//fetch('https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/2.0.1/test/data/UScounties.fgb')
-//.then(handleResponse)
+  }
 
   fetch(data_fl) //, {mode: 'no-cors'})
   .then(handleResponse);
@@ -88,7 +99,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
 };
 
 
-function json2table(json, classes) {
+function json2table(json, cls) {
   var cols = Object.keys(json);
   var vals = Object.values(json);
 
@@ -99,6 +110,37 @@ function json2table(json, classes) {
     "<td align='right'>" + vals[i] + "&emsp;</td></tr>";
   }
 
-  return "<table>" + tab + "</table>";
+  return "<table class=" + cls + ">" + tab + "</table>";
 
 }
+
+
+/**
+ * from https://gomakethings.com/how-to-create-a-new-object-with-only-a-subject-of-properties-using-vanilla-js/
+ *
+ *
+ * Create a new object composed of properties picked from another object
+ * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+ * @param  {Object} obj   The object to pick properties from
+ * @param  {Array}  props An array of properties to use
+ * @return {Object}       The new object
+ */
+var pick = function (obj, props) {
+
+	'use strict';
+
+	// Make sure object and properties are provided
+	if (!obj || !props) return;
+
+	// Create new object
+	var picked = {};
+
+	// Loop through props and push to new object
+	props.forEach(function(prop) {
+		picked[prop] = obj[prop];
+	});
+
+	// Return new object
+	return picked;
+
+};

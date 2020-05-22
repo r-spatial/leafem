@@ -21,7 +21,8 @@ addFgb(
   fillColor = color,
   fillOpacity = 0.2,
   dashArray = NULL,
-  options = NULL
+  options = NULL,
+  className = NULL
 )
 }
 \arguments{
@@ -64,6 +65,9 @@ If set, \code{url} is ignored.}
 
 \item{options}{a list of extra options for tile layers, popups, paths
 (circles, rectangles, polygons, ...), or other map elements.}
+
+\item{className}{optional class name for the popup (table). Can be used
+to define css for the popup.}
 }
 \description{
 flatgeobuf is a performant binary geo-spatial file format suitable for
@@ -95,6 +99,7 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
        , group = "counties"
        , label = "NAME"
        , popup = TRUE
+       , fill = TRUE
        , fillColor = "blue"
        , fillOpacity = 0.6
        , color = "black"

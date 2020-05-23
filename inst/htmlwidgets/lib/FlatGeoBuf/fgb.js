@@ -47,7 +47,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               pointToLayer: function (feature, latlng) {
                   return L.circleMarker(latlng, options);
               },
-              style: style,
+              style: function(feature) {
+                return updateStyle(style, feature);
+              },
               onEachFeature: pop
             });
 
@@ -63,12 +65,12 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
         }
     }
     it.next().then(handleResult);
-  }
+  };
 
   fetch(data_fl) //, {mode: 'no-cors'})
   .then(handleResponse);
 
-  //map.fitBounds(layer.getBounds());
+  //map.fitBounds(lyr.getBounds());
   //map.layerManager.addLayer(layer, null, null, group);
 };
 
@@ -148,4 +150,22 @@ var pick = function (obj, props) {
 	// Return new object
 	return picked;
 
+};
+
+
+updateStyle = function(style_obj, feature) {
+  var cols = Object.keys(style_obj);
+  var vals = Object.values(style_obj);
+
+  var out = {};
+
+  for (i = 0; i < cols.length; i++) {
+    if (vals[i] === null) {
+      out[cols[i]] = feature.properties[cols[i]];
+    } else {
+      out[cols[i]] = vals[i];
+    }
+  }
+
+  return out;
 };

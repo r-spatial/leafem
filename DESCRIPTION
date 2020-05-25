@@ -36,7 +36,11 @@ Authors@R:
       person(given = "Sebastian",
              family = "Gatscha",
              role = "ctb",
-             email = "sebastian_gatscha@gmx.at"))           
+             email = "sebastian_gatscha@gmx.at"),
+      person(given = "Björn",
+             family = "Harrtell",
+             role = "ctb",
+             comment = "FlatGeobuf plugin"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
     many of which are used by package 'mapview'. 

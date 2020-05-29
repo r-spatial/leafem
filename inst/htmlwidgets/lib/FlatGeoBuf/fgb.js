@@ -163,9 +163,17 @@ updateStyle = function(style_obj, feature) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
+      if (Object.keys(feature.properties).includes(vals[i])) {
+        vals[i] = rescale(feature.properties[vals[i]], 3, 15, 47.08114, 151.6732);
+      }
       out[cols[i]] = vals[i];
     }
   }
 
   return out;
+};
+
+
+rescale = function(value, to_min, to_max, from_min, from_max) {
+  return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
 };

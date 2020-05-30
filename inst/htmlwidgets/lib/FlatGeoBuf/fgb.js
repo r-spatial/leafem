@@ -5,7 +5,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 label,
                                                 style,
                                                 options,
-                                                className) {
+                                                className,
+                                                scale) {
 
   var map = this;
   var gl = false;
@@ -48,15 +49,17 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                   return L.circleMarker(latlng, options);
               },
               style: function(feature) {
-                return updateStyle(style, feature);
+                return updateStyle(style, feature, scale);
               },
               onEachFeature: pop
             });
 
             if (label) {
-              lyr.bindTooltip(function (layer) {
-                 return layer.feature.properties[label].toString();
-              }, {sticky: true});
+              if (Object.keys(result.value.properties).includes(label)) {
+                lyr.bindTooltip(function (layer) {
+                   return layer.feature.properties[label].toString();
+                }, {sticky: true});
+              }
             }
 
             map.layerManager.addLayer(lyr, null, null, group);
@@ -65,7 +68,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
         }
     }
     it.next().then(handleResult);
-  };
+  }
 
   fetch(data_fl) //, {mode: 'no-cors'})
   .then(handleResponse);
@@ -153,7 +156,7 @@ var pick = function (obj, props) {
 };
 
 
-updateStyle = function(style_obj, feature) {
+updateStyle = function(style_obj, feature, scale) {
   var cols = Object.keys(style_obj);
   var vals = Object.values(style_obj);
 
@@ -164,7 +167,13 @@ updateStyle = function(style_obj, feature) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
       if (Object.keys(feature.properties).includes(vals[i])) {
-        vals[i] = rescale(feature.properties[vals[i]], 3, 15, 47.08114, 151.6732);
+        vals[i] = rescale(
+          feature.properties[vals[i]]
+          , scale[cols[i]].to[0]
+          , scale[cols[i]].to[1]
+          , scale[cols[i]].from[0]
+          , scale[cols[i]].from[1]
+        );
       }
       out[cols[i]] = vals[i];
     }

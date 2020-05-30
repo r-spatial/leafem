@@ -22,7 +22,8 @@ addFgb(
   fillOpacity = 0.2,
   dashArray = NULL,
   options = NULL,
-  className = NULL
+  className = NULL,
+  scale = scaleOptions()
 )
 }
 \arguments{
@@ -68,6 +69,9 @@ If set, \code{url} is ignored.}
 
 \item{className}{optional class name for the popup (table). Can be used
 to define css for the popup.}
+
+\item{scale}{named list with instructions on how to scale radius, width,
+opacity, fillOpacity if those are to be mapped to an attribute column.}
 }
 \description{
 flatgeobuf is a performant binary geo-spatial file format suitable for

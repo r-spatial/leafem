@@ -281,6 +281,8 @@ addTileFolder = function(map,
 #'   (circles, rectangles, polygons, ...), or other map elements.
 #' @param className optional class name for the popup (table). Can be used
 #'   to define css for the popup.
+#' @param scale named list with instructions on how to scale radius, width,
+#'   opacity, fillOpacity if those are to be mapped to an attribute column.
 #'
 #' @examples
 #'  if (interactive()) {
@@ -329,7 +331,8 @@ addFgb = function(map,
                   fillOpacity = 0.2,
                   dashArray = NULL,
                   options = NULL,
-                  className = NULL) {
+                  className = NULL,
+                  scale = scaleOptions()) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -381,6 +384,7 @@ addFgb = function(map,
       , style_list
       , options
       , className
+      , scale
     )
   } else {
     style_list = list(radius = radius,
@@ -411,9 +415,23 @@ addFgb = function(map,
       , style_list
       , options
       , className
+      , scale
     )
   }
 
+}
+
+
+scaleOptions = function(radius = list(to = c(3, 15), from = c(3, 15)),
+                        weight = list(to = c(1, 10), from = c(1, 10)),
+                        opacity = list(to = c(0, 1), from = c(0, 1)),
+                        fillOpacity = list(to = c(0, 1), from = c(0, 1))) {
+  list(
+    radius = radius
+    , weight = weight
+    , opacity = opacity
+    , fillOpacity = fillOpacity
+  )
 }
 
 fgbDependencies = function() {

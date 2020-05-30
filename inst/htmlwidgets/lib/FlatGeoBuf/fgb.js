@@ -184,5 +184,8 @@ updateStyle = function(style_obj, feature, scale) {
 
 
 rescale = function(value, to_min, to_max, from_min, from_max) {
+  if (value === undefined) {
+    value = to_min;
+  }
   return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
 };

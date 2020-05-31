@@ -60,7 +60,7 @@ addFeatures <- function(map,
 
   if (inherits(data, "Spatial")) data = sf::st_as_sf(data)
 
-  if (any(grepl("Z|M", colnames(sf::st_coordinates(head(data, 1)))))) {
+  if (any(grepl("Z|M", colnames(sf::st_coordinates(utils::head(data, 1)))))) {
     data = sf::st_zm(data)
   }
 

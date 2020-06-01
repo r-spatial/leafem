@@ -6,7 +6,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 style,
                                                 options,
                                                 className,
-                                                scale) {
+                                                scale,
+                                                scaleFields) {
 
   var map = this;
   var gl = false;
@@ -44,12 +45,24 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               pop = null;
             }
 
+            if (scaleFields === undefined) {
+              var vls = Object.values(style);
+              scaleFields = [];
+              vls.forEach(function(name) {
+                if (name in result.value.properties) {
+                  scaleFields.push(true);
+                } else {
+                  scaleFields.push(false);
+                }
+              });
+            }
+
             lyr = L.geoJSON(result.value, {
               pointToLayer: function (feature, latlng) {
                   return L.circleMarker(latlng, options);
               },
               style: function(feature) {
-                return updateStyle(style, feature, scale);
+                return updateStyle(style, feature, scale, scaleFields);
               },
               onEachFeature: pop
             });
@@ -156,7 +169,7 @@ var pick = function (obj, props) {
 };
 
 
-updateStyle = function(style_obj, feature, scale) {
+updateStyle = function(style_obj, feature, scale, scaleValues) {
   var cols = Object.keys(style_obj);
   var vals = Object.values(style_obj);
 
@@ -166,7 +179,8 @@ updateStyle = function(style_obj, feature, scale) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
-      if (Object.keys(feature.properties).includes(vals[i])) {
+      //if (Object.keys(feature.properties).includes(vals[i])) {
+      if (scaleValues[i] === true) {
         vals[i] = rescale(
           feature.properties[vals[i]]
           , scale[cols[i]].to[0]
@@ -185,7 +199,7 @@ updateStyle = function(style_obj, feature, scale) {
 
 rescale = function(value, to_min, to_max, from_min, from_max) {
   if (value === undefined) {
-    value = to_min;
+    value = from_min;
   }
   return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
 };

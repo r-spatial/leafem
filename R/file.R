@@ -360,6 +360,8 @@ addFgb = function(map,
                       fillColor = fillColor,
                       fillOpacity = fillOpacity)
 
+    scale = utils::modifyList(scaleOptions(), scale)
+
     options = utils::modifyList(as.list(options), style_list)
 
     map$dependencies = c(
@@ -416,6 +418,7 @@ addFgb = function(map,
       , options
       , className
       , scale
+      , scaleFields = NULL
     )
   }
 

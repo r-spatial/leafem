@@ -45,7 +45,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               pop = null;
             }
 
-            if (scaleFields === undefined) {
+            if (scaleFields === undefined &
+                result.value.properties !== undefined) {
               var vls = Object.values(style);
               scaleFields = [];
               vls.forEach(function(name) {
@@ -98,7 +99,7 @@ function makePopup(popup, className) {
     };
   } else if (typeof(popup) === "string") {
     pop = function(feature, layer) {
-      if (popup in feature.properties) {
+      if (feature.properties !== undefined && popup in feature.properties) {
         popup = popup.split();
         popUp = json2table(
           pick(feature.properties, popup),
@@ -179,15 +180,17 @@ updateStyle = function(style_obj, feature, scale, scaleValues) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
-      //if (Object.keys(feature.properties).includes(vals[i])) {
-      if (scaleValues[i] === true) {
-        vals[i] = rescale(
-          feature.properties[vals[i]]
-          , scale[cols[i]].to[0]
-          , scale[cols[i]].to[1]
-          , scale[cols[i]].from[0]
-          , scale[cols[i]].from[1]
-        );
+      if (scaleValues !== undefined) {
+        //if (Object.keys(feature.properties).includes(vals[i])) {
+        if (scaleValues[i] === true) {
+          vals[i] = rescale(
+            feature.properties[vals[i]]
+            , scale[cols[i]].to[0]
+            , scale[cols[i]].to[1]
+            , scale[cols[i]].from[0]
+            , scale[cols[i]].from[1]
+          );
+        }
       }
       out[cols[i]] = vals[i];
     }

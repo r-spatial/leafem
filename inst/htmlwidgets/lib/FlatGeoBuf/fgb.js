@@ -21,11 +21,18 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   }
 
   var popUp;
+  var colnames = [];
 
-  function handleResponse(response) {
+  function handleHeaderMeta(headerMeta) {
+    headerMeta.columns.forEach(function(col) {
+      colnames.push(col.name);
+    });
+  }
+
+function handleResponse(response) {
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
-    let it = flatgeobuf.deserialize(response.body);
+    let it = flatgeobuf.deserialize(response.body, undefined, handleHeaderMeta);
     // handle result
     function handleResult(result) {
         if (!result.done) {
@@ -50,7 +57,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               var vls = Object.values(style);
               scaleFields = [];
               vls.forEach(function(name) {
-                if (name in result.value.properties) {
+                //if (name in colnames) {
+                if (colnames.includes(name)) {
                   scaleFields.push(true);
                 } else {
                   scaleFields.push(false);

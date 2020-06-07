@@ -25,7 +25,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   function handleResponse(response) {
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
-    let it = flatgeobuf.deserializeStream(response.body);
+    let it = flatgeobuf.deserialize(response.body);
     // handle result
     function handleResult(result) {
         if (!result.done) {
@@ -129,7 +129,7 @@ function json2table(json, cls) {
 
   var tab = "";
 
-  for (i = 0; i < cols.length; i++) {
+  for (let i = 0; i < cols.length; i++) {
     tab += "<tr><th>" + cols[i] + "&emsp;</th>" +
     "<td align='right'>" + vals[i] + "&emsp;</td></tr>";
   }
@@ -176,7 +176,7 @@ updateStyle = function(style_obj, feature, scale, scaleValues) {
 
   var out = {};
 
-  for (i = 0; i < cols.length; i++) {
+  for (let i = 0; i < cols.length; i++) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {

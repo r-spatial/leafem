@@ -29,7 +29,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     });
   }
 
-function handleResponse(response) {
+  function handleResponse(response) {
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
     let it = flatgeobuf.deserialize(response.body, undefined, handleHeaderMeta);
@@ -157,7 +157,7 @@ function json2table(json, cls) {
  * @param  {Array}  props An array of properties to use
  * @return {Object}       The new object
  */
-var pick = function (obj, props) {
+function pick(obj, props) {
 
 	'use strict';
 
@@ -175,10 +175,10 @@ var pick = function (obj, props) {
 	// Return new object
 	return picked;
 
-};
+}
 
 
-updateStyle = function(style_obj, feature, scale, scaleValues) {
+function updateStyle(style_obj, feature, scale, scaleValues) {
   var cols = Object.keys(style_obj);
   var vals = Object.values(style_obj);
 
@@ -205,12 +205,12 @@ updateStyle = function(style_obj, feature, scale, scaleValues) {
   }
 
   return out;
-};
+}
 
 
-rescale = function(value, to_min, to_max, from_min, from_max) {
+function rescale(value, to_min, to_max, from_min, from_max) {
   if (value === undefined) {
     value = from_min;
   }
   return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
-};
+}

@@ -367,6 +367,7 @@ addFgb = function(map,
     map$dependencies = c(
       map$dependencies
       , fgbDependencies()
+      , chromaJsDependencies()
     )
 
     map$dependencies = c(
@@ -403,6 +404,7 @@ addFgb = function(map,
     map$dependencies = c(
       map$dependencies
       , fgbDependencies()
+      , chromaJsDependencies()
     )
 
     leaflet::invokeMethod(
@@ -446,6 +448,19 @@ fgbDependencies = function() {
       , script = c(
         'fgb.js'
         , 'flatgeobuf-geojson.min.js'
+      )
+    )
+  )
+}
+
+chromaJsDependencies = function() {
+  list(
+    htmltools::htmlDependency(
+      "chromajs"
+      , '2.1.0'
+      , system.file("htmlwidgets/lib/chroma", package = "leafem")
+      , script = c(
+        'chroma.min.js'
       )
     )
   )

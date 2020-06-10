@@ -94,7 +94,7 @@ removeHomeButton <- function(map) {
 
 
 addZoomFullButton = function(map, lst, position = "bottomleft") {
-  bb = combineExtent(lst, sf = FALSE)
+  bb = combineExtent(lst, sf = FALSE, crs = getProjection(lst[[1]]))
   names(bb) = NULL
   label = "Zoom to full extent"
   txt = "<strong>Zoom full</strong>"

@@ -135,6 +135,10 @@ addPointFeatures.mapview = addPointFeatures.leaflet
 addPointFeatures.mapdeck <- function(map,
                                      data,
                                      ...) {
+  if (!requireNamespace("mapdeck", quietly = TRUE)) {
+    stop("Package \"mapdeck\" must be installed for this function to work.",
+         call. = FALSE)
+  }
   garnishMap(
     map
     , mapdeck::add_scatterplot
@@ -184,6 +188,10 @@ addLineFeatures.mapview = addLineFeatures.leaflet
 addLineFeatures.mapdeck <- function(map,
                                     data,
                                     ...) {
+  if (!requireNamespace("mapdeck", quietly = TRUE)) {
+    stop("Package \"mapdeck\" must be installed for this function to work.",
+         call. = FALSE)
+  }
   garnishMap(
     map
     , mapdeck::add_path
@@ -232,6 +240,10 @@ addPolygonFeatures.mapview = addPolygonFeatures.leaflet
 addPolygonFeatures.mapdeck <- function(map,
                                        data,
                                        ...) {
+  if (!requireNamespace("mapdeck", quietly = TRUE)) {
+    stop("Package \"mapdeck\" must be installed for this function to work.",
+         call. = FALSE)
+  }
   garnishMap(
     map
     , mapdeck::add_polygon

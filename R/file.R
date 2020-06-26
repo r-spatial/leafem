@@ -332,7 +332,8 @@ addFgb = function(map,
                   dashArray = NULL,
                   options = NULL,
                   className = NULL,
-                  scale = scaleOptions()) {
+                  scale = scaleOptions(),
+                  ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 

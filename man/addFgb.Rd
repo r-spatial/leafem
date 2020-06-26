@@ -23,7 +23,8 @@ addFgb(
   dashArray = NULL,
   options = NULL,
   className = NULL,
-  scale = scaleOptions()
+  scale = scaleOptions(),
+  ...
 )
 }
 \arguments{

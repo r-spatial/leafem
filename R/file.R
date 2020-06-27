@@ -343,20 +343,8 @@ addFgb = function(map,
   if (is.null(group))
     group = basename(tools::file_path_sans_ext(file))
 
-  if (grepl("\\.", group)) {
-    warning(
-      sprintf(
-        "found dot(s) ('.') in group '%s'! replacing with '_' to become '%s'"
-        , group
-        , gsub("\\.", "_", group)
-      )
-      , "\n keep in mind when setting layerscontrol"
-      , call. = FALSE
-    )
-    ## the actual replace ment is done in fgb.js:15
-  }
-
   if (is.null(layerId)) layerId = group
+  layerId = gsub("\\.", "_", layerId)
 
   if (!is.null(file)) {
     path_layer = tempfile()

@@ -12,8 +12,6 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   var map = this;
   var gl = false;
 
-  group = group.split(".").join("_");
-
   var data_fl = document.getElementById(layerId + '-1-attachment');
 
   if (data_fl === null) {

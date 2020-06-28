@@ -53,8 +53,9 @@ garnishMap <- function(map, ...) {
       , silent = TRUE
     )
     if (!inherits(args_i, "try-error")) {
+      args_lst = ls[args_i][!(is.na(names(ls[args_i])))]
       maptry = try(
-        do.call(i, append(list(map = map), Filter(Negate(is.null), ls[args_i])))
+        do.call(i, append(list(map = map), args_lst))
         , silent = TRUE
       )
       if (!inherits(maptry, "try-error")) {

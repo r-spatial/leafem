@@ -2,7 +2,9 @@ addGeoRaster = function(map,
                         file = NULL,
                         url = NULL,
                         group = NULL,
-                        layerId = NULL) {
+                        layerId = NULL,
+                        resolution = 96,
+                        opacity = 0.8) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -35,6 +37,8 @@ addGeoRaster = function(map,
       , url
       , group
       , layerId
+      , resolution
+      , opacity
     )
   } else {
     map$dependencies <- c(
@@ -49,6 +53,8 @@ addGeoRaster = function(map,
       , url
       , group
       , layerId
+      , resolution
+      , opacity
     )
   }
 

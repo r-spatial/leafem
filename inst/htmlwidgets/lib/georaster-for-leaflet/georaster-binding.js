@@ -1,6 +1,8 @@
 LeafletWidget.methods.addGeoRaster = function (url,
                                                group,
-                                               layerId) {
+                                               layerId,
+                                               resolution,
+                                               opacity) {
 
   var map = this;
 
@@ -19,7 +21,8 @@ LeafletWidget.methods.addGeoRaster = function (url,
             console.log("georaster:", georaster);
             var layer = new GeoRasterLayer({
               georaster: georaster,
-              resolution: 96
+              resolution: resolution,
+              opacity: opacity
             });
             layer.addTo(map);
             map.fitBounds(layer.getBounds());

@@ -11,6 +11,13 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
 
   var map = this;
   var gl = false;
+  var pane;
+
+  if (options.pane === undefined) {
+    pane = 'overlayPane';
+  } else {
+    pane = options.pane;
+  }
 
   var data_fl = document.getElementById(layerId + '-1-attachment');
 
@@ -73,7 +80,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               style: function(feature) {
                 return updateStyle(style, feature, scale, scaleFields);
               },
-              onEachFeature: pop
+              onEachFeature: pop,
+              pane: pane
             });
 
             if (label) {

@@ -374,7 +374,7 @@ addFgb = function(map,
 
     scale = utils::modifyList(scaleOptions(), scale)
 
-    options = utils::modifyList(as.list(options), style_list)
+    options = options[!(options %in% style_list)]
 
     map$dependencies = c(
       map$dependencies

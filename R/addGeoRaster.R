@@ -4,7 +4,8 @@ addGeoRaster = function(map,
                         group = NULL,
                         layerId = NULL,
                         resolution = 96,
-                        opacity = 0.8) {
+                        opacity = 0.8,
+                        colorOptions = colorOptions()) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -28,6 +29,7 @@ addGeoRaster = function(map,
       map$dependencies
       , fileAttachment(path_layer, layerId)
       , leafletGeoRasterDependencies()
+      , chromaJsDependencies()
     )
 
     leaflet::invokeMethod(
@@ -39,11 +41,13 @@ addGeoRaster = function(map,
       , layerId
       , resolution
       , opacity
+      , colorOptions
     )
   } else {
     map$dependencies <- c(
       map$dependencies
       , leafletGeoRasterDependencies()
+      , chromaJsDependencies()
     )
 
     leaflet::invokeMethod(
@@ -55,10 +59,20 @@ addGeoRaster = function(map,
       , layerId
       , resolution
       , opacity
+      , colorOptions
     )
   }
 
 }
+
+colorOptions = function(palette = hcl.colors(256, "inferno"),
+                        breaks = NULL) {
+  if (is.function(palette)) {
+    palette = palette(256)
+  }
+  list(palette = palette, breaks = breaks)
+}
+
 
 leafletGeoRasterDependencies = function() {
   list(

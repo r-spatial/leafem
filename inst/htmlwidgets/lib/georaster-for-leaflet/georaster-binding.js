@@ -2,7 +2,8 @@ LeafletWidget.methods.addGeoRaster = function (url,
                                                group,
                                                layerId,
                                                resolution,
-                                               opacity) {
+                                               opacity,
+                                               colorOptions) {
 
   var map = this;
 
@@ -14,13 +15,26 @@ LeafletWidget.methods.addGeoRaster = function (url,
     data_fl = data_fl.href;
   }
 
+  const cols = colorOptions.palette;
+
+  var scale = chroma.scale(cols);
+
+  if (colorOptions.breaks !== null) {
+    scale = scale.classes(colorOptions.breaks);
+  }
+
   fetch(data_fl)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
           parseGeoraster(arrayBuffer).then(georaster => {
+            var pixelValuesToColorFn = values => {
+              let clr = scale.domain([georaster.mins, georaster.maxs]);
+              return clr(values).hex();
+            };
             console.log("georaster:", georaster);
             var layer = new GeoRasterLayer({
               georaster: georaster,
+              pixelValuesToColorFn: pixelValuesToColorFn,
               resolution: resolution,
               opacity: opacity
             });

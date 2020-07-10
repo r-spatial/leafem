@@ -345,8 +345,18 @@ addFgb = function(map,
 
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
+  layerId = gsub(" ", "", layerId)
 
   if (!is.null(file)) {
+    if (!file.exists(file)) {
+      stop(
+        sprintf(
+          "file %s does not seem to exist"
+          , file
+        )
+        , call. = FALSE
+      )
+    }
     path_layer = tempfile()
     dir.create(path_layer)
     path_layer = paste0(path_layer, "/", layerId, "_layer.fgb")

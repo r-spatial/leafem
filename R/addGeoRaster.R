@@ -65,12 +65,17 @@ addGeoRaster = function(map,
 
 }
 
-colorOptions = function(palette = hcl.colors(256, "inferno"),
-                        breaks = NULL) {
+colorOptions = function(palette = NULL,
+                        breaks = NULL,
+                        na.color = "#bebebe22") {
   if (is.function(palette)) {
     palette = palette(256)
   }
-  list(palette = palette, breaks = breaks)
+  list(
+    palette = palette
+    , breaks = breaks
+    , naColor = na.color
+  )
 }
 
 

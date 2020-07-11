@@ -29,6 +29,7 @@ LeafletWidget.methods.addGeoRaster = function (url,
           parseGeoraster(arrayBuffer).then(georaster => {
             var pixelValuesToColorFn = values => {
               let clr = scale.domain([georaster.mins, georaster.maxs]);
+              if (isNaN(values)) return colorOptions.naColor;
               return clr(values).hex();
             };
             console.log("georaster:", georaster);

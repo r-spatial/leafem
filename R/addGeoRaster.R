@@ -5,7 +5,8 @@ addGeoRaster = function(map,
                         layerId = NULL,
                         resolution = 96,
                         opacity = 0.8,
-                        colorOptions = colorOptions()) {
+                        colorOptions = colorOptions(),
+                        pixelValuesToColorFn = NULL) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -42,6 +43,7 @@ addGeoRaster = function(map,
       , resolution
       , opacity
       , colorOptions
+      , pixelValuesToColorFn
     )
   } else {
     map$dependencies <- c(
@@ -60,6 +62,7 @@ addGeoRaster = function(map,
       , resolution
       , opacity
       , colorOptions
+      , pixelValuesToColorFn
     )
   }
 

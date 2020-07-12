@@ -3,7 +3,8 @@ LeafletWidget.methods.addGeoRaster = function (url,
                                                layerId,
                                                resolution,
                                                opacity,
-                                               colorOptions) {
+                                               colorOptions,
+                                               pixelValuesToColorFn) {
 
   var map = this;
 
@@ -15,33 +16,45 @@ LeafletWidget.methods.addGeoRaster = function (url,
     data_fl = data_fl.href;
   }
 
-  const cols = colorOptions.palette;
+  if (pixelValuesToColorFn === null) {
+    pixelValuesToColorFn = (raster, colorOptions) => {
+      const cols = colorOptions.palette;
+      var scale = chroma.scale(cols);
 
-  var scale = chroma.scale(cols);
-
-  if (colorOptions.breaks !== null) {
-    scale = scale.classes(colorOptions.breaks);
+      if (colorOptions.breaks !== null) {
+        scale = scale.classes(colorOptions.breaks);
+      }
+      var pixelFunc = values => {
+        let clr = scale.domain([raster.mins, raster.maxs]);
+        if (isNaN(values)) return colorOptions.naColor;
+        return clr(values).hex();
+      };
+      return pixelFunc;
+    };
   }
 
-  fetch(data_fl)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => {
-          parseGeoraster(arrayBuffer).then(georaster => {
-            var pixelValuesToColorFn = values => {
+  /*
+  var pixelValuesToColorFn = values => {
               let clr = scale.domain([georaster.mins, georaster.maxs]);
               if (isNaN(values)) return colorOptions.naColor;
               return clr(values).hex();
             };
-            console.log("georaster:", georaster);
-            var layer = new GeoRasterLayer({
-              georaster: georaster,
-              pixelValuesToColorFn: pixelValuesToColorFn,
-              resolution: resolution,
-              opacity: opacity
-            });
-            layer.addTo(map);
-            map.fitBounds(layer.getBounds());
+  */
+
+  fetch(data_fl)
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => {
+      parseGeoraster(arrayBuffer).then(georaster => {
+        console.log("georaster:", georaster);
+        var layer = new GeoRasterLayer({
+          georaster: georaster,
+          pixelValuesToColorFn: pixelValuesToColorFn(georaster, colorOptions),
+          resolution: resolution,
+          opacity: opacity
         });
+        map.layerManager.addLayer(layer, null, layerId, group);
+        map.fitBounds(layer.getBounds());
       });
+    });
 
 };

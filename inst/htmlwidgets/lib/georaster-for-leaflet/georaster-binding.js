@@ -1,10 +1,10 @@
-LeafletWidget.methods.addGeoRaster = function (url,
-                                               group,
-                                               layerId,
-                                               resolution,
-                                               opacity,
-                                               colorOptions,
-                                               pixelValuesToColorFn) {
+LeafletWidget.methods.addGeotiff = function (url,
+                                             group,
+                                             layerId,
+                                             resolution,
+                                             opacity,
+                                             colorOptions,
+                                             pixelValuesToColorFn) {
 
   var map = this;
 

@@ -1,12 +1,55 @@
 addGeoRaster = function(map,
-                        file = NULL,
-                        url = NULL,
+                        x,
                         group = NULL,
                         layerId = NULL,
                         resolution = 96,
                         opacity = 0.8,
                         colorOptions = colorOptions(),
                         pixelValuesToColorFn = NULL) {
+
+  if (inherits(x, "Raster")) {
+    x = stars::st_as_stars(x)
+  }
+
+  if (!sf::st_is_longlat(x)) {
+    x = stars::st_warp(x, crs = 4326)
+  }
+
+  fl = tempfile(fileext = ".tif")
+
+  if (inherits(x, "stars_proxy")) {
+    file.copy(x[[1]], fl)
+  }
+
+  if (!inherits(x, "stars_proxy")) {
+    stars::write_stars(x, dsn = fl)
+  }
+
+  addGeotiff(
+    map
+    , file = fl
+    , url = NULL
+    , group = group
+    , layerId = layerId
+    , resolution = resolution
+    , opacity = opacity
+    , colorOptions = colorOptions
+    , pixelValuesToColorFn = pixelValuesToColorFn
+  )
+
+}
+
+
+
+addGeotiff = function(map,
+                      file = NULL,
+                      url = NULL,
+                      group = NULL,
+                      layerId = NULL,
+                      resolution = 96,
+                      opacity = 0.8,
+                      colorOptions = colorOptions(),
+                      pixelValuesToColorFn = NULL) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -36,7 +79,7 @@ addGeoRaster = function(map,
     leaflet::invokeMethod(
       map
       , data = leaflet::getMapData(map)
-      , method = "addGeoRaster"
+      , method = "addGeotiff"
       , url
       , group
       , layerId
@@ -55,7 +98,7 @@ addGeoRaster = function(map,
     leaflet::invokeMethod(
       map
       , data = leaflet::getMapData(map)
-      , method = "addGeoRaster"
+      , method = "addGeotiff"
       , url
       , group
       , layerId

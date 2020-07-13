@@ -18,7 +18,7 @@ addFgb(
   weight = 5,
   opacity = 0.5,
   fill = FALSE,
-  fillColor = color,
+  fillColor = NULL,
   fillOpacity = 0.2,
   dashArray = NULL,
   options = NULL,
@@ -56,10 +56,10 @@ If set, \code{url} is ignored.}
 
 \item{opacity}{stroke opacity.}
 
-\item{fill}{whether to fill the path with color
-(e.g. filling on polygons or circles).}
+\item{fill}{whether to fill the path with \code{fillColor}. If \code{fillColor}
+is set, this will be set to \code{TRUE}, default is \code{FALSE}.}
 
-\item{fillColor}{fill color.}
+\item{fillColor}{fill color. If set, \code{fill} will be set to \code{TRUE}.}
 
 \item{fillOpacity}{fill opacity.}
 

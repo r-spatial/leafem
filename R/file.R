@@ -272,9 +272,9 @@ addTileFolder = function(map,
 #' @param color stroke color.
 #' @param weight stroke width in pixels.
 #' @param opacity stroke opacity.
-#' @param fill whether to fill the path with color
-#'   (e.g. filling on polygons or circles).
-#' @param fillColor fill color.
+#' @param fill whether to fill the path with \code{fillColor}. If \code{fillColor}
+#'   is set, this will be set to \code{TRUE}, default is \code{FALSE}.
+#' @param fillColor fill color. If set, \code{fill} will be set to \code{TRUE}.
 #' @param fillOpacity fill opacity.
 #' @param dashArray a string that defines the stroke dash pattern.
 #' @param options a list of extra options for tile layers, popups, paths
@@ -327,13 +327,18 @@ addFgb = function(map,
                   weight = 5,
                   opacity = 0.5,
                   fill = FALSE,
-                  fillColor = color,
+                  fillColor = NULL,
                   fillOpacity = 0.2,
                   dashArray = NULL,
                   options = NULL,
                   className = NULL,
                   scale = scaleOptions(),
                   ...) {
+
+  if (!is.null(fillColor)) fill = TRUE
+  if (is.null(fillColor) && isTRUE(fill)) {
+    fillColor = color
+  }
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 

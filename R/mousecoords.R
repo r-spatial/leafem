@@ -141,7 +141,7 @@ addMouseCoordinates <- function(map,
       // remove the lnlt div when mouse leaves map
       map.on('mouseout', function (e) {
       var strip = document.querySelector('.lnlt');
-      strip.remove();
+      if( strip !==null) strip.remove();
       });
 
       };

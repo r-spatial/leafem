@@ -3,6 +3,7 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              layerId,
                                              resolution,
                                              opacity,
+                                             options,
                                              colorOptions,
                                              pixelValuesToColorFn) {
 
@@ -14,6 +15,12 @@ LeafletWidget.methods.addGeotiff = function (url,
     data_fl = url;
   } else {
     data_fl = data_fl.href;
+  }
+
+  if (options.pane === undefined) {
+    pane = 'tilePane';
+  } else {
+    pane = options.pane;
   }
 
   if (pixelValuesToColorFn === null) {
@@ -50,7 +57,8 @@ LeafletWidget.methods.addGeotiff = function (url,
           georaster: georaster,
           pixelValuesToColorFn: pixelValuesToColorFn(georaster, colorOptions),
           resolution: resolution,
-          opacity: opacity
+          opacity: opacity,
+          pane: pane
         });
         map.layerManager.addLayer(layer, null, layerId, group);
         map.fitBounds(layer.getBounds());

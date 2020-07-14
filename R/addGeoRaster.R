@@ -4,6 +4,7 @@ addGeoRaster = function(map,
                         layerId = NULL,
                         resolution = 96,
                         opacity = 0.8,
+                        options = leaflet::tileOptions(),
                         colorOptions = colorOptions(),
                         pixelValuesToColorFn = NULL) {
 
@@ -33,6 +34,7 @@ addGeoRaster = function(map,
     , layerId = layerId
     , resolution = resolution
     , opacity = opacity
+    , options
     , colorOptions = colorOptions
     , pixelValuesToColorFn = pixelValuesToColorFn
   )
@@ -48,6 +50,7 @@ addGeotiff = function(map,
                       layerId = NULL,
                       resolution = 96,
                       opacity = 0.8,
+                      options = leaflet::tileOptions(),
                       colorOptions = colorOptions(),
                       pixelValuesToColorFn = NULL) {
 
@@ -85,6 +88,7 @@ addGeotiff = function(map,
       , layerId
       , resolution
       , opacity
+      , options
       , colorOptions
       , pixelValuesToColorFn
     )
@@ -104,6 +108,7 @@ addGeotiff = function(map,
       , layerId
       , resolution
       , opacity
+      , options
       , colorOptions
       , pixelValuesToColorFn
     )

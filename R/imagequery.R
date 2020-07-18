@@ -48,7 +48,6 @@
 #' }
 #'
 #' @importFrom raster projectExtent projectRaster as.matrix
-#' @importFrom sp CRS
 #'
 #' @export addImageQuery
 #' @name addImageQuery
@@ -88,11 +87,13 @@ addImageQuery = function(map,
         projected <- sf::st_transform(x, crs = 4326)
       }
     }
-    if (inherits(x, "Raster")) projected <- raster::projectRaster(
-      x,
-      raster::projectExtent(x, crs = sp::CRS(llcrs)),
-      method = "ngb"
-    )
+    if (inherits(x, "Raster")) {
+      projected = raster::projectRaster(
+        x
+        , raster::projectExtent(x, crs = sf::st_crs(4326)$proj4string)
+        , method = "ngb"
+      )
+    }
   } else {
     projected <- x
   }
@@ -137,7 +138,16 @@ addImageQuery = function(map,
 
   bounds <- as.numeric(sf::st_bbox(projected))
 
-  leaflet::invokeMethod(map, NULL, "addImageQuery", layerId, bounds, type, digits, prefix)
+  leaflet::invokeMethod(
+    map
+    , NULL
+    , "addImageQuery"
+    , layerId
+    , bounds
+    , type
+    , digits
+    , prefix
+  )
 }
 
 ##############################################################################

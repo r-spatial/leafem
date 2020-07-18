@@ -1,8 +1,16 @@
-## leafem 0.1.1
+## leafem 0.1.2
+
+new features:
+
+  * addFgb has gained argument className to allow css specification.
 
 bugfixes:
   
   * don't use st_zm for addFeatures.mapdeck
+  * remove mousecoords strip only if it exists. #23
+  * addFgb now respects pane passed via options.
+  * addFgb used to fail LayerId contained . (dot).
+  * addFgb uses layerId instead of group to attach to html.
 
 ## leafem 0.1.0
 

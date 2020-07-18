@@ -102,8 +102,7 @@ addPointFeatures.leaflet <- function(map,
   if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
   if (wgl) {
     if (!requireNamespace("leafgl")) {
-      stop("please remotes::install_github('r-spatial/leafgl')",
-           "to use webgl rendering",
+      stop("please install.packages('leafgl') to use webgl rendering",
            call. = FALSE)
     }
   }
@@ -159,8 +158,7 @@ addLineFeatures.leaflet <- function(map,
   if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
   if (wgl) {
     if (!requireNamespace("leafgl")) {
-      stop("please remotes::install_github('r-spatial/leafgl')",
-           "to use webgl rendering",
+      stop("please install.packages('leafgl') to use webgl rendering",
            call. = FALSE)
     }
   }
@@ -211,8 +209,7 @@ addPolygonFeatures.leaflet <- function(map,
   if ("gl" %in% names(list(...))) wgl = list(...)$gl else wgl = FALSE
   if (wgl) {
     if (!requireNamespace("leafgl")) {
-      stop("please remotes::install_github('r-spatial/leafgl')",
-           "to use webgl rendering",
+      stop("please install.packages('leafgl') to use webgl rendering",
            call. = FALSE)
     }
   }

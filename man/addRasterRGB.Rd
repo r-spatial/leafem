@@ -45,8 +45,8 @@ If set to NULL, stretching is performed basing on `domain` argument.}
 
 \item{domain}{the upper and lower values used for color stretching.
 This is used only if `quantiles` is NULL.
-If bot `domain` and `quantiles` are set to NULL, stretching is applied
-basing on min-max values.}
+If both `domain` and `quantiles` are set to NULL, stretching is applied
+based on min-max values.}
 
 \item{na.color}{the color to be used for NA pixels}
 

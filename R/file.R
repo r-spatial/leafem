@@ -283,6 +283,7 @@ addTileFolder = function(map,
 #'   to define css for the popup.
 #' @param scale named list with instructions on how to scale radius, width,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
+#' @param ... currently not used.
 #'
 #' @examples
 #'  if (interactive()) {

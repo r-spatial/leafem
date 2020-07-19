@@ -17,6 +17,7 @@ LeafletWidget.methods.addGeotiff = function (url,
     data_fl = data_fl.href;
   }
 
+  var pane;  // could also use let
   if (options.pane === undefined) {
     pane = 'tilePane';
   } else {

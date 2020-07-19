@@ -1,8 +1,9 @@
-## leafem 0.1.2
+## leafem 0.1.3
 
 new features:
 
   * addFgb has gained argument className to allow css specification.
+  * new functions addGeotiff and addGeoRaster to render large raster data using https://github.com/GeoTIFF/georaster-layer-for-leaflet
 
 bugfixes:
   

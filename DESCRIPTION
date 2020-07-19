@@ -1,8 +1,8 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.1.2
-Date: 2020-07-18
+Version: 0.1.3
+Date: 2020-07-19
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",

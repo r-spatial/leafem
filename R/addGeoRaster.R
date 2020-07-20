@@ -45,13 +45,10 @@
 #'       x1
 #'       , opacity = 1
 #'       , colorOptions = colorOptions(
-#'         palette = hcl.colors(256, "inferno")
+#'         palette = grey.colors(256)
 #'       )
 #'     )
 #' }
-#'
-#' @importFrom stars st_as_stars st_warp write_stars
-#' @importFrom sf st_is_longlat
 #'
 #' @export addGeoRaster
 #' @name addGeoRaster
@@ -138,14 +135,15 @@ addGeoRaster = function(map,
 #' if (interactive()) {
 #'   library(leaflet)
 #'   library(leafem)
+#'   library(stars)
 #'
-#'   chrpsfl_202004 = "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_monthly/tifs/chirps-v2.0.2020.04.tif.gz"
-#'   dsn_202004 = file.path(tempdir(), basename(chrpsfl_202004))
+#'   tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#'   x1 = read_stars(tif)
+#'   x1 = x1[, , , 3] # band 3
 #'
-#'   download.file(chrpsfl_202004, dsn_202004)
+#'   tmpfl = tempfile(fileext = ".tif")
 #'
-#'   tiffl_202004 = gsub(".gz", "", dsn_202004)
-#'   R.utils::gunzip(dsn_202004, tiffl_202004)
+#'   write_stars(st_warp(x1, crs = 4326), tmpfl)
 #'
 #'   myCustomJSFunc = htmlwidgets::JS(
 #'     "
@@ -159,7 +157,6 @@ addGeoRaster = function(map,
 #'         var pixelFunc = values => {
 #'           let clr = scale.domain([raster.mins, raster.maxs]);
 #'           if (isNaN(values)) return colorOptions.naColor;
-#'           if (values < 120) return colorOptions.naColor;
 #'           return clr(values).hex();
 #'         };
 #'         return pixelFunc;
@@ -170,20 +167,16 @@ addGeoRaster = function(map,
 #'   leaflet() %>%
 #'     addTiles() %>%
 #'     addGeotiff(
-#'       file = tiffl_202004
+#'       file = tmpfl
 #'       , opacity = 0.9
 #'       , colorOptions = colorOptions(
-#'         palette = hcl.colors(256, "viridis")
-#'         , breaks = seq(0, 1000, 10)
+#'         palette = grey.colors
 #'         , na.color = "transparent"
 #'       )
 #'       , pixelValuesToColorFn = myCustomJSFunc
 #'     )
 #'
 #' }
-#'
-#' @importFrom stars st_as_stars st_warp write_stars
-#' @importFrom sf st_is_longlat
 #'
 #' @export addGeotiff
 #' @name addGeotiff

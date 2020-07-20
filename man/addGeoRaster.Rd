@@ -76,8 +76,8 @@ if (interactive()) {
     leafem:::addGeoRaster(
       x1
       , opacity = 1
-      , colorOptions = leafem:::colorOptions(
-        palette = hcl.colors(256, "inferno")
+      , colorOptions = colorOptions(
+        palette = grey.colors(256)
       )
     )
 }

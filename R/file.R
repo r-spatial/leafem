@@ -337,9 +337,6 @@ addFgb = function(map,
                   ...) {
 
   if (!is.null(fillColor)) fill = TRUE
-  if (is.null(fillColor) && isTRUE(fill)) {
-    fillColor = color
-  }
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 

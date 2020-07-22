@@ -336,7 +336,7 @@ addFgb = function(map,
                   scale = scaleOptions(),
                   ...) {
 
-  if (!is.null(fillColor)) fill = TRUE
+  # if (!is.null(fillColor)) fill = TRUE
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -349,6 +349,8 @@ addFgb = function(map,
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
   layerId = gsub(" ", "", layerId)
+  layerId = gsub('\\"', '', layerId)
+  layerId = gsub("\\'", "", layerId)
 
   if (!is.null(file)) {
     if (!file.exists(file)) {

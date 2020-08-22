@@ -256,6 +256,39 @@ addGeotiff = function(map,
 }
 
 
+addCOG = function(map,
+                  url = NULL,
+                  group = NULL,
+                  layerId = NULL,
+                  resolution = 96,
+                  opacity = 0.8,
+                  options = leaflet::tileOptions(),
+                  colorOptions = NULL, #colorOptions(),
+                  pixelValuesToColorFn = NULL,
+                  ...) {
+
+  map$dependencies <- c(
+    map$dependencies
+    , leafletGeoRasterDependencies()
+    , chromaJsDependencies()
+  )
+
+  leaflet::invokeMethod(
+    map
+    , data = leaflet::getMapData(map)
+    , method = "addCOG"
+    , url
+    , group
+    , layerId
+    , resolution
+    , opacity
+    , options
+    , colorOptions
+    , pixelValuesToColorFn
+  )
+}
+
+
 #' Color options for addGeoRaster and addGeotiff
 #'
 #' @param palette the color palette to use. Can be a set of colors or a

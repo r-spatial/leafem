@@ -67,3 +67,42 @@ LeafletWidget.methods.addGeotiff = function (url,
     });
 
 };
+
+
+LeafletWidget.methods.addCOG = function (url,
+                                         group,
+                                         layerId,
+                                         resolution,
+                                         opacity,
+                                         options,
+                                         colorOptions,
+                                         pixelValuesToColorFn) {
+
+  var map = this;
+
+  var pane;  // could also use let
+  if (options.pane === undefined) {
+    pane = 'tilePane';
+  } else {
+    pane = options.pane;
+  }
+
+  parseGeoraster(url).then(georaster => {
+    console.log("georaster:", georaster);
+
+    /*
+        GeoRasterLayer is an extension of GridLayer,
+        which means can use GridLayer options like opacity.
+        Just make sure to include the georaster option!
+        http://leafletjs.com/reference-1.2.0.html#gridlayer
+    */
+    var layer = new GeoRasterLayer({
+        georaster: georaster,
+        resolution: resolution,
+        opacity: opacity,
+        pane: pane
+    });
+    map.layerManager.addLayer(layer, null, layerId, group);
+    map.fitBounds(layer.getBounds());
+  });
+};

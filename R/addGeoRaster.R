@@ -299,6 +299,7 @@ addCOG = function(map,
 #' @export
 colorOptions = function(palette = NULL,
                         breaks = NULL,
+                        domain = NULL,
                         na.color = "#bebebe22") {
   if (is.function(palette)) {
     palette = palette(256)
@@ -306,6 +307,7 @@ colorOptions = function(palette = NULL,
   list(
     palette = palette
     , breaks = breaks
+    , domain = domain
     , naColor = na.color
   )
 }

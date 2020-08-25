@@ -4,7 +4,12 @@
 \alias{colorOptions}
 \title{Color options for addGeoRaster and addGeotiff}
 \usage{
-colorOptions(palette = NULL, breaks = NULL, na.color = "#bebebe22")
+colorOptions(
+  palette = NULL,
+  breaks = NULL,
+  domain = NULL,
+  na.color = "#bebebe22"
+)
 }
 \arguments{
 \item{palette}{the color palette to use. Can be a set of colors or a

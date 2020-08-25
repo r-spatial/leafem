@@ -157,3 +157,78 @@ rscl = function(x,
 #   return(raster::extent(c(x_sc, y_sc)))
 # }
 
+addRGB = function(
+  map,
+  x,
+  r = 3, g = 2, b = 1,
+  quantiles = c(0.02, 0.98),
+  group = NULL,
+  layerId = NULL,
+  resolution = 96,
+  opacity = 0.8,
+  options = leaflet::tileOptions(),
+  colorOptions = colorOptions(),
+  project = TRUE,
+  pixelValuesToColorFn = NULL,
+  ...
+) {
+
+  if (inherits(x, "Raster")) {
+    x = stars::st_as_stars(x)
+  }
+
+  if (project && !sf::st_is_longlat(x)) {
+    x = stars::st_warp(x, crs = 4326)
+  }
+
+  fl = tempfile(fileext = ".tif")
+
+  if (inherits(x, "stars_proxy")) {
+    file.copy(x, fl)
+  }
+
+  if (!inherits(x, "stars_proxy")) {
+    stars::write_stars(x, dsn = fl)
+  }
+
+  rgbPixelfun = htmlwidgets::JS(
+    sprintf(
+      "
+        pixelValuesToColorFn = (raster, colorOptions) => {
+        // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+          function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? '0' + hex : hex;
+          }
+
+          function rgbToHex(r, g, b) {
+            return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+          }
+
+          var pixelFunc = values => {
+            if (isNaN(values[0])) return colorOptions.naColor;
+            return rgbToHex(values[%s], values[%s], values[%s]);
+          };
+          return pixelFunc;
+        };
+      "
+    , r - 1, g - 1, b - 1
+    )
+  )
+
+  # todo: streching via quantiles and domain...
+
+  addGeotiff(
+    map
+    , file = fl
+    , url = NULL
+    , group = group
+    , layerId = layerId
+    , resolution = resolution
+    , opacity = opacity
+    , options
+    , colorOptions = colorOptions
+    , pixelValuesToColorFn = rgbPixelfun
+  )
+
+}

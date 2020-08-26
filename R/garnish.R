@@ -33,38 +33,39 @@ garnishMap <- function(map, ...) {
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
 
   ls = list(...)
-  # if (is.null(names(ls))) ls <- unlist(ls, recursive = FALSE)
 
   funs <- sapply(ls, is.function)
 
   if (all(sapply(ls, is.null)) && all(sapply(funs, is.null))) {
     return(map)
-  } else {
-    fn_lst <- lapply(ls[funs], function(i) {
-      tst <- try(match.fun(i), silent = TRUE)
-      if (inherits(tst, "try-error")) tst <- NULL
-      return(tst)
-    })
-    fn_lst <- fn_lst[!sapply(fn_lst, is.null)]
+  }
 
-    for (i in fn_lst) {
-      args_i = try(
-        match.arg(names(ls), names(as.list(i)), several.ok = TRUE)
+  fn_lst <- lapply(ls[funs], function(i) {
+    tst <- try(match.fun(i), silent = TRUE)
+    if (inherits(tst, "try-error")) tst <- NULL
+    return(tst)
+  })
+  fn_lst <- fn_lst[!sapply(fn_lst, is.null)]
+
+  for (i in fn_lst) {
+    args_i = try(
+      match.arg(names(ls), names(as.list(i)), several.ok = TRUE)
+      , silent = TRUE
+    )
+    if (!inherits(args_i, "try-error")) {
+      args_lst = ls[args_i][!(is.na(names(ls[args_i])))]
+      maptry = try(
+        do.call(i, append(list(map = map), args_lst))
         , silent = TRUE
       )
-      if (!inherits(args_i, "try-error")) {
-        maptry = try(
-          do.call(i, append(list(map = map), ls[args_i]))
-          , silent = TRUE
-        )
-        if (!inherits(maptry, "try-error")) {
-          map <- maptry
-        }
+      if (!inherits(maptry, "try-error")) {
+        map <- maptry
       }
     }
-    return(map)
   }
+  return(map)
 }
+
 
 ### decorateMap lets you pass lists of functions with respective lists of
 ### named lists of arguments as in

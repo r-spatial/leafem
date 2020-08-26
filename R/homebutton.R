@@ -4,10 +4,10 @@
 #'
 #' @description
 #' This function adds a button to the map that enables zooming to a
-#' provided \code{\link{extent}} / \code{\link{bbox}}.
+#' provided extent / bbox.
 #'
 #' @param map a mapview or leaflet object.
-#' @param ext the \code{\link{extent}} / \code{\link{bbox}} to zoom to.
+#' @param ext the extent / bbox to zoom to.
 #' @param group the name of the group/layer to be zoomed to (or any character
 #' string)
 #' @param position the position of the button (one of 'topleft', 'topright',
@@ -65,7 +65,7 @@ addHomeButton <- function(map, ext, group = "layer",
   }
 
   if (add) {
-    if (class(extent) == "matrix") ext <- raster::extent(ext)
+    if (inherits(extent, "matrix")) ext = raster::extent(ext)
     label <- paste("Zoom to", group)
 
     txt <- paste('<strong>', group, '</strong>')
@@ -94,7 +94,7 @@ removeHomeButton <- function(map) {
 
 
 addZoomFullButton = function(map, lst, position = "bottomleft") {
-  bb = combineExtent(lst, sf = FALSE)
+  bb = combineExtent(lst, sf = FALSE, crs = getProjection(lst[[1]]))
   names(bb) = NULL
   label = "Zoom to full extent"
   txt = "<strong>Zoom full</strong>"

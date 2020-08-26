@@ -134,7 +134,7 @@ addLocalFile = function(map,
     map$dependencies,
     fileDependency(
       fn = path_outfile,
-      group = group
+      layerId = layerId
     )
   )
 
@@ -272,13 +272,18 @@ addTileFolder = function(map,
 #' @param color stroke color.
 #' @param weight stroke width in pixels.
 #' @param opacity stroke opacity.
-#' @param fill whether to fill the path with color
-#'   (e.g. filling on polygons or circles).
-#' @param fillColor fill color.
+#' @param fill whether to fill the path with \code{fillColor}. If \code{fillColor}
+#'   is set, this will be set to \code{TRUE}, default is \code{FALSE}.
+#' @param fillColor fill color. If set, \code{fill} will be set to \code{TRUE}.
 #' @param fillOpacity fill opacity.
 #' @param dashArray a string that defines the stroke dash pattern.
 #' @param options a list of extra options for tile layers, popups, paths
 #'   (circles, rectangles, polygons, ...), or other map elements.
+#' @param className optional class name for the popup (table). Can be used
+#'   to define css for the popup.
+#' @param scale named list with instructions on how to scale radius, width,
+#'   opacity, fillOpacity if those are to be mapped to an attribute column.
+#' @param ... currently not used.
 #'
 #' @examples
 #'  if (interactive()) {
@@ -295,6 +300,7 @@ addTileFolder = function(map,
 #'        , group = "counties"
 #'        , label = "NAME"
 #'        , popup = TRUE
+#'        , fill = TRUE
 #'        , fillColor = "blue"
 #'        , fillOpacity = 0.6
 #'        , color = "black"
@@ -322,10 +328,15 @@ addFgb = function(map,
                   weight = 5,
                   opacity = 0.5,
                   fill = FALSE,
-                  fillColor = color,
+                  fillColor = NULL,
                   fillOpacity = 0.2,
                   dashArray = NULL,
-                  options = NULL) {
+                  options = NULL,
+                  className = NULL,
+                  scale = scaleOptions(),
+                  ...) {
+
+  # if (!is.null(fillColor)) fill = TRUE
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -336,8 +347,21 @@ addFgb = function(map,
     group = basename(tools::file_path_sans_ext(file))
 
   if (is.null(layerId)) layerId = group
+  layerId = gsub("\\.", "_", layerId)
+  layerId = gsub(" ", "", layerId)
+  layerId = gsub('\\"', '', layerId)
+  layerId = gsub("\\'", "", layerId)
 
   if (!is.null(file)) {
+    if (!file.exists(file)) {
+      stop(
+        sprintf(
+          "file %s does not seem to exist"
+          , file
+        )
+        , call. = FALSE
+      )
+    }
     path_layer = tempfile()
     dir.create(path_layer)
     path_layer = paste0(path_layer, "/", layerId, "_layer.fgb")
@@ -353,11 +377,14 @@ addFgb = function(map,
                       fillColor = fillColor,
                       fillOpacity = fillOpacity)
 
-    options = utils::modifyList(as.list(options), style_list)
+    scale = utils::modifyList(scaleOptions(), scale)
+
+    options = options[!(options %in% style_list)]
 
     map$dependencies = c(
       map$dependencies
       , fgbDependencies()
+      , chromaJsDependencies()
     )
 
     map$dependencies = c(
@@ -376,6 +403,8 @@ addFgb = function(map,
       , label
       , style_list
       , options
+      , className
+      , scale
     )
   } else {
     style_list = list(radius = radius,
@@ -392,6 +421,7 @@ addFgb = function(map,
     map$dependencies = c(
       map$dependencies
       , fgbDependencies()
+      , chromaJsDependencies()
     )
 
     leaflet::invokeMethod(
@@ -405,20 +435,48 @@ addFgb = function(map,
       , label
       , style_list
       , options
+      , className
+      , scale
     )
   }
 
+}
+
+
+scaleOptions = function(radius = list(to = c(3, 15), from = c(3, 15)),
+                        weight = list(to = c(1, 10), from = c(1, 10)),
+                        opacity = list(to = c(0, 1), from = c(0, 1)),
+                        fillOpacity = list(to = c(0, 1), from = c(0, 1))) {
+  list(
+    radius = radius
+    , weight = weight
+    , opacity = opacity
+    , fillOpacity = fillOpacity
+  )
 }
 
 fgbDependencies = function() {
   list(
     htmltools::htmlDependency(
       "FlatGeoBuf"
-      , '0.0.1'
+      , '3.3.3'
       , system.file("htmlwidgets/lib/FlatGeoBuf", package = "leafem")
       , script = c(
         'fgb.js'
         , 'flatgeobuf-geojson.min.js'
+      )
+    )
+  )
+}
+
+chromaJsDependencies = function() {
+  list(
+    htmltools::htmlDependency(
+      "chromajs"
+      , '2.1.0'
+      , system.file("htmlwidgets/lib/chroma", package = "leafem")
+      , script = c(
+        'chroma.min.js'
       )
     )
   )

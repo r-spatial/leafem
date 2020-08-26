@@ -12,7 +12,7 @@ removeHomeButton(map)
 \arguments{
 \item{map}{a mapview or leaflet object.}
 
-\item{ext}{the \code{\link{extent}} / \code{\link{bbox}} to zoom to.}
+\item{ext}{the extent / bbox to zoom to.}
 
 \item{group}{the name of the group/layer to be zoomed to (or any character
 string)}
@@ -24,7 +24,7 @@ string)}
 }
 \description{
 This function adds a button to the map that enables zooming to a
-provided \code{\link{extent}} / \code{\link{bbox}}.
+provided extent / bbox.
 }
 \section{Functions}{
 \itemize{

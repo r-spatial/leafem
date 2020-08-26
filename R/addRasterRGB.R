@@ -17,11 +17,11 @@
 #' @param g integer. Index of the Green channel/band, between 1 and nlayers(x)
 #' @param b integer. Index of the Blue channel/band, between 1 and nlayers(x)
 #' @param quantiles the upper and lower quantiles used for color stretching.
-#' If set to NULL, stretching is performed basing on `domain` argument.
+#'   If set to NULL, stretching is performed basing on `domain` argument.
 #' @param domain the upper and lower values used for color stretching.
-#' This is used only if `quantiles` is NULL.
-#' If bot `domain` and `quantiles` are set to NULL, stretching is applied
-#' basing on min-max values.
+#'   This is used only if `quantiles` is NULL.
+#'   If both `domain` and `quantiles` are set to NULL, stretching is applied
+#'   based on min-max values.
 #' @param na.color the color to be used for NA pixels
 #' @param ... additional arguments passed on to \code{\link{addRasterImage}}
 #'
@@ -50,8 +50,6 @@
 #' @importFrom raster extent as.factor is.factor ncell projectExtent
 #'  projectRaster projection sampleRegular
 #' @importFrom stats quantile
-#' @importFrom sp CRS
-#' @importFrom scales rescale
 #' @export
 
 addRasterRGB <- function(
@@ -105,13 +103,13 @@ addRasterRGB <- function(
       mat[, i] <- z
     }
   } else if (!is.null(domain)) {
-    mat <- apply(mat, 2, scales::rescale, from = domain)
+    mat <- apply(mat, 2, rscl, from = domain)
     # Stretch values outside colour range to band limits
     mat[mat < 0] <- 0
     mat[mat > 1] <- 1
   } else {
     # If there is no stretch we just scale the data between 0 and 1
-    mat <- apply(mat, 2, scales::rescale)
+    mat <- apply(mat, 2, rscl)
   }
 
   na_indx <- apply(mat, 1, anyNA)
@@ -144,11 +142,93 @@ addStarsRGB <- addRasterRGB
 
 ## Helper functions imported from mapview needed by addRGB() ===================
 
-# Scale extent -----------------------------------------------------------------
-scaleExtent <- function(x) {
-  ratio <- raster::nrow(x) / raster::ncol(x)
-  x_sc <- scales::rescale(c(x@extent@xmin, x@extent@xmax), c(0, 1))
-  y_sc <- scales::rescale(c(x@extent@ymin, x@extent@ymax), c(0, 1)) * ratio
-  return(raster::extent(c(x_sc, y_sc)))
+rscl = function(x,
+                from = range(x, na.rm = TRUE, finite = TRUE),
+                to = c(0, 1),
+                ...) {
+  (x - from[1]) / diff(from) * diff(to) + to[1]
 }
 
+# Scale extent -----------------------------------------------------------------
+# scaleExtent <- function(x) {
+#   ratio <- raster::nrow(x) / raster::ncol(x)
+#   x_sc <- scales::rescale(c(x@extent@xmin, x@extent@xmax), c(0, 1))
+#   y_sc <- scales::rescale(c(x@extent@ymin, x@extent@ymax), c(0, 1)) * ratio
+#   return(raster::extent(c(x_sc, y_sc)))
+# }
+
+addRGB = function(
+  map,
+  x,
+  r = 3, g = 2, b = 1,
+  quantiles = c(0.02, 0.98),
+  group = NULL,
+  layerId = NULL,
+  resolution = 96,
+  opacity = 0.8,
+  options = leaflet::tileOptions(),
+  colorOptions = colorOptions(),
+  project = TRUE,
+  pixelValuesToColorFn = NULL,
+  ...
+) {
+
+  if (inherits(x, "Raster")) {
+    x = stars::st_as_stars(x)
+  }
+
+  if (project && !sf::st_is_longlat(x)) {
+    x = stars::st_warp(x, crs = 4326)
+  }
+
+  fl = tempfile(fileext = ".tif")
+
+  if (inherits(x, "stars_proxy")) {
+    file.copy(x, fl)
+  }
+
+  if (!inherits(x, "stars_proxy")) {
+    stars::write_stars(x, dsn = fl)
+  }
+
+  rgbPixelfun = htmlwidgets::JS(
+    sprintf(
+      "
+        pixelValuesToColorFn = (raster, colorOptions) => {
+        // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+          function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? '0' + hex : hex;
+          }
+
+          function rgbToHex(r, g, b) {
+            return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+          }
+
+          var pixelFunc = values => {
+            if (isNaN(values[0])) return colorOptions.naColor;
+            return rgbToHex(values[%s], values[%s], values[%s]);
+          };
+          return pixelFunc;
+        };
+      "
+    , r - 1, g - 1, b - 1
+    )
+  )
+
+  # todo: streching via quantiles and domain...
+
+  addGeotiff(
+    map
+    , file = fl
+    , url = NULL
+    , group = group
+    , layerId = layerId
+    , resolution = resolution
+    , opacity = opacity
+    , options
+    , colorOptions = colorOptions
+    , pixelValuesToColorFn = rgbPixelfun
+  )
+
+}

@@ -1,6 +1,8 @@
 ## the two crs we use
-wmcrs <- "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"
-llcrs <- "+proj=longlat +datum=WGS84 +no_defs"
+# wmcrs <- "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"
+wmcrs = sf::st_crs(3857)$proj4string
+# llcrs <- "+proj=longlat +datum=WGS84 +no_defs"
+llcrs = sf::st_crs(4326)$proj4string
 
 ### getSFClass
 getSFClass <- function(x) {
@@ -86,8 +88,13 @@ stars2Array = function(x, band = 1) {
   paste(
     sapply(seq(nrow(x[[1]])), function(i) {
       paste0(
-        '[', gsub("NA", "null",
-                  paste(as.numeric(layer[i, ]), collapse = ",")), ']'
+        '['
+        , gsub(
+          "NA"
+          , "null"
+          , paste(as.numeric(layer[i, ]), collapse = ",")
+        )
+        , ']'
       )
     }),
     collapse = ","
@@ -107,8 +114,13 @@ rasterLayer2Array = function(x) {
   paste(
     sapply(seq(ncol(x)), function(i) {
       paste0(
-        '[', gsub("NA", "null",
-                  paste(as.matrix(x)[, i], collapse = ",")), ']'
+        '['
+        , gsub(
+          "NA"
+          , "null"
+          , paste(as.matrix(x)[, i], collapse = ",")
+        )
+        , ']'
       )
     }),
     collapse = ","
@@ -120,10 +132,12 @@ starsDataDependency <- function(jFn, counter = 1, group) {
   data_file <- basename(jFn)
   list(
     htmltools::htmlDependency(
-      name = group,
-      version = counter,
-      src = c(file = data_dir),
-      script = list(data_file)))
+      name = group
+      , version = counter
+      , src = c(file = data_dir)
+      , script = list(data_file)
+    )
+  )
 }
 
 ### mapview to leaflet
@@ -134,15 +148,7 @@ mapview2leaflet <- function(x) {
 
 
 getProjection <- function(x) {
-
-  if (inherits(x, c("Raster", "Spatial"))) {
-    prj <- raster::projection(x)
-  } else {
-    prj <- sf::st_crs(x)$proj4string
-  }
-
-  return(prj)
-
+  sf::st_crs(x)$proj4string
 }
 
 getGeometryType <- function(x) {

@@ -141,7 +141,7 @@ addMouseCoordinates <- function(map,
       // remove the lnlt div when mouse leaves map
       map.on('mouseout', function (e) {
       var strip = document.querySelector('.lnlt');
-      strip.remove();
+      if( strip !==null) strip.remove();
       });
 
       };
@@ -222,8 +222,13 @@ addMouseCoordinatesMD <- function(map,
 
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
-
   map$dependencies <- c(map$dependencies, mouseCoordsDependenciesMD())
+
+  if (!requireNamespace("mapdeck", quietly = TRUE)) {
+    stop("Package \"mapdeck\" must be installed for this function to work.",
+         call. = FALSE)
+  }
+
   mapdeck::invoke_method(map, 'addMouseCoordinatesMD')
 
 }

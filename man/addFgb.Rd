@@ -18,10 +18,13 @@ addFgb(
   weight = 5,
   opacity = 0.5,
   fill = FALSE,
-  fillColor = color,
+  fillColor = NULL,
   fillOpacity = 0.2,
   dashArray = NULL,
-  options = NULL
+  options = NULL,
+  className = NULL,
+  scale = scaleOptions(),
+  ...
 )
 }
 \arguments{
@@ -53,10 +56,10 @@ If set, \code{url} is ignored.}
 
 \item{opacity}{stroke opacity.}
 
-\item{fill}{whether to fill the path with color
-(e.g. filling on polygons or circles).}
+\item{fill}{whether to fill the path with \code{fillColor}. If \code{fillColor}
+is set, this will be set to \code{TRUE}, default is \code{FALSE}.}
 
-\item{fillColor}{fill color.}
+\item{fillColor}{fill color. If set, \code{fill} will be set to \code{TRUE}.}
 
 \item{fillOpacity}{fill opacity.}
 
@@ -64,6 +67,14 @@ If set, \code{url} is ignored.}
 
 \item{options}{a list of extra options for tile layers, popups, paths
 (circles, rectangles, polygons, ...), or other map elements.}
+
+\item{className}{optional class name for the popup (table). Can be used
+to define css for the popup.}
+
+\item{scale}{named list with instructions on how to scale radius, width,
+opacity, fillOpacity if those are to be mapped to an attribute column.}
+
+\item{...}{currently not used.}
 }
 \description{
 flatgeobuf is a performant binary geo-spatial file format suitable for
@@ -95,6 +106,7 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
        , group = "counties"
        , label = "NAME"
        , popup = TRUE
+       , fill = TRUE
        , fillColor = "blue"
        , fillOpacity = 0.6
        , color = "black"

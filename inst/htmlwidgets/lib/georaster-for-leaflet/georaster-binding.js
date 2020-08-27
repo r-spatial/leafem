@@ -1,3 +1,25 @@
+function mouseHandler(mapId, georaster, layerId, group, eventName) {
+  return function(e) {
+    if (!HTMLWidgets.shinyMode) return;
+    let latLng = this.mouseEventToLatLng(e.originalEvent);
+    var val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
+    if (val) {
+      let eventInfo = $.extend({
+        id: layerId,
+        ".nonce": Math.random(),  // force reactivity
+        group: group ? group : null,
+        value: val[0]
+        },
+        e.latlng
+      );
+      Shiny.onInputChange(mapId + "_" + eventName, eventInfo);
+    } else {
+      Shiny.onInputChange(mapId + "_" + eventName, null);
+    }
+  };
+}
+
+
 LeafletWidget.methods.addGeotiff = function (url,
                                              group,
                                              layerId,
@@ -61,8 +83,11 @@ LeafletWidget.methods.addGeotiff = function (url,
           opacity: opacity,
           pane: pane
         });
-        map.layerManager.addLayer(layer, null, layerId, group);
+        map.layerManager.addLayer(layer, "image", layerId, group);
         map.fitBounds(layer.getBounds());
+
+        map.on("click", mouseHandler(map.id, georaster, layerId, group, "georaster_click"), this);
+        map.on("mousemove", mouseHandler(map.id, georaster, layerId, group, "georaster_mousemove"), this);
       });
     });
 

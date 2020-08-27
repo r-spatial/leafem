@@ -322,6 +322,7 @@ leafletGeoRasterDependencies = function() {
       script = c(
         "georaster.min.js"
         , "georaster-layer-for-leaflet.browserify.min.js"
+        , "geoblaze.js"
         , "georaster-binding.js"
       )
     )

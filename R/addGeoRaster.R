@@ -204,6 +204,22 @@ addGeotiff = function(map,
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
 
+  if (grepl("\\s", layerId)) {
+    warning("The layerId is invalid. Maybe it contains spaces?")
+  }
+
+  ## Add Legend Control if `imagequery` == TRUE
+  if (TRUE) {
+    ctrl_nm = paste("rasterValues", layerId, sep = "-")
+    map = leaflet::addControl(
+      map,
+      html = "",
+      layerId = ctrl_nm,
+      position = "topright",
+      className = paste("info legend rastervals", "className")
+    )
+  }
+
   if (!is.null(file)) {
     path_layer = tempfile()
     dir.create(path_layer)

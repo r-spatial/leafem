@@ -1,9 +1,16 @@
-function mouseHandler(mapId, georaster, layerId, group, eventName) {
+function mouseHandler(map, georaster, layerId, group, eventName) {
   return function(e) {
-    if (!HTMLWidgets.shinyMode) return;
+    let outputWidget = getInfoLegend(layerId);
+    if (!(map.layerManager.getVisibleGroups().includes(group))) {
+      $(outputWidget).hide();
+      return;
+    }
+
     let latLng = this.mouseEventToLatLng(e.originalEvent);
-    var val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
+    let val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
+
     if (val) {
+      outputWidget.innerHTML = renderInfo(val, layerId, 1, "");
       let eventInfo = $.extend({
         id: layerId,
         ".nonce": Math.random(),  // force reactivity
@@ -12,11 +19,28 @@ function mouseHandler(mapId, georaster, layerId, group, eventName) {
         },
         e.latlng
       );
-      Shiny.onInputChange(mapId + "_" + eventName, eventInfo);
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
+      }
     } else {
-      Shiny.onInputChange(mapId + "_" + eventName, null);
+      $(outputWidget).hide();
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, null);
+      }
     }
   };
+}
+function renderInfo(val, layerId, digits, prefix) {
+  $(document.getElementById("rasterValues-" + layerId)).show();
+  let text = "<small>"+ "Layer"+ " <strong> "+ layerId + ": </strong>"+ val + "</small>";
+  return text;
+}
+function getInfoLegend(layerId) {
+  let element = window.document.getElementById("rasterValues-" + layerId);
+  if (element === null) {
+    console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
+  }
+  return element;
 }
 
 
@@ -86,8 +110,8 @@ LeafletWidget.methods.addGeotiff = function (url,
         map.layerManager.addLayer(layer, "image", layerId, group);
         map.fitBounds(layer.getBounds());
 
-        map.on("click", mouseHandler(map.id, georaster, layerId, group, "georaster_click"), this);
-        map.on("mousemove", mouseHandler(map.id, georaster, layerId, group, "georaster_mousemove"), this);
+        map.on("click", mouseHandler(map, georaster, layerId, group, "georaster_click"), this);
+        map.on("mousemove", mouseHandler(map, georaster, layerId, group, "georaster_mousemove"), this);
       });
     });
 

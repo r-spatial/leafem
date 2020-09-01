@@ -161,7 +161,6 @@ addRGB = function(
   map,
   x,
   r = 3, g = 2, b = 1,
-  quantiles = c(0.02, 0.98),
   group = NULL,
   layerId = NULL,
   resolution = 96,
@@ -177,14 +176,15 @@ addRGB = function(
     x = stars::st_as_stars(x)
   }
 
-  if (project && !sf::st_is_longlat(x)) {
+  if (project & !sf::st_is_longlat(x)) {
     x = stars::st_warp(x, crs = 4326)
   }
 
   fl = tempfile(fileext = ".tif")
 
   if (inherits(x, "stars_proxy")) {
-    file.copy(x, fl)
+    # file.copy(x[[1]], fl)
+    fl = x[[1]]
   }
 
   if (!inherits(x, "stars_proxy")) {
@@ -194,25 +194,20 @@ addRGB = function(
   rgbPixelfun = htmlwidgets::JS(
     sprintf(
       "
-        pixelValuesToColorFn = (raster, colorOptions) => {
-        // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-          function componentToHex(c) {
-            var hex = c.toString(16);
-            return hex.length == 1 ? '0' + hex : hex;
-          }
-
-          function rgbToHex(r, g, b) {
-            return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
-          }
-
-          var pixelFunc = values => {
-            if (isNaN(values[0])) return colorOptions.naColor;
-            return rgbToHex(values[%s], values[%s], values[%s]);
-          };
-          return pixelFunc;
+        pixelValuesToColorFn = values => {
+        // debugger;
+          if (isNaN(values[0])) return '%s';
+          return rgbToHex(
+            Math.ceil(values[%s])
+            , Math.ceil(values[%s])
+            , Math.ceil(values[%s])
+          );
         };
       "
-    , r - 1, g - 1, b - 1
+      , colorOptions[["naColor"]]
+      , r - 1
+      , g - 1
+      , b - 1
     )
   )
 
@@ -225,9 +220,11 @@ addRGB = function(
     , group = group
     , layerId = layerId
     , resolution = resolution
+    , arith = NULL
     , opacity = opacity
-    , options
+    , options = options
     , colorOptions = colorOptions
+    , rgb = TRUE
     , pixelValuesToColorFn = rgbPixelfun
   )
 

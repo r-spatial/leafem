@@ -187,9 +187,12 @@ addGeotiff = function(map,
                       group = NULL,
                       layerId = NULL,
                       resolution = 96,
+                      bands = NULL,
+                      arith = NULL,
                       opacity = 0.8,
                       options = leaflet::tileOptions(),
-                      colorOptions = NULL, #colorOptions(),
+                      colorOptions = colorOptions(),
+                      rgb = FALSE,
                       pixelValuesToColorFn = NULL,
                       ...) {
 
@@ -204,12 +207,34 @@ addGeotiff = function(map,
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
 
+  if (is.null(arith)) {
+    if (is.null(bands)) {
+      bands = 1
+    } else {
+      bands = bands
+    }
+  }
+  if (!is.null(arith)) {
+    bands = extractBands(arith)
+  }
+
+  bands = sort(bands)
+  min_band = min(bands)
+
   if (!is.null(file)) {
     path_layer = tempfile()
     dir.create(path_layer)
     path_layer = paste0(path_layer, "/", layerId, "_layer.tif")
 
-    file.copy(file, path_layer, overwrite = TRUE)
+    # file.copy(file, path_layer, overwrite = TRUE)
+    sf::gdal_utils(
+      util = "translate"
+      , source = file
+      , destination = path_layer
+      , options = unname(unlist(Map("c", "-b", bands)))
+    )
+
+    bands = seq_along(bands) - 1
 
     map$dependencies <- c(
       map$dependencies
@@ -226,9 +251,12 @@ addGeotiff = function(map,
       , group
       , layerId
       , resolution
+      , bands - min_band
+      , bandCalc(arith)
       , opacity
       , options
       , colorOptions
+      , rgb
       , pixelValuesToColorFn
     )
   } else {
@@ -246,9 +274,12 @@ addGeotiff = function(map,
       , group
       , layerId
       , resolution
+      , band - 1
+      , arith
       , opacity
       , options
       , colorOptions
+      , rgb
       , pixelValuesToColorFn
     )
   }
@@ -284,6 +315,7 @@ addCOG = function(map,
     , opacity
     , options
     , colorOptions
+    , rgb
     , pixelValuesToColorFn
   )
 }
@@ -323,7 +355,29 @@ leafletGeoRasterDependencies = function() {
         "georaster.min.js"
         , "georaster-layer-for-leaflet.browserify.min.js"
         , "georaster-binding.js"
+        , "georasterUtils.js"
       )
     )
   )
+}
+
+bandCalc = function(f) {
+  if (is.null(f)) return(NULL)
+  band_calc = deparse(body(f))
+  idx_r = gregexpr("[0-9]+", band_calc)
+  js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
+  js_bands = js_bands - min(js_bands)
+  js_bands = as.integer(rscl(js_bands, to = c(0, length(unique(js_bands)) - 1)))
+
+  js_band_calc = gsub("[0-9]+", "%s", band_calc)
+  js_band_calc = gsub(formalArgs(f), "values", js_band_calc)
+  js_band_calc = do.call("sprintf", c(list(js_band_calc), js_bands))
+  return(js_band_calc)
+}
+
+extractBands = function(f) {
+  band_calc = deparse(body(f))
+  idx_r = gregexpr("[0-9]+", band_calc)
+  bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
+  return(sort(unique(bands)))
 }

@@ -11,9 +11,12 @@ addGeotiff(
   group = NULL,
   layerId = NULL,
   resolution = 96,
+  bands = NULL,
+  arith = NULL,
   opacity = 0.8,
   options = leaflet::tileOptions(),
-  colorOptions = NULL,
+  colorOptions = colorOptions(),
+  rgb = FALSE,
   pixelValuesToColorFn = NULL,
   ...
 )

@@ -71,11 +71,14 @@ function evalDomain(arr, arith) {
   var out = [];
   for (let i = 0; i < arr.length; i++) {
     values = arr[i];
-    out.push(eval(arith));
+    out.push(evalMath(arith));
   }
   return [Math.min(...out), Math.max(...out)];
 }
 
+function evalMath(a) {
+    return Function( 'with(Math) return ' + a)();
+}
 
 
 // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb

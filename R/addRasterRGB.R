@@ -166,7 +166,7 @@ addRGB = function(
   resolution = 96,
   opacity = 0.8,
   options = leaflet::tileOptions(),
-  colorOptions = colorOptions(),
+  colorOptions = NULL,
   project = TRUE,
   pixelValuesToColorFn = NULL,
   ...
@@ -180,6 +180,10 @@ addRGB = function(
     x = stars::st_warp(x, crs = 4326)
   }
 
+  if (is.null(colorOptions)) {
+    colorOptions = colorOptions()
+  }
+
   fl = tempfile(fileext = ".tif")
 
   if (inherits(x, "stars_proxy")) {
@@ -190,6 +194,8 @@ addRGB = function(
   if (!inherits(x, "stars_proxy")) {
     stars::write_stars(x, dsn = fl)
   }
+
+  minband = min(r, g, b)
 
   rgbPixelfun = htmlwidgets::JS(
     sprintf(
@@ -205,9 +211,9 @@ addRGB = function(
         };
       "
       , colorOptions[["naColor"]]
-      , r - 1
-      , g - 1
-      , b - 1
+      , r - minband
+      , g - minband
+      , b - minband
     )
   )
 
@@ -220,6 +226,7 @@ addRGB = function(
     , group = group
     , layerId = layerId
     , resolution = resolution
+    , bands = c(r, g, b)
     , arith = NULL
     , opacity = opacity
     , options = options

@@ -191,7 +191,7 @@ addGeotiff = function(map,
                       arith = NULL,
                       opacity = 0.8,
                       options = leaflet::tileOptions(),
-                      colorOptions = colorOptions(),
+                      colorOptions = NULL,
                       rgb = FALSE,
                       pixelValuesToColorFn = NULL,
                       ...) {
@@ -207,6 +207,10 @@ addGeotiff = function(map,
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
 
+  if (is.null(colorOptions)) {
+    colorOptions = colorOptions()
+  }
+
   if (is.null(arith)) {
     if (is.null(bands)) {
       bands = 1
@@ -216,10 +220,11 @@ addGeotiff = function(map,
   }
   if (!is.null(arith)) {
     bands = extractBands(arith)
+    # bands = sort(bands) - min(bands)
   }
 
-  bands = sort(bands)
-  min_band = min(bands)
+  # bands = sort(bands)
+  # min_band = min(bands)
 
   if (!is.null(file)) {
     path_layer = tempfile()
@@ -234,7 +239,7 @@ addGeotiff = function(map,
       , options = unname(unlist(Map("c", "-b", bands)))
     )
 
-    bands = seq_along(bands) - 1
+    bands = seq_along(bands)
 
     map$dependencies <- c(
       map$dependencies
@@ -251,7 +256,7 @@ addGeotiff = function(map,
       , group
       , layerId
       , resolution
-      , bands - min_band
+      , bands - 1
       , bandCalc(arith)
       , opacity
       , options
@@ -274,7 +279,7 @@ addGeotiff = function(map,
       , group
       , layerId
       , resolution
-      , band - 1
+      , bands - 1
       , arith
       , opacity
       , options

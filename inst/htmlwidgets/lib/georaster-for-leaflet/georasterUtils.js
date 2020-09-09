@@ -71,13 +71,13 @@ function evalDomain(arr, arith) {
   var out = [];
   for (let i = 0; i < arr.length; i++) {
     values = arr[i];
-    out.push(evalMath(arith));
+    out.push(evalMath(arith, values));
   }
   return [Math.min(...out), Math.max(...out)];
 }
 
-function evalMath(a) {
-    return Function( 'with(Math) return ' + a)();
+function evalMath(a, values) {
+    return Function('values', 'with(Math) return ' + a)(values);
 }
 
 

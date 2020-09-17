@@ -15,7 +15,7 @@ addGeotiff(
   arith = NULL,
   opacity = 0.8,
   options = leaflet::tileOptions(),
-  colorOptions = colorOptions(),
+  colorOptions = NULL,
   rgb = FALSE,
   pixelValuesToColorFn = NULL,
   ...

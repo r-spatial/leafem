@@ -147,7 +147,7 @@ LeafletWidget.methods.addGeotiff = function (url,
               vals = values[bands];
             }
             if (arith !== null) {
-              vals = eval(arith);
+              vals = evalMath(arith, values);
             }
             let clr = scale.domain(domain);
             if (isNaN(vals)) return nacol;

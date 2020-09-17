@@ -44,7 +44,10 @@ Authors@R:
       person(given = "Daniel",
              family = "Dufour",
              role = "ctb",
-             comment = "georaster-layer-for-leaflet"))
+             comment = "georaster-layer-for-leaflet"),
+      person(given = "Yeedle",
+             family = "Neuwirth",
+             role = "ctb"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
     many of which are used by package 'mapview'. 

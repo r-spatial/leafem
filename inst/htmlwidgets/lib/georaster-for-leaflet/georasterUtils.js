@@ -1,3 +1,7 @@
+/* import and instantiate math expression parser */
+var Parser = require('../expr-eval-1.2.2').Parser;
+var parser = new Parser();
+
 /*
 function prepareArray(mins, maxs) {
   let out = [];
@@ -76,8 +80,17 @@ function evalDomain(arr, arith) {
   return [Math.min(...out), Math.max(...out)];
 }
 
+/*
 function evalMath(a, values) {
     return Function('values', 'with(Math) return ' + a)(values);
+} */
+
+// this function can further be optimized by parsing the expression once for repeated calls with different values
+// 
+function evalMath(rawExpression, values) {
+    var expression = parser.parse(rawExpression);
+    var result = expression.evaluate({ values });
+    return result;
 }
 
 

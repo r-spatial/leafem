@@ -76,7 +76,6 @@ LeafletWidget.methods.addGeotiff = function (url,
             var a = prepareArray(mins, maxs);
             var arr = wrapArrays(a, a.length);
             domain = evalDomain(arr, arith);
-            console.log("domain:" + domain);
           }
         }
 

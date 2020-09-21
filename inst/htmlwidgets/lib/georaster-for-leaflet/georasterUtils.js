@@ -45,7 +45,7 @@
 /* making mathjs evaluations safer
  * https://mathjs.org/docs/expressions/security.html
  */
-const math = math.create(math.all);
+
 const safeEval = math.evaluate;
  
 math.import({
@@ -141,7 +141,7 @@ function evalMath(a, values) {
 } */
  
 function evalMath(rawExpression, values) {
-    return safeEval(rawExpression, values);
+    return safeEval(rawExpression, {values});
 }
 
 

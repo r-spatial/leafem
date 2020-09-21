@@ -373,6 +373,8 @@ bandCalc = function(f) {
   js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   js_bands = js_bands - min(js_bands) + 1 # math.js uses 1-based array indexing
   js_bands = as.integer(rscl(js_bands, to = c(0, length(unique(js_bands)) - 1)))
+  print('js bands:')
+  print(js_bands)
 
   js_band_calc = gsub("[0-9]+", "%s", band_calc)
   js_band_calc = gsub(formalArgs(f), "values", js_band_calc)

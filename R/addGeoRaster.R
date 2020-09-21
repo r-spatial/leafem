@@ -372,7 +372,7 @@ bandCalc = function(f) {
   band_calc = deparse(body(f))
   idx_r = gregexpr("[0-9]+", band_calc)
   js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
-  js_bands = js_bands - min(js_bands) + 1 
+  js_bands = js_bands - min(js_bands)
   js_bands = as.integer(rscl(js_bands, to = c(1, length(unique(js_bands)))))
 
 

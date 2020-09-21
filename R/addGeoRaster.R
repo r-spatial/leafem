@@ -361,6 +361,7 @@ leafletGeoRasterDependencies = function() {
         , "georaster-layer-for-leaflet.browserify.min.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
+        , "mathjs.min.js"
       )
     )
   )

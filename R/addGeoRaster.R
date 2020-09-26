@@ -91,7 +91,7 @@ addGeoRaster = function(map,
     , layerId = layerId
     , resolution = resolution
     , opacity = opacity
-    , options
+    , options = options
     , colorOptions = colorOptions
     , pixelValuesToColorFn = pixelValuesToColorFn
   )

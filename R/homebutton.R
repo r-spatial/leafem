@@ -94,7 +94,14 @@ removeHomeButton <- function(map) {
 
 
 addZoomFullButton = function(map, lst, position = "bottomleft") {
-  bb = combineExtent(lst, sf = FALSE, crs = getProjection(lst[[1]]))
+  if (inherits(map, "mapview")) map = mapview2leaflet(map)
+
+  crs = ifelse(
+    !map$x$options$crs$crsClass == "L.CRS.Simple"
+    , 4326
+    , getProjection(lst[[1]])
+  )
+  bb = combineExtent(lst, sf = FALSE, crs = crs)
   names(bb) = NULL
   label = "Zoom to full extent"
   txt = "<strong>Zoom full</strong>"

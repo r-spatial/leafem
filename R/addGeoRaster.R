@@ -60,7 +60,7 @@ addGeoRaster = function(map,
                         resolution = 96,
                         opacity = 0.8,
                         options = leaflet::tileOptions(),
-                        colorOptions = colorOptions(),
+                        colorOptions = NULL,
                         project = TRUE,
                         pixelValuesToColorFn = NULL,
                         ...) {

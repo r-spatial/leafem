@@ -83,7 +83,7 @@ function evalMath(a, values) {
  
 const compiledExpressions = {}
 function evalMath(rawExpression, values) {
-  console.log('raw expression', rawExpression)
+  console.log(`raw expression, ${JSON.stringify(rawExpression)}`)
   console.log('raw expression is not in compiledexpressions', !rawExpression in compiledExpressions)
   if (!rawExpression in compiledExpressions) {
     console.log('storing raw expression in compiled')

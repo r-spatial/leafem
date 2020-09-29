@@ -83,9 +83,12 @@ function evalMath(a, values) {
  
 const compiledExpressions = {}
 function evalMath(rawExpression, values) {
+  console.log('raw expression', rawExpression)
   if (! rawExpression in compiledExpressions) {
+    console.log('storing raw expression in compiled')
     compiledExpressions[rawExpression] = safeCompile(rawExpression).evaluate;
   }
+  console.log('cached expression', compiledExpressions[rawExpression])
   return compiledExpressions[rawExpression]({values});
 }
 

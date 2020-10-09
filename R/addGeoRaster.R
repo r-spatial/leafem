@@ -361,6 +361,7 @@ leafletGeoRasterDependencies = function() {
         , "georaster-layer-for-leaflet.browserify.min.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
+        , "mathjs.min.js"
       )
     )
   )
@@ -372,7 +373,9 @@ bandCalc = function(f) {
   idx_r = gregexpr("[0-9]+", band_calc)
   js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   js_bands = js_bands - min(js_bands)
-  js_bands = as.integer(rscl(js_bands, to = c(0, length(unique(js_bands)) - 1)))
+  js_bands = as.integer(rscl(js_bands, to = c(1, length(unique(js_bands)))))
+
+
 
   js_band_calc = gsub("[0-9]+", "%s", band_calc)
   js_band_calc = gsub(formalArgs(f), "values", js_band_calc)

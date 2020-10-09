@@ -76,10 +76,14 @@ function evalDomain(arr, arith) {
   return [Math.min(...out), Math.max(...out)];
 }
 
+/*
 function evalMath(a, values) {
     return Function('values', 'with(Math) return ' + a)(values);
-}
+} */
 
+function evalMath(rawExpression, values) {
+    return safeEval(rawExpression, {values});
+}
 
 // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function componentToHex(c) {

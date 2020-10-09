@@ -81,8 +81,12 @@ function evalMath(a, values) {
     return Function('values', 'with(Math) return ' + a)(values);
 } */
 
+const compiledExpressions = {}
 function evalMath(rawExpression, values) {
-    return safeEval(rawExpression, {values});
+  if (!(rawExpression in compiledExpressions)) {
+    compiledExpressions[rawExpression] = safeCompile(rawExpression).evaluate;
+  }
+  return compiledExpressions[rawExpression]({values});
 }
 
 // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb

@@ -71,7 +71,10 @@ function evalDomain(arr, arith) {
   var out = [];
   for (let i = 0; i < arr.length; i++) {
     values = arr[i];
-    out.push(evalMath(arith, values));
+    let res = evalMath(arith, values);
+    if (!isNaN(res)) {
+      out.push(res);
+    }
   }
   return [Math.min(...out), Math.max(...out)];
 }

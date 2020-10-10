@@ -119,6 +119,15 @@ addGeoRaster = function(map,
 #' @param resolution the target resolution for the simple nearest neighbor interpolation.
 #'   Larger values will result in more detailed rendering, but may impact performance.
 #'   Default is 96 (pixels).
+#' @param arith an optional function to be applied to a multi-layer object.
+#'   Will be computed on-the-fly in the browser.
+#' @param project if TRUE (default), automatically project x to the map projection
+#'   expected by georaster-layer-for-leaflet (EPSG:4326);
+#'   if FALSE, it's the caller's responsibility to ensure that \code{file} is already projected.
+#' @param method character defining the resampling method to be used when
+#' \code{project} is \code{TRUE}.
+#' See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+#' possible values.
 #' @param opacity opacity of the rendered layer.
 #' @param options options to be passed to the layer.
 #'   See \code{\link[leaflet]{tileOptions}} for details.
@@ -189,6 +198,8 @@ addGeotiff = function(map,
                       resolution = 96,
                       bands = NULL,
                       arith = NULL,
+                      project = TRUE,
+                      method = NULL,
                       opacity = 0.8,
                       options = leaflet::tileOptions(),
                       colorOptions = NULL,
@@ -236,8 +247,28 @@ addGeotiff = function(map,
       util = "translate"
       , source = file
       , destination = path_layer
-      , options = unname(unlist(Map("c", "-b", bands)))
+      , options = c(
+        unname(unlist(Map("c", "-b", bands)))
+      )
     )
+
+    if (project) {
+      path_layer_tmp = tempfile(fileext = ".tif")
+      file.copy(path_layer, path_layer_tmp, overwrite = TRUE)
+      # for some reason we need to delete the destination file for gdalwarp to work
+      unlink(path_layer)
+      method = ifelse(is.null(method), "near", method)
+      sf::gdal_utils(
+        util = "warp"
+        , source = path_layer_tmp
+        , destination = path_layer
+        , options = c(
+          "-t_srs", "EPSG:4326"
+          , "-r", method
+          , "-overwrite"
+        )
+      )
+    }
 
     bands = seq_along(bands)
 
@@ -367,9 +398,9 @@ leafletGeoRasterDependencies = function() {
   )
 }
 
-bandCalc = function(f) {
-  if (is.null(f)) return(NULL)
-  band_calc = deparse(body(f))
+bandCalc = function(fun) {
+  if (is.null(fun)) return(NULL)
+  band_calc = deparse(body(fun))
   idx_r = gregexpr("[0-9]+", band_calc)
   js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   js_bands = js_bands - min(js_bands)
@@ -378,13 +409,13 @@ bandCalc = function(f) {
 
 
   js_band_calc = gsub("[0-9]+", "%s", band_calc)
-  js_band_calc = gsub(formalArgs(f), "values", js_band_calc)
+  js_band_calc = gsub(formalArgs(fun), "values", js_band_calc)
   js_band_calc = do.call("sprintf", c(list(js_band_calc), js_bands))
   return(js_band_calc)
 }
 
-extractBands = function(f) {
-  band_calc = deparse(body(f))
+extractBands = function(fun) {
+  band_calc = deparse(body(fun))
   idx_r = gregexpr("[0-9]+", band_calc)
   bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   return(sort(unique(bands)))

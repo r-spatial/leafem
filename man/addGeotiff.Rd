@@ -13,6 +13,8 @@ addGeotiff(
   resolution = 96,
   bands = NULL,
   arith = NULL,
+  project = TRUE,
+  method = NULL,
   opacity = 0.8,
   options = leaflet::tileOptions(),
   colorOptions = NULL,
@@ -35,6 +37,18 @@ addGeotiff(
 \item{resolution}{the target resolution for the simple nearest neighbor interpolation.
 Larger values will result in more detailed rendering, but may impact performance.
 Default is 96 (pixels).}
+
+\item{arith}{an optional function to be applied to a multi-layer object.
+Will be computed on-the-fly in the browser.}
+
+\item{project}{if TRUE (default), automatically project x to the map projection
+expected by georaster-layer-for-leaflet (EPSG:4326);
+if FALSE, it's the caller's responsibility to ensure that \code{file} is already projected.}
+
+\item{method}{character defining the resampling method to be used when
+\code{project} is \code{TRUE}.
+See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+possible values.}
 
 \item{opacity}{opacity of the rendered layer.}
 

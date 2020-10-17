@@ -38,7 +38,7 @@ LeafletWidget.methods.addGeotiff = function (url,
         const cols = colorOptions.palette;
         let scale = chroma.scale(cols);
         let domain = colorOptions.domain;
-        let nacol = colorOptions.naColor;
+        let nacol = colorOptions["na.color"];
         if (colorOptions.breaks !== null) {
           scale = scale.classes(colorOptions.breaks);
         }

@@ -376,7 +376,7 @@ colorOptions = function(palette = NULL,
     palette = palette
     , breaks = breaks
     , domain = domain
-    , naColor = na.color
+    , na.color = na.color
   )
 }
 

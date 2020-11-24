@@ -8,7 +8,8 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              options,
                                              colorOptions,
                                              rgb,
-                                             pixelValuesToColorFn) {
+                                             pixelValuesToColorFn,
+                                             autozoom) {
 
   var map = this;
 
@@ -122,7 +123,10 @@ LeafletWidget.methods.addGeotiff = function (url,
           pane: pane
         });
         map.layerManager.addLayer(layer, null, layerId, group);
-        map.fitBounds(layer.getBounds());
+
+        if (autozoom) {
+          map.fitBounds(layer.getBounds());
+        }
       });
     });
 
@@ -136,7 +140,8 @@ LeafletWidget.methods.addCOG = function (url,
                                          opacity,
                                          options,
                                          colorOptions,
-                                         pixelValuesToColorFn) {
+                                         pixelValuesToColorFn,
+                                         autozoom) {
 
   var map = this;
 
@@ -163,6 +168,9 @@ LeafletWidget.methods.addCOG = function (url,
         pane: pane
     });
     map.layerManager.addLayer(layer, null, layerId, group);
-    map.fitBounds(layer.getBounds());
+
+    if (autozoom) {
+      map.fitBounds(layer.getBounds());
+    }
   });
 };

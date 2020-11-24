@@ -18,6 +18,7 @@ addGeotiff(
   colorOptions = NULL,
   rgb = FALSE,
   pixelValuesToColorFn = NULL,
+  autozoom = TRUE,
   ...
 )
 }
@@ -46,6 +47,9 @@ See \code{\link[leaflet]{tileOptions}} for details.}
 \item{pixelValuesToColorFn}{optional JS function to be passed to the browser.
 Can be used to fine tune and manipulate the color mapping.
 See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.}
+
+\item{autozoom}{whether to automatically zoom to the full extent of the layer.
+Default is \code{TRUE}}
 
 \item{...}{currently not used.}
 }

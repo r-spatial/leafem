@@ -9,7 +9,7 @@
 #'
 #' @param map the map to add the raster data to.
 #' @param x the stars/raster object to be rendered.
-#' @param group he name of the group this raster image should belong to.
+#' @param group the name of the group this raster image should belong to.
 #' @param layerId the layerId.
 #' @param resolution the target resolution for the simple nearest neighbor interpolation.
 #'   Larger values will result in more detailed rendering, but may impact performance.
@@ -24,6 +24,8 @@
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
+#' @param autozoom whether to automatically zoom to the full extent of the layer.
+#'   Default is \code{TRUE}
 #' @param ... currently not used.
 #'
 #' @return
@@ -63,6 +65,7 @@ addGeoRaster = function(map,
                         colorOptions = NULL,
                         project = TRUE,
                         pixelValuesToColorFn = NULL,
+                        autozoom = TRUE,
                         ...) {
 
   if (inherits(x, "Raster")) {
@@ -94,6 +97,7 @@ addGeoRaster = function(map,
     , options = options
     , colorOptions = colorOptions
     , pixelValuesToColorFn = pixelValuesToColorFn
+    , autozoom = autozoom
   )
 
 }
@@ -135,6 +139,8 @@ addGeoRaster = function(map,
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
+#' @param autozoom whether to automatically zoom to the full extent of the layer.
+#'   Default is \code{TRUE}
 #' @param ... currently not used.
 #'
 #' @return
@@ -205,6 +211,7 @@ addGeotiff = function(map,
                       colorOptions = NULL,
                       rgb = FALSE,
                       pixelValuesToColorFn = NULL,
+                      autozoom = TRUE,
                       ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -294,6 +301,7 @@ addGeotiff = function(map,
       , colorOptions
       , rgb
       , pixelValuesToColorFn
+      , autozoom
     )
   } else {
     map$dependencies <- c(
@@ -317,6 +325,7 @@ addGeotiff = function(map,
       , colorOptions
       , rgb
       , pixelValuesToColorFn
+      , autozoom
     )
   }
 
@@ -332,6 +341,7 @@ addCOG = function(map,
                   options = leaflet::tileOptions(),
                   colorOptions = NULL, #colorOptions(),
                   pixelValuesToColorFn = NULL,
+                  autozoom = TRUE,
                   ...) {
 
   map$dependencies <- c(
@@ -353,6 +363,7 @@ addCOG = function(map,
     , colorOptions
     , rgb
     , pixelValuesToColorFn
+    , autozoom
   )
 }
 

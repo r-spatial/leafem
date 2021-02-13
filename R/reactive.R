@@ -5,8 +5,9 @@ addReactiveFeatures = function(map,
                                on,
                                group,
                                layerId = NULL,
-                               options,
-                               style = NULL) {
+                               options = NULL,
+                               style = NULL,
+                               updateStyle = NULL) {
 
   if (!inherits(x, "geojson")) {
     x = geojsonsf::sf_geojson(x)
@@ -27,7 +28,9 @@ addReactiveFeatures = function(map,
     , on
     , group
     , layerId
+    , options
     , style
+    , updateStyle
   )
 
 }

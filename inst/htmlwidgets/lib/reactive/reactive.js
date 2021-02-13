@@ -5,7 +5,8 @@ LeafletWidget.methods.addReactiveLayer = function(x,
                                                   group,
                                                   layerId,
                                                   options,
-                                                  style) {
+                                                  style,
+                                                  updateStyle) {
 
     var map = this;
     let out;
@@ -36,6 +37,12 @@ LeafletWidget.methods.addReactiveLayer = function(x,
       var cur_by = e.layer.feature.properties[by];
       var ids = getAllIndexes(nkeys, cur_by);
 
+      e.target.eachLayer(function (layer) {
+        if(layer.feature.properties[[by]] == cur_by) {
+          layer.setStyle(updateStyle);
+        }
+      });
+
       ids.forEach(function(i) {
         if (!map.hasLayer(bind_layer._layers[okeys[i]])) {
           map.addLayer(bind_layer._layers[okeys[i]]);
@@ -46,6 +53,12 @@ LeafletWidget.methods.addReactiveLayer = function(x,
       console.log(e.layer.feature.properties[by]);
       var cur_by = e.layer.feature.properties[by];
       var ids = getAllIndexes(nkeys, cur_by);
+
+      e.target.eachLayer(function (layer) {
+        if(layer.feature.properties[[by]] == cur_by) {
+          layer.setStyle(layer.defaultOptions.style(layer.feature));
+        }
+      });
 
       ids.forEach(function(i) {
         if (map.hasLayer(bind_layer._layers[okeys[i]])) {

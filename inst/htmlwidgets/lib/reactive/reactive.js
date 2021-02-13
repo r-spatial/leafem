@@ -6,7 +6,8 @@ LeafletWidget.methods.addReactiveLayer = function(x,
                                                   layerId,
                                                   options,
                                                   style,
-                                                  updateStyle) {
+                                                  updateStyle,
+                                                  popup) {
 
     var map = this;
     let out;
@@ -15,6 +16,23 @@ LeafletWidget.methods.addReactiveLayer = function(x,
     }
     if (on === "mouseover") {
       out = "mouseout";
+    }
+
+    var pop = [];
+
+    if (typeof(popup) === "string") {
+      //pop = new Array(x.features.length);
+      for (var i = 0; i <= x.features.length; i++) {
+        pop.push(popup);
+      }
+    }
+
+    if (typeof(popup) === "object") {
+      if (popup === null) {
+        pop = null;
+      } else if (popup.length == x.features.length) {
+        pop = popup;
+      }
     }
 
     var bindto_layer = map.layerManager._byGroup[bindTo];
@@ -26,6 +44,10 @@ LeafletWidget.methods.addReactiveLayer = function(x,
       },
       style: style
     });
+
+    if (pop !== null) {
+      bind_layer.bindPopup(pop);
+    }
 
     var okeys = Object.keys(bind_layer._layers);
     var nkeys = [...okeys];
@@ -45,7 +67,11 @@ LeafletWidget.methods.addReactiveLayer = function(x,
 
       ids.forEach(function(i) {
         if (!map.hasLayer(bind_layer._layers[okeys[i]])) {
-          map.addLayer(bind_layer._layers[okeys[i]]);
+          if (bind_layer._popup === undefined) {
+            map.addLayer(bind_layer._layers[okeys[i]]);
+          } else {
+          map.addLayer(bind_layer._layers[okeys[i]].bindPopup(bind_layer._popup._content[[i]]));
+          }
         }
       });
     })

@@ -55,42 +55,46 @@ LeafletWidget.methods.addReactiveLayer = function(x,
 
     bindto_layer[bindto_layer_key]
     .on(on, function(e) {
-      console.log(e.layer.feature.properties[by]);
-      var cur_by = e.layer.feature.properties[by];
-      var ids = getAllIndexes(nkeys, cur_by);
+      if (e.originalEvent.ctrlKey) {
+        // console.log(e.layer.feature.properties[by]);
+        var cur_by = e.layer.feature.properties[by];
+        var ids = getAllIndexes(nkeys, cur_by);
 
-      e.target.eachLayer(function (layer) {
-        if(layer.feature.properties[[by]] == cur_by) {
-          layer.setStyle(updateStyle);
-        }
-      });
-
-      ids.forEach(function(i) {
-        if (!map.hasLayer(bind_layer._layers[okeys[i]])) {
-          if (bind_layer._popup === undefined) {
-            map.addLayer(bind_layer._layers[okeys[i]]);
-          } else {
-          map.addLayer(bind_layer._layers[okeys[i]].bindPopup(bind_layer._popup._content[[i]]));
+        e.target.eachLayer(function (layer) {
+          if(layer.feature.properties[[by]] == cur_by) {
+            layer.setStyle(updateStyle);
           }
-        }
-      });
+        });
+
+        ids.forEach(function(i) {
+          if (!map.hasLayer(bind_layer._layers[okeys[i]])) {
+            if (bind_layer._popup === undefined) {
+              map.addLayer(bind_layer._layers[okeys[i]]);
+            } else {
+            map.addLayer(bind_layer._layers[okeys[i]].bindPopup(bind_layer._popup._content[[i]]));
+            }
+          }
+        });
+      }
     })
     .on(out, function (e) {
-      console.log(e.layer.feature.properties[by]);
-      var cur_by = e.layer.feature.properties[by];
-      var ids = getAllIndexes(nkeys, cur_by);
+      if (e.originalEvent.ctrlKey) {
+        // console.log(e.layer.feature.properties[by]);
+        var cur_by = e.layer.feature.properties[by];
+        var ids = getAllIndexes(nkeys, cur_by);
 
-      e.target.eachLayer(function (layer) {
-        if(layer.feature.properties[[by]] == cur_by) {
-          layer.setStyle(layer.defaultOptions.style(layer.feature));
-        }
-      });
+        e.target.eachLayer(function (layer) {
+          if(layer.feature.properties[[by]] == cur_by) {
+            layer.setStyle(layer.defaultOptions.style(layer.feature));
+          }
+        });
 
-      ids.forEach(function(i) {
-        if (map.hasLayer(bind_layer._layers[okeys[i]])) {
-          map.removeLayer(bind_layer._layers[okeys[i]]);
-        }
-      });
+        ids.forEach(function(i) {
+          if (map.hasLayer(bind_layer._layers[okeys[i]])) {
+            map.removeLayer(bind_layer._layers[okeys[i]]);
+          }
+        });
+      }
     });
 };
 

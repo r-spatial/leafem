@@ -83,11 +83,24 @@ LeafletWidget.methods.addReactiveLayer = function(x,
         var cur_by = e.layer.feature.properties[by];
         var ids = getAllIndexes(nkeys, cur_by);
 
-        e.target.eachLayer(function (layer) {
-          if(layer.feature.properties[[by]] == cur_by) {
-            layer.setStyle(layer.defaultOptions.style(layer.feature));
+        ids.forEach(function(i) {
+          if (map.hasLayer(bind_layer._layers[okeys[i]])) {
+            map.removeLayer(bind_layer._layers[okeys[i]]);
           }
         });
+
+        e.target.eachLayer(function (layer) {
+          layer.setStyle(layer.defaultOptions.style(layer.feature));
+        });
+
+      }
+    });
+
+    bind_layer.on(out, function (e) {
+      if (e.originalEvent.ctrlKey) {
+        // console.log(e.layer.feature.properties[by]);
+        var cur_by = e.layer.feature.properties[by];
+        var ids = getAllIndexes(nkeys, cur_by);
 
         ids.forEach(function(i) {
           if (map.hasLayer(bind_layer._layers[okeys[i]])) {

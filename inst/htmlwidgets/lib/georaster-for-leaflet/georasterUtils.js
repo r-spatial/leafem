@@ -71,15 +71,26 @@ function evalDomain(arr, arith) {
   var out = [];
   for (let i = 0; i < arr.length; i++) {
     values = arr[i];
-    out.push(evalMath(arith, values));
+    let res = evalMath(arith, values);
+    if (!isNaN(res)) {
+      out.push(res);
+    }
   }
   return [Math.min(...out), Math.max(...out)];
 }
 
+/*
 function evalMath(a, values) {
     return Function('values', 'with(Math) return ' + a)(values);
-}
+} */
 
+const compiledExpressions = {}
+function evalMath(rawExpression, values) {
+  if (!(rawExpression in compiledExpressions)) {
+    compiledExpressions[rawExpression] = safeCompile(rawExpression).evaluate;
+  }
+  return compiledExpressions[rawExpression]({values});
+}
 
 // helpers from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function componentToHex(c) {

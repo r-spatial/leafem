@@ -54,7 +54,8 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              options,
                                              colorOptions,
                                              rgb,
-                                             pixelValuesToColorFn) {
+                                             pixelValuesToColorFn,
+                                             autozoom) {
 
   var map = this;
 
@@ -84,7 +85,7 @@ LeafletWidget.methods.addGeotiff = function (url,
         const cols = colorOptions.palette;
         let scale = chroma.scale(cols);
         let domain = colorOptions.domain;
-        let nacol = colorOptions.naColor;
+        let nacol = colorOptions["na.color"];
         if (colorOptions.breaks !== null) {
           scale = scale.classes(colorOptions.breaks);
         }
@@ -167,14 +168,16 @@ LeafletWidget.methods.addGeotiff = function (url,
           opacity: opacity,
           pane: pane
         });
-        map.layerManager.addLayer(layer, "image", layerId, group);
-        map.fitBounds(layer.getBounds());
 
+        map.layerManager.addLayer(layer, "image", layerId, group);
+        if (autozoom) {
+          map.fitBounds(layer.getBounds());
+        }
+        
         map.on("click", mouseHandler(map, georaster, layerId, group, "georaster_click"), this);
         map.on("mousemove", mouseHandler(map, georaster, layerId, group, "georaster_mousemove"), this);
       });
     });
-
 };
 
 
@@ -185,7 +188,8 @@ LeafletWidget.methods.addCOG = function (url,
                                          opacity,
                                          options,
                                          colorOptions,
-                                         pixelValuesToColorFn) {
+                                         pixelValuesToColorFn,
+                                         autozoom) {
 
   var map = this;
 
@@ -212,6 +216,9 @@ LeafletWidget.methods.addCOG = function (url,
         pane: pane
     });
     map.layerManager.addLayer(layer, null, layerId, group);
-    map.fitBounds(layer.getBounds());
+
+    if (autozoom) {
+      map.fitBounds(layer.getBounds());
+    }
   });
 };

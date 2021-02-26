@@ -12,9 +12,10 @@ addGeoRaster(
   resolution = 96,
   opacity = 0.8,
   options = leaflet::tileOptions(),
-  colorOptions = colorOptions(),
+  colorOptions = NULL,
   project = TRUE,
   pixelValuesToColorFn = NULL,
+  autozoom = TRUE,
   ...
 )
 }
@@ -23,7 +24,7 @@ addGeoRaster(
 
 \item{x}{the stars/raster object to be rendered.}
 
-\item{group}{he name of the group this raster image should belong to.}
+\item{group}{the name of the group this raster image should belong to.}
 
 \item{layerId}{the layerId.}
 
@@ -45,6 +46,9 @@ if set to \code{FALSE}.}
 \item{pixelValuesToColorFn}{optional JS function to be passed to the browser.
 Can be used to fine tune and manipulate the color mapping.
 See \url{https://github.com/r-spatial/leafem/issues/25} for some examples.}
+
+\item{autozoom}{whether to automatically zoom to the full extent of the layer.
+Default is \code{TRUE}}
 
 \item{...}{currently not used.}
 }

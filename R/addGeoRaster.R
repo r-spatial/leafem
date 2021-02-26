@@ -9,7 +9,7 @@
 #'
 #' @param map the map to add the raster data to.
 #' @param x the stars/raster object to be rendered.
-#' @param group he name of the group this raster image should belong to.
+#' @param group the name of the group this raster image should belong to.
 #' @param layerId the layerId.
 #' @param resolution the target resolution for the simple nearest neighbor interpolation.
 #'   Larger values will result in more detailed rendering, but may impact performance.
@@ -24,6 +24,8 @@
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
+#' @param autozoom whether to automatically zoom to the full extent of the layer.
+#'   Default is \code{TRUE}
 #' @param ... currently not used.
 #'
 #' @return
@@ -60,9 +62,10 @@ addGeoRaster = function(map,
                         resolution = 96,
                         opacity = 0.8,
                         options = leaflet::tileOptions(),
-                        colorOptions = colorOptions(),
+                        colorOptions = NULL,
                         project = TRUE,
                         pixelValuesToColorFn = NULL,
+                        autozoom = TRUE,
                         ...) {
 
   if (inherits(x, "Raster")) {
@@ -91,9 +94,10 @@ addGeoRaster = function(map,
     , layerId = layerId
     , resolution = resolution
     , opacity = opacity
-    , options
+    , options = options
     , colorOptions = colorOptions
     , pixelValuesToColorFn = pixelValuesToColorFn
+    , autozoom = autozoom
   )
 
 }
@@ -119,6 +123,15 @@ addGeoRaster = function(map,
 #' @param resolution the target resolution for the simple nearest neighbor interpolation.
 #'   Larger values will result in more detailed rendering, but may impact performance.
 #'   Default is 96 (pixels).
+#' @param arith an optional function to be applied to a multi-layer object.
+#'   Will be computed on-the-fly in the browser.
+#' @param project if TRUE (default), automatically project x to the map projection
+#'   expected by georaster-layer-for-leaflet (EPSG:4326);
+#'   if FALSE, it's the caller's responsibility to ensure that \code{file} is already projected.
+#' @param method character defining the resampling method to be used when
+#' \code{project} is \code{TRUE}.
+#' See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+#' possible values.
 #' @param opacity opacity of the rendered layer.
 #' @param options options to be passed to the layer.
 #'   See \code{\link[leaflet]{tileOptions}} for details.
@@ -126,6 +139,8 @@ addGeoRaster = function(map,
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
+#' @param autozoom whether to automatically zoom to the full extent of the layer.
+#'   Default is \code{TRUE}
 #' @param ... currently not used.
 #'
 #' @return
@@ -189,11 +204,14 @@ addGeotiff = function(map,
                       resolution = 96,
                       bands = NULL,
                       arith = NULL,
+                      project = TRUE,
+                      method = NULL,
                       opacity = 0.8,
                       options = leaflet::tileOptions(),
                       colorOptions = NULL,
                       rgb = FALSE,
                       pixelValuesToColorFn = NULL,
+                      autozoom = TRUE,
                       ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -252,8 +270,28 @@ addGeotiff = function(map,
       util = "translate"
       , source = file
       , destination = path_layer
-      , options = unname(unlist(Map("c", "-b", bands)))
+      , options = c(
+        unname(unlist(Map("c", "-b", bands)))
+      )
     )
+
+    if (project) {
+      path_layer_tmp = tempfile(fileext = ".tif")
+      file.copy(path_layer, path_layer_tmp, overwrite = TRUE)
+      # for some reason we need to delete the destination file for gdalwarp to work
+      unlink(path_layer)
+      method = ifelse(is.null(method), "near", method)
+      sf::gdal_utils(
+        util = "warp"
+        , source = path_layer_tmp
+        , destination = path_layer
+        , options = c(
+          "-t_srs", "EPSG:4326"
+          , "-r", method
+          , "-overwrite"
+        )
+      )
+    }
 
     bands = seq_along(bands)
 
@@ -279,6 +317,7 @@ addGeotiff = function(map,
       , colorOptions
       , rgb
       , pixelValuesToColorFn
+      , autozoom
     )
   } else {
     map$dependencies <- c(
@@ -302,6 +341,7 @@ addGeotiff = function(map,
       , colorOptions
       , rgb
       , pixelValuesToColorFn
+      , autozoom
     )
   }
 
@@ -317,6 +357,7 @@ addCOG = function(map,
                   options = leaflet::tileOptions(),
                   colorOptions = NULL, #colorOptions(),
                   pixelValuesToColorFn = NULL,
+                  autozoom = TRUE,
                   ...) {
 
   map$dependencies <- c(
@@ -338,6 +379,7 @@ addCOG = function(map,
     , colorOptions
     , rgb
     , pixelValuesToColorFn
+    , autozoom
   )
 }
 
@@ -361,7 +403,7 @@ colorOptions = function(palette = NULL,
     palette = palette
     , breaks = breaks
     , domain = domain
-    , naColor = na.color
+    , na.color = na.color
   )
 }
 
@@ -378,27 +420,30 @@ leafletGeoRasterDependencies = function() {
         , "geoblaze.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
+        , "mathjs.min.js"
       )
     )
   )
 }
 
-bandCalc = function(f) {
-  if (is.null(f)) return(NULL)
-  band_calc = deparse(body(f))
+bandCalc = function(fun) {
+  if (is.null(fun)) return(NULL)
+  band_calc = deparse(body(fun))
   idx_r = gregexpr("[0-9]+", band_calc)
   js_bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   js_bands = js_bands - min(js_bands)
-  js_bands = as.integer(rscl(js_bands, to = c(0, length(unique(js_bands)) - 1)))
+  js_bands = as.integer(rscl(js_bands, to = c(1, length(unique(js_bands)))))
+
+
 
   js_band_calc = gsub("[0-9]+", "%s", band_calc)
-  js_band_calc = gsub(formalArgs(f), "values", js_band_calc)
+  js_band_calc = gsub(formalArgs(fun), "values", js_band_calc)
   js_band_calc = do.call("sprintf", c(list(js_band_calc), js_bands))
   return(js_band_calc)
 }
 
-extractBands = function(f) {
-  band_calc = deparse(body(f))
+extractBands = function(fun) {
+  band_calc = deparse(body(fun))
   idx_r = gregexpr("[0-9]+", band_calc)
   bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   return(sort(unique(bands)))

@@ -1,8 +1,8 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.1.3
-Date: 2020-07-19
+Version: 0.1.4
+Date: 2021-01-23
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -21,7 +21,7 @@ Authors@R:
              email = "Debugger@jedimasters.de"),
       person(given = "Daniel",
              family = "Montague",
-             role = c("ctb"), 
+             role = c("ctb", "cph"), 
              comment = "Leaflet.EasyButton plugin"),
       person(given = "Lorenzo",
              family = "Busetto",
@@ -39,11 +39,11 @@ Authors@R:
              email = "sebastian_gatscha@gmx.at"),
       person(given = "Björn",
              family = "Harrtell",
-             role = "ctb",
+             role = c("ctb", "cph"),
              comment = "FlatGeobuf plugin"),
       person(given = "Daniel",
              family = "Dufour",
-             role = "ctb",
+             role = c("ctb", "cph"),
              comment = "georaster-layer-for-leaflet"),
       person(given = "Yeedle",
              family = "Neuwirth",

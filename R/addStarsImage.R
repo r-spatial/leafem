@@ -23,7 +23,8 @@
 #' (before base64 encoding); defaults to 4MB.
 #' @param data the data object from which the argument values are derived; by
 #'   default, it is the \code{data} object provided to \code{leaflet()}
-#'   initially, but can be overridden
+#'   initially, but can be overridden.
+#' @param ... currently not used.
 #'
 #' @details
 #' This is an adaption of \code{\link{addRasterImage}}. See that documentation
@@ -48,18 +49,19 @@
 #' @importFrom png writePNG
 #' @export
 addStarsImage <- function(
-  map,
-  x,
-  band = 1,
-  colors = "Spectral",
-  opacity = 1,
-  attribution = NULL,
-  layerId = NULL,
-  group = NULL,
-  project = FALSE,
-  method = c("auto", "bilinear", "ngb"),
-  maxBytes = 4 * 1024 * 1024,
-  data = getMapData(map)
+  map
+  , x
+  , band = 1
+  , colors = "Spectral"
+  , opacity = 1
+  , attribution = NULL
+  , layerId = NULL
+  , group = NULL
+  , project = FALSE
+  , method = c("auto", "bilinear", "ngb")
+  , maxBytes = 4 * 1024 * 1024
+  , data = getMapData(map)
+  , ...
 ) {
 
   # this allows using `addStarsImage` directly on a leaflet pipe, without

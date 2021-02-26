@@ -16,7 +16,8 @@ addStarsImage(
   project = FALSE,
   method = c("auto", "bilinear", "ngb"),
   maxBytes = 4 * 1024 * 1024,
-  data = getMapData(map)
+  data = getMapData(map),
+  ...
 )
 }
 \arguments{
@@ -54,7 +55,9 @@ Ignored if project = FALSE. See projectRaster for details.}
 
 \item{data}{the data object from which the argument values are derived; by
 default, it is the \code{data} object provided to \code{leaflet()}
-initially, but can be overridden}
+initially, but can be overridden.}
+
+\item{...}{currently not used.}
 }
 \description{
 Add stars layer to a leaflet map

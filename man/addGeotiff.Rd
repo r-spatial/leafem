@@ -13,11 +13,14 @@ addGeotiff(
   resolution = 96,
   bands = NULL,
   arith = NULL,
+  project = TRUE,
+  method = NULL,
   opacity = 0.8,
   options = leaflet::tileOptions(),
   colorOptions = NULL,
   rgb = FALSE,
   pixelValuesToColorFn = NULL,
+  autozoom = TRUE,
   ...
 )
 }
@@ -36,6 +39,18 @@ addGeotiff(
 Larger values will result in more detailed rendering, but may impact performance.
 Default is 96 (pixels).}
 
+\item{arith}{an optional function to be applied to a multi-layer object.
+Will be computed on-the-fly in the browser.}
+
+\item{project}{if TRUE (default), automatically project x to the map projection
+expected by georaster-layer-for-leaflet (EPSG:4326);
+if FALSE, it's the caller's responsibility to ensure that \code{file} is already projected.}
+
+\item{method}{character defining the resampling method to be used when
+\code{project} is \code{TRUE}.
+See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+possible values.}
+
 \item{opacity}{opacity of the rendered layer.}
 
 \item{options}{options to be passed to the layer.
@@ -46,6 +61,9 @@ See \code{\link[leaflet]{tileOptions}} for details.}
 \item{pixelValuesToColorFn}{optional JS function to be passed to the browser.
 Can be used to fine tune and manipulate the color mapping.
 See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.}
+
+\item{autozoom}{whether to automatically zoom to the full extent of the layer.
+Default is \code{TRUE}}
 
 \item{...}{currently not used.}
 }

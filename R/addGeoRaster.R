@@ -375,6 +375,8 @@ addCOG = function(map,
 #' @param breaks the breaks at which color should change.
 #' @param na.color color for NA values (will map to NaN in Javascript).
 #'
+#' @importFrom methods formalArgs
+#'
 #' @export
 colorOptions = function(palette = NULL,
                         breaks = NULL,

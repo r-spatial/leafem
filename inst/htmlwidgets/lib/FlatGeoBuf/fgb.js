@@ -126,6 +126,10 @@ function makePopup(popup, className) {
       }
       layer.bindPopup(popUp, { maxWidth: 2000 });
     };
+  } else if (typeof(popup) === "object") {
+    pop = function(feature, layer) {
+      layer.bindPopup(popup[feature.properties.mvFeatureId - 1]);
+    };
   } else {
     pop = function(feature, layer) {
       popUp = json2table(

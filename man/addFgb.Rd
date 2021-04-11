@@ -79,7 +79,7 @@ opacity, fillOpacity if those are to be mapped to an attribute column.}
 \description{
 flatgeobuf is a performant binary geo-spatial file format suitable for
   serving large data. For more details see
-  \url{https://github.com/bjornharrtell/flatgeobuf} and the respective
+  \url{https://github.com/flatgeobuf/flatgeobuf} and the respective
   documentation for the GDAL/OGR driver at
   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
   \cr
@@ -97,7 +97,7 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
    library(leafem)
 
    # via URL
-   url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/3.0.1/test/data/UScounties.fgb"
+   url = "https://raw.githubusercontent.com/flatgeobuf/flatgeobuf/3.0.1/test/data/UScounties.fgb"
 
    leaflet() \%>\%
      addTiles() \%>\%

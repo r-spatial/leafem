@@ -124,7 +124,7 @@ addImageQuery = function(map,
     )
   }
 
-  sm <- sample(1:1000, 1)
+  sm <- createFileId() #sample(1:1000, 1)
   map$dependencies <- c(map$dependencies,
                         starsDataDependency(jFn = pathDatFn,
                                             counter = 1,

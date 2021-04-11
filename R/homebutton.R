@@ -71,8 +71,7 @@ addHomeButton <- function(map, ext, group = "layer",
     label <- paste("Zoom to", group)
 
     txt <- paste('<strong>', group, '</strong>')
-    
-    print(leafletHomeButtonDependencies())
+
     map$dependencies <- c(map$dependencies, leafletHomeButtonDependencies())
     leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
                           ext[1], ext[2], ext[3], ext[4],

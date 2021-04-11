@@ -53,8 +53,10 @@ addHomeButton <- function(map, ext, group = "layer",
     } else {
       ext = as.vector(ext)
     }
+    useext = TRUE
   } else {
     ext = c(0, 0, 0, 0)
+    useext = FALSE
   }
 
   hb <- try(getCallEntryFromMap(map, "addHomeButton"), silent = TRUE)
@@ -69,11 +71,12 @@ addHomeButton <- function(map, ext, group = "layer",
     label <- paste("Zoom to", group)
 
     txt <- paste('<strong>', group, '</strong>')
-
+    
+    print(leafletHomeButtonDependencies())
     map$dependencies <- c(map$dependencies, leafletHomeButtonDependencies())
     leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
                           ext[1], ext[2], ext[3], ext[4],
-                          group, label, txt, position)
+                          useext, group, label, txt, position)
   }
 
   else map

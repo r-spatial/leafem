@@ -63,9 +63,11 @@ Depends:
     R (>= 3.1.0)
 Imports:
     base64enc,
+    geojsonsf,
     htmltools (>= 0.3),
     htmlwidgets,
     leaflet (>= 2.0.1),
+    methods,
     raster,
     sf,
     png

@@ -1,4 +1,13 @@
-## leafem 0.1.4
+## leafem 0.1.5
+
+new features:
+
+  * new function addReactiveFeatures to show/hide one layer when clicking on another. #38
+  
+bugfixes:
+
+  * imageQuery now properly updated in shiny. #27
+  * homeButton did not work for extents with xmin = 0. #40
 
 
 ## leafem 0.1.3

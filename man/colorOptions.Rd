@@ -17,6 +17,8 @@ color generating function such as the result of \code{\link[grDevices]{colorRamp
 
 \item{breaks}{the breaks at which color should change.}
 
+\item{domain}{the value domain (min/max) within which color mapping should occur.}
+
 \item{na.color}{color for NA values (will map to NaN in Javascript).}
 }
 \description{

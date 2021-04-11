@@ -39,6 +39,8 @@ addGeotiff(
 Larger values will result in more detailed rendering, but may impact performance.
 Default is 96 (pixels).}
 
+\item{bands}{which bands to use in case of multi-band Geotiff.}
+
 \item{arith}{an optional function to be applied to a multi-layer object.
 Will be computed on-the-fly in the browser.}
 
@@ -57,6 +59,8 @@ possible values.}
 See \code{\link[leaflet]{tileOptions}} for details.}
 
 \item{colorOptions}{list defining the palette, breaks and na.color to be used.}
+
+\item{rgb}{logical, whether to render Geotiff as RGB.}
 
 \item{pixelValuesToColorFn}{optional JS function to be passed to the browser.
 Can be used to fine tune and manipulate the color mapping.
@@ -97,35 +101,15 @@ if (interactive()) {
 
   write_stars(st_warp(x1, crs = 4326), tmpfl)
 
-  myCustomJSFunc = htmlwidgets::JS(
-    "
-      pixelValuesToColorFn = (raster, colorOptions) => {
-        const cols = colorOptions.palette;
-        var scale = chroma.scale(cols);
-
-        if (colorOptions.breaks !== null) {
-          scale = scale.classes(colorOptions.breaks);
-        }
-        var pixelFunc = values => {
-          let clr = scale.domain([raster.mins, raster.maxs]);
-          if (isNaN(values)) return colorOptions.naColor;
-          return clr(values).hex();
-        };
-        return pixelFunc;
-      };
-    "
-  )
-
   leaflet() \%>\%
     addTiles() \%>\%
     addGeotiff(
       file = tmpfl
       , opacity = 0.9
       , colorOptions = colorOptions(
-        palette = grey.colors
+        palette = hcl.colors(256, palette = "inferno")
         , na.color = "transparent"
       )
-      , pixelValuesToColorFn = myCustomJSFunc
     )
 
 }

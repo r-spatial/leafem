@@ -123,6 +123,7 @@ addGeoRaster = function(map,
 #' @param resolution the target resolution for the simple nearest neighbor interpolation.
 #'   Larger values will result in more detailed rendering, but may impact performance.
 #'   Default is 96 (pixels).
+#' @param bands which bands to use in case of multi-band Geotiff.
 #' @param arith an optional function to be applied to a multi-layer object.
 #'   Will be computed on-the-fly in the browser.
 #' @param project if TRUE (default), automatically project x to the map projection
@@ -136,6 +137,7 @@ addGeoRaster = function(map,
 #' @param options options to be passed to the layer.
 #'   See \code{\link[leaflet]{tileOptions}} for details.
 #' @param colorOptions list defining the palette, breaks and na.color to be used.
+#' @param rgb logical, whether to render Geotiff as RGB.
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
@@ -160,35 +162,15 @@ addGeoRaster = function(map,
 #'
 #'   write_stars(st_warp(x1, crs = 4326), tmpfl)
 #'
-#'   myCustomJSFunc = htmlwidgets::JS(
-#'     "
-#'       pixelValuesToColorFn = (raster, colorOptions) => {
-#'         const cols = colorOptions.palette;
-#'         var scale = chroma.scale(cols);
-#'
-#'         if (colorOptions.breaks !== null) {
-#'           scale = scale.classes(colorOptions.breaks);
-#'         }
-#'         var pixelFunc = values => {
-#'           let clr = scale.domain([raster.mins, raster.maxs]);
-#'           if (isNaN(values)) return colorOptions.naColor;
-#'           return clr(values).hex();
-#'         };
-#'         return pixelFunc;
-#'       };
-#'     "
-#'   )
-#'
 #'   leaflet() %>%
 #'     addTiles() %>%
 #'     addGeotiff(
 #'       file = tmpfl
 #'       , opacity = 0.9
 #'       , colorOptions = colorOptions(
-#'         palette = grey.colors
+#'         palette = hcl.colors(256, palette = "inferno")
 #'         , na.color = "transparent"
 #'       )
-#'       , pixelValuesToColorFn = myCustomJSFunc
 #'     )
 #'
 #' }
@@ -373,6 +355,7 @@ addCOG = function(map,
 #' @param palette the color palette to use. Can be a set of colors or a
 #'   color generating function such as the result of \code{\link[grDevices]{colorRampPalette}}.
 #' @param breaks the breaks at which color should change.
+#' @param domain the value domain (min/max) within which color mapping should occur.
 #' @param na.color color for NA values (will map to NaN in Javascript).
 #'
 #' @importFrom methods formalArgs

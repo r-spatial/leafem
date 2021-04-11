@@ -109,7 +109,7 @@ addZoomFullButton = function(map, lst, position = "bottomleft") {
   txt = "<strong>Zoom full</strong>"
 
   leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
-                        bb[1], bb[2], bb[3], bb[4], NULL, label, txt,
+                        bb[1], bb[2], bb[3], bb[4], TRUE, NULL, label, txt,
                         position)
 
 }

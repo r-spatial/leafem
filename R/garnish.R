@@ -53,13 +53,18 @@ garnishMap <- function(map, ...) {
       , silent = TRUE
     )
     if (!inherits(args_i, "try-error")) {
+      if (!"map" %in% names(as.list(i))) {
+        next
+      }
       args_lst = ls[args_i][!(is.na(names(ls[args_i])))]
-      maptry = try(
+      maptry = tryCatch(
         do.call(i, append(list(map = map), args_lst))
-        , silent = TRUE
+        , error = function(e) { e }
       )
-      if (!inherits(maptry, "try-error")) {
-        map <- maptry
+      if (inherits(maptry, "error")) {
+        stop(maptry$message, call. = FALSE)
+      } else {
+        map = maptry
       }
     }
   }

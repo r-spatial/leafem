@@ -13,7 +13,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   var gl = false;
   var pane;
 
-  if (options.pane === undefined) {
+  if (options === null || options.pane === undefined) {
     pane = 'overlayPane';
   } else {
     pane = options.pane;
@@ -128,7 +128,14 @@ function makePopup(popup, className) {
     };
   } else if (typeof(popup) === "object") {
     pop = function(feature, layer) {
-      layer.bindPopup(popup[feature.properties.mvFeatureId - 1]);
+      if (feature.properties.mvFeatureId !== undefined) {
+        var idx = feature.properties.mvFeatureId;
+        layer.bindPopup(popup[idx - 1]);
+      }
+      if (feature.properties.mvFeatureId === undefined) {
+        console.log("cannot bind popup to layer without id! Please file an issue at https://github.com/r-spatial/leafem/issues");
+        layer.bindPopup("");
+      }
     };
   } else {
     pop = function(feature, layer) {

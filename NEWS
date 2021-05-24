@@ -1,4 +1,4 @@
-leafem 0.1.5
+leafem 0.1.6
 
 new features:
 
@@ -8,6 +8,10 @@ bugfixes:
 
   * imageQuery now properly updated in shiny. #27
   * homeButton did not work for extents with xmin = 0. #40
+  
+miscellaneous:
+
+  * add(Raster/Stars)RGB default quantile stretching now between 0 & 1.
 
 
 leafem 0.1.3

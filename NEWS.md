@@ -1,4 +1,4 @@
-## leafem 0.1.5
+## leafem 0.1.6
 
 new features:
 

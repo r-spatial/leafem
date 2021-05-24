@@ -11,7 +11,7 @@ addRasterRGB(
   r = 3,
   g = 2,
   b = 1,
-  quantiles = c(0.02, 0.98),
+  quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
   ...
@@ -23,7 +23,7 @@ addStarsRGB(
   r = 3,
   g = 2,
   b = 1,
-  quantiles = c(0.02, 0.98),
+  quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
   ...

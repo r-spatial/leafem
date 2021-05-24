@@ -130,7 +130,7 @@ function makePopup(popup, className) {
     pop = function(feature, layer) {
       if (feature.properties.mvFeatureId !== undefined) {
         var idx = feature.properties.mvFeatureId;
-        layer.bindPopup(popup[idx - 1]);
+        layer.bindPopup(popup[idx - 1], { maxWidth: 2000 });
       }
       if (feature.properties.mvFeatureId === undefined) {
         console.log("cannot bind popup to layer without id! Please file an issue at https://github.com/r-spatial/leafem/issues");

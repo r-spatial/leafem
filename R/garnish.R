@@ -49,7 +49,7 @@ garnishMap <- function(map, ...) {
 
   for (i in fn_lst) {
     args_i = try(
-      match.arg(names(ls), names(as.list(i)), several.ok = TRUE)
+      match.arg(c("map", names(ls)), names(as.list(i)), several.ok = TRUE)
       , silent = TRUE
     )
     if (!inherits(args_i, "try-error")) {

@@ -52,6 +52,7 @@ garnishMap <- function(map, ...) {
       match.arg(c("map", names(ls)), names(as.list(i)), several.ok = TRUE)
       , silent = TRUE
     )
+    args_i = args_i[!duplicated(args_i)]
     if (!inherits(args_i, "try-error")) {
       if (!"map" %in% names(as.list(i))) {
         next

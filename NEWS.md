@@ -1,5 +1,7 @@
 ## leafem 0.1.7
 
+## leafem 0.1.6
+
 new features:
 
   * new function addReactiveFeatures to show/hide one layer when clicking on another. #38

@@ -162,7 +162,7 @@ LeafletWidget.methods.addCOG = function (url,
         http://leafletjs.com/reference-1.2.0.html#gridlayer
     */
     var layer = new GeoRasterLayer({
-        georaster: georaster,
+        georaster,
         resolution: resolution,
         opacity: opacity,
         pane: pane

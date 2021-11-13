@@ -343,7 +343,6 @@ addCOG = function(map,
     , opacity
     , options
     , colorOptions
-    , rgb
     , pixelValuesToColorFn
     , autozoom
   )

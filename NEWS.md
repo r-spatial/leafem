@@ -1,4 +1,8 @@
-## leafem 0.1.7
+## leafem 0.1.8
+
+bugfixes:
+
+  * (unexported) addCOG now works much better after updating JS deps. #48
 
 ## leafem 0.1.6
 

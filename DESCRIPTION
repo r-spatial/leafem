@@ -1,8 +1,8 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.1.7
-Date: 2021-06-25
+Version: 0.1.8
+Date: 2021-11-13
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -85,4 +85,4 @@ Suggests:
     stars
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

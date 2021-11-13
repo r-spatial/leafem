@@ -1,16 +1,20 @@
-leafem 0.1.7
+leafem 0.1.8
+
+bugfixes:
+
+  * (unexported) addCOG now works much better after updating JS deps. #48
 
 leafem 0.1.6
 
 new features:
 
   * new function addReactiveFeatures to show/hide one layer when clicking on another. #38
-
+  
 bugfixes:
 
   * imageQuery now properly updated in shiny. #27
   * homeButton did not work for extents with xmin = 0. #40
-
+  
 miscellaneous:
 
   * add(Raster/Stars)RGB default quantile stretching now between 0 & 1.
@@ -24,7 +28,7 @@ new features:
   * new functions addGeotiff and addGeoRaster to render large raster data using https://github.com/GeoTIFF/georaster-layer-for-leaflet
 
 bugfixes:
-
+  
   * don't use st_zm for addFeatures.mapdeck
   * remove mousecoords strip only if it exists. #23
   * addFgb now respects pane passed via options.
@@ -43,7 +47,7 @@ new features:
   * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto #2.
   * new function `addFgb` to add flatgeobuf files from file or url.
   * addImageQuery now much more robust. Also works with leaflet_proxy objects now. Thanks to Sebastian Gatscha #9, #12, #13
-
+  
 miscellaneous:
 
   * garnishMap now uses match.arg and tries to be more robust.

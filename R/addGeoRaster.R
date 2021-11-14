@@ -324,6 +324,7 @@ addCOG = function(map,
                   colorOptions = NULL, #colorOptions(),
                   pixelValuesToColorFn = NULL,
                   autozoom = TRUE,
+                  rgb = FALSE,
                   ...) {
 
   map$dependencies <- c(
@@ -345,6 +346,7 @@ addCOG = function(map,
     , colorOptions
     , pixelValuesToColorFn
     , autozoom
+    , rgb
   )
 }
 

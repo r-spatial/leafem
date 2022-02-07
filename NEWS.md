@@ -3,6 +3,7 @@
 bugfixes:
 
   * (unexported) addCOG now works much better after updating JS deps. #48
+  * georaster.noDataValue now mapped correctly to na.color. #52
 
 ## leafem 0.1.6
 

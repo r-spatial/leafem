@@ -105,7 +105,7 @@ LeafletWidget.methods.addGeotiff = function (url,
               vals = evalMath(arith, values);
             }
             let clr = scale.domain(domain);
-            if (isNaN(vals)) return nacol;
+            if (isNaN(vals) || vals === georaster.noDataValue) return nacol;
             return clr(vals).hex();
           };
         } else {

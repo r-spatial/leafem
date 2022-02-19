@@ -161,7 +161,7 @@ addLocalFile = function(map,
 #'
 #' @description
 #'   Add tiled raster data pyramids from a local folder that was created with
-#'   gdal2tiles.py (see \url{https://gdal.org/gdal2tiles.html} for details).
+#'   gdal2tiles.py (see \url{https://gdal.org/programs/gdal2tiles.html} for details).
 #'
 #' @param map a mapview or leaflet object.
 #' @param folder the (top level) folder where the tiles (folders) reside.

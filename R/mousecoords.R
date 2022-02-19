@@ -198,14 +198,14 @@ clip2sfc = function(x, clipboard = TRUE) {
       stop("\nplease install.packages('clipr') to enable reading from clipboard")
     lns = clipr::read_clip()
     splt = strsplit(lns, " ")[[1]]
-    lnlt = regmatches(splt, regexpr("([0-9]+.[0-9]+)", splt))
+    lnlt = regmatches(splt, regexpr("(-?[0-9]+.[0-9]+)", splt))
     x = as.numeric(lnlt[1])
     y = as.numeric(lnlt[2])
     sf::st_sfc(sf::st_point(c(x, y)), crs = 4326)
   } else {
     if (missing(x)) stop("\nneed some text or 'clipboard = TRUE'", call. = FALSE)
     splt = strsplit(x, " ")[[1]]
-    lnlt = regmatches(splt, regexpr("([0-9]+.[0-9]+)", splt))
+    lnlt = regmatches(splt, regexpr("(-?[0-9]+.[0-9]+)", splt))
     x = as.numeric(lnlt[1])
     y = as.numeric(lnlt[2])
     sf::st_sfc(sf::st_point(c(x, y)), crs = 4326)

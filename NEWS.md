@@ -4,6 +4,8 @@
 
 #### 🐛 bug fixes
 
+  * update flatgeobuf geojson js lib to latest version. (https://github.com/r-spatial/mapview/issues/411)
+
 #### 💬 documentation etc
 
 #### 🍬 miscellaneous

@@ -156,15 +156,16 @@ LeafletWidget.methods.addCOG = function (url,
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
 
-/*    // get color palette etc
-    const cols = colorOptions.palette;
-    let scale = chroma.scale(cols);
-    let domain = colorOptions.domain;
-    let nacol = colorOptions["na.color"];
-    if (colorOptions.breaks !== null) {
-      scale = scale.classes(colorOptions.breaks);
-    }
-
+    if (colorOptions !== null) {
+      // get color palette etc
+      const cols = colorOptions.palette;
+      let scale = chroma.scale(cols);
+      let domain = colorOptions.domain;
+      let nacol = colorOptions["na.color"];
+      if (colorOptions.breaks !== null) {
+        scale = scale.classes(colorOptions.breaks);
+      }
+/*
     let mins = georaster.mins;
     let maxs = georaster.maxs;
 
@@ -199,19 +200,21 @@ LeafletWidget.methods.addCOG = function (url,
         );
       }
     }
-
-    // define pixel value -> colorm mapping (if not provided)
-    if (pixelValuesToColorFn === null) {
-      pixelValuesToColorFn = values => {
-        let vals;
-        let clr = scale.domain(domain);
-        if (isNaN(vals)) return nacol;
-        return clr(vals).hex();
-      };
-    } else {
-      pixelValuesToColorFn = pixelValuesToColorFn;
-    }
 */
+      // define pixel value -> colorm mapping (if not provided)
+      if (pixelValuesToColorFn === null) {
+        pixelValuesToColorFn = values => {
+          //let vals;
+          let clr = scale.domain(domain);
+          if (isNaN(values) || values === georaster.noDataValue) return nacol;
+          //console.log(values);
+          return clr(values).hex();
+        };
+      } else {
+        pixelValuesToColorFn = pixelValuesToColorFn;
+      }
+    }
+
 
     /*
         GeoRasterLayer is an extension of GridLayer,

@@ -40,6 +40,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
     let it = flatgeobuf.deserialize(response.body, undefined, handleHeaderMeta);
+    var cntr = 0;
     // handle result
     function handleResult(result) {
         if (!result.done) {
@@ -87,7 +88,16 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             if (label) {
               if (Object.keys(result.value.properties).includes(label)) {
                 lyr.bindTooltip(function (layer) {
-                   return layer.feature.properties[label].toString();
+                  return layer.feature.properties[label].toString();
+                }, {sticky: true});
+              } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
+                var lb = label[cntr];
+                lyr.bindTooltip(function (layer) {
+                  return(lb);
+                }, {sticky: true});
+              } else {
+                lyr.bindTooltip(function (layer) {
+                  return(label);
                 }, {sticky: true});
               }
             }
@@ -96,6 +106,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             it.next().then(handleResult);
           }
         }
+        cntr += 1;
     }
     it.next().then(handleResult);
   }

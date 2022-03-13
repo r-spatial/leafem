@@ -3,6 +3,7 @@
 #### ✨ features and improvements
 
   * `addFGB()` now accepts arbitrary labels. #53
+  * update georaster-layer-for-leaflet version to 3.7.1
 
 #### 🐛 bug fixes
 

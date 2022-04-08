@@ -15,6 +15,8 @@
 
 #### 🍬 miscellaneous
 
+  * removed `gdalUtils` dependency using new `sf::st_layers()` instead. 
+
 
 ## leafem 0.1.8
 

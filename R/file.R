@@ -60,16 +60,19 @@ addLocalFile = function(map,
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
-  geom_type = gdalUtils::ogrinfo(file)
+  layers = sf::st_layers(file)
+  # geom_type = gdalUtils::ogrinfo(file)
+  geom_type = layers$geomtype[[1]]
   if (any(grepl("Line String", geom_type))) fill = FALSE
 
-  prj = gdalUtils::gdalsrsinfo(file, o = "proj4")
-  prj = prj[grep("+proj=", prj)]
-  # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
-  #
-  # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
-  prj = gsub(" '", "", prj)
-  prj = gsub("'", "", prj)
+  # prj = gdalUtils::gdalsrsinfo(file, o = "proj4")
+  # prj = prj[grep("+proj=", prj)]
+  # # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
+  # #
+  # # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
+  # prj = gsub(" '", "", prj)
+  # prj = gsub("'", "", prj)
+  prj = layers$crs[[1]]
 
   style_list = list(radius = radius,
                     stroke = stroke,
@@ -102,18 +105,35 @@ addLocalFile = function(map,
 
   if (tools::file_ext(file) != "geojson") {
     if (sf::st_is_longlat(sf::st_crs(prj))) {
-      gdalUtils::ogr2ogr(
-        src_datasource_name = file,
-        dst_datasource_name = path_layer,
-        f = "GeoJSON"
+      # gdalUtils::ogr2ogr(
+      #   src_datasource_name = file,
+      #   dst_datasource_name = path_layer,
+      #   f = "GeoJSON"
+      # )
+      sf::gdal_utils(
+        util = "vectortranslate"
+        , source = file
+        , destination = path_layer
+        , options = c(
+          "-f", "GeoJSON"
+        )
       )
     }
     if (!sf::st_is_longlat(sf::st_crs(prj))) {
-      gdalUtils::ogr2ogr(
-        src_datasource_name = file,
-        dst_datasource_name = path_layer,
-        t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-        f = "GeoJSON"
+      # gdalUtils::ogr2ogr(
+      #   src_datasource_name = file,
+      #   dst_datasource_name = path_layer,
+      #   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
+      #   f = "GeoJSON"
+      # )
+      sf::gdal_utils(
+        util = "vectortranslate"
+        , source = file
+        , destination = path_layer
+        , options = c(
+          "-t_srs", "+proj=longlat +datum=WGS84 +no_defs",
+          "-f", "GeoJSON"
+        )
       )
     }
   } else {

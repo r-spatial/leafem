@@ -104,5 +104,6 @@ leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/
 ### Code of Conduct
 
 Please note that the ‘leafem’ project is released with a [Contributor
-Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project
-you agree to abide by its terms.
+Code of
+Conduct](https://github.com/r-spatial/leafem/blob/master/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.

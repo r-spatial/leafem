@@ -76,8 +76,8 @@ addImageQuery = function(map,
 
   tmp <- makepathStars(as.character(jsgroup))
   pathDatFn <- tmp[[2]][1]
-  starspathDatFn <- tmp[[3]][1]
-  datFn <- tmp[[4]][1]
+  # starspathDatFn <- tmp[[3]][1]
+  # datFn <- tmp[[4]][1]
 
   if (project) {
     if (inherits(x, "stars")) {
@@ -111,6 +111,8 @@ addImageQuery = function(map,
   }))
   ctrlid = ctrlid[imctrl]
 
+  # map = leaflet::clearControls(map)
+
   if (length(ctrlid) == 0) {
     # must add empty character instead of NULL for html with addControl
     map = leaflet::addControl(
@@ -122,10 +124,11 @@ addImageQuery = function(map,
     )
   }
 
+  sm <- createFileId() #sample(1:1000, 1)
   map$dependencies <- c(map$dependencies,
                         starsDataDependency(jFn = pathDatFn,
                                             counter = 1,
-                                            group = layerId))
+                                            group = paste0(layerId,"_",sm)))
   map$dependencies = c(map$dependencies,
                        list(htmltools::htmlDependency(
                          version = "0.0.1",

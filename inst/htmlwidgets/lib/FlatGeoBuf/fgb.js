@@ -13,7 +13,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   var gl = false;
   var pane;
 
-  if (options.pane === undefined) {
+  if (options === null || options.pane === undefined) {
     pane = 'overlayPane';
   } else {
     pane = options.pane;
@@ -40,6 +40,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
     let it = flatgeobuf.deserialize(response.body, undefined, handleHeaderMeta);
+    var cntr = 0;
     // handle result
     function handleResult(result) {
         if (!result.done) {
@@ -87,7 +88,16 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             if (label) {
               if (Object.keys(result.value.properties).includes(label)) {
                 lyr.bindTooltip(function (layer) {
-                   return layer.feature.properties[label].toString();
+                  return layer.feature.properties[label].toString();
+                }, {sticky: true});
+              } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
+                var lb = label[cntr];
+                lyr.bindTooltip(function (layer) {
+                  return(lb);
+                }, {sticky: true});
+              } else {
+                lyr.bindTooltip(function (layer) {
+                  return(label);
                 }, {sticky: true});
               }
             }
@@ -96,6 +106,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             it.next().then(handleResult);
           }
         }
+        cntr += 1;
     }
     it.next().then(handleResult);
   }
@@ -125,6 +136,17 @@ function makePopup(popup, className) {
         popUp = popup;
       }
       layer.bindPopup(popUp, { maxWidth: 2000 });
+    };
+  } else if (typeof(popup) === "object") {
+    pop = function(feature, layer) {
+      if (feature.properties.mvFeatureId !== undefined) {
+        var idx = feature.properties.mvFeatureId;
+        layer.bindPopup(popup[idx - 1], { maxWidth: 2000 });
+      }
+      if (feature.properties.mvFeatureId === undefined) {
+        console.log("cannot bind popup to layer without id! Please file an issue at https://github.com/r-spatial/leafem/issues");
+        layer.bindPopup("");
+      }
     };
   } else {
     pop = function(feature, layer) {

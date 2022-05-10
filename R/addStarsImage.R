@@ -137,7 +137,11 @@ addStarsImage <- function(
     }
   }
 
-  clrs = colors(as.numeric(layer))
+  if (is.null(attr(layer, "color"))) {
+    clrs = colors(as.numeric(layer))
+  } else {
+    clrs = colors(layer)
+  }
   clrs = grDevices::col2rgb(clrs, alpha = TRUE)
   tileData = as.raw(clrs)
 

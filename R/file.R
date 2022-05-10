@@ -60,16 +60,19 @@ addLocalFile = function(map,
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
-  geom_type = gdalUtils::ogrinfo(file)
+  layers = sf::st_layers(file)
+  # geom_type = gdalUtils::ogrinfo(file)
+  geom_type = layers$geomtype[[1]]
   if (any(grepl("Line String", geom_type))) fill = FALSE
 
-  prj = gdalUtils::gdalsrsinfo(file, o = "proj4")
-  prj = prj[grep("+proj=", prj)]
-  # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
-  #
-  # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
-  prj = gsub(" '", "", prj)
-  prj = gsub("'", "", prj)
+  # prj = gdalUtils::gdalsrsinfo(file, o = "proj4")
+  # prj = prj[grep("+proj=", prj)]
+  # # prjln = srs_info[grep("PROJ[^A-Z]", srs_info)]
+  # #
+  # # prj = regmatches(prjln, regexpr("'([^]]+)'", prjln))
+  # prj = gsub(" '", "", prj)
+  # prj = gsub("'", "", prj)
+  prj = layers$crs[[1]]
 
   style_list = list(radius = radius,
                     stroke = stroke,
@@ -102,18 +105,35 @@ addLocalFile = function(map,
 
   if (tools::file_ext(file) != "geojson") {
     if (sf::st_is_longlat(sf::st_crs(prj))) {
-      gdalUtils::ogr2ogr(
-        src_datasource_name = file,
-        dst_datasource_name = path_layer,
-        f = "GeoJSON"
+      # gdalUtils::ogr2ogr(
+      #   src_datasource_name = file,
+      #   dst_datasource_name = path_layer,
+      #   f = "GeoJSON"
+      # )
+      sf::gdal_utils(
+        util = "vectortranslate"
+        , source = file
+        , destination = path_layer
+        , options = c(
+          "-f", "GeoJSON"
+        )
       )
     }
     if (!sf::st_is_longlat(sf::st_crs(prj))) {
-      gdalUtils::ogr2ogr(
-        src_datasource_name = file,
-        dst_datasource_name = path_layer,
-        t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-        f = "GeoJSON"
+      # gdalUtils::ogr2ogr(
+      #   src_datasource_name = file,
+      #   dst_datasource_name = path_layer,
+      #   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
+      #   f = "GeoJSON"
+      # )
+      sf::gdal_utils(
+        util = "vectortranslate"
+        , source = file
+        , destination = path_layer
+        , options = c(
+          "-t_srs", "+proj=longlat +datum=WGS84 +no_defs",
+          "-f", "GeoJSON"
+        )
       )
     }
   } else {
@@ -161,7 +181,7 @@ addLocalFile = function(map,
 #'
 #' @description
 #'   Add tiled raster data pyramids from a local folder that was created with
-#'   gdal2tiles.py (see \url{https://gdal.org/gdal2tiles.html} for details).
+#'   gdal2tiles.py (see \url{https://gdal.org/programs/gdal2tiles.html} for details).
 #'
 #' @param map a mapview or leaflet object.
 #' @param folder the (top level) folder where the tiles (folders) reside.
@@ -244,7 +264,7 @@ addTileFolder = function(map,
 #' @description
 #'   flatgeobuf is a performant binary geo-spatial file format suitable for
 #'   serving large data. For more details see
-#'   \url{https://github.com/bjornharrtell/flatgeobuf} and the respective
+#'   \url{https://github.com/flatgeobuf/flatgeobuf} and the respective
 #'   documentation for the GDAL/OGR driver at
 #'   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
 #'   \cr
@@ -291,7 +311,7 @@ addTileFolder = function(map,
 #'    library(leafem)
 #'
 #'    # via URL
-#'    url = "https://raw.githubusercontent.com/bjornharrtell/flatgeobuf/3.0.1/test/data/UScounties.fgb"
+#'    url = "https://raw.githubusercontent.com/flatgeobuf/flatgeobuf/3.0.1/test/data/UScounties.fgb"
 #'
 #'    leaflet() %>%
 #'      addTiles() %>%
@@ -459,7 +479,7 @@ fgbDependencies = function() {
   list(
     htmltools::htmlDependency(
       "FlatGeoBuf"
-      , '3.3.3'
+      , '3.21.3'
       , system.file("htmlwidgets/lib/FlatGeoBuf", package = "leafem")
       , script = c(
         'fgb.js'

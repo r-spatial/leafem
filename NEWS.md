@@ -1,4 +1,44 @@
-## leafem 0.1.4
+## leafem 0.2.0 (2022-04-16)
+
+#### ✨ features and improvements
+
+  * `addFGB()` now accepts arbitrary labels. #53
+  * update georaster-layer-for-leaflet version to 3.7.1
+
+#### 🐛 bug fixes
+
+  * update flatgeobuf geojson js lib to latest version. (https://github.com/r-spatial/mapview/issues/411)
+  * fix parsing of negative coordinates in `clip2sfc()`. @famuvie #45
+  * remove offending character conversion in `addStaticLabels()`. @jannes-m #47
+
+#### 💬 documentation etc
+
+#### 🍬 miscellaneous
+
+  * removed `gdalUtils` dependency using new `sf::st_layers()` instead. 
+
+
+## leafem 0.1.8
+
+bugfixes:
+
+  * (unexported) addCOG now works much better after updating JS deps. #48
+  * georaster.noDataValue now mapped correctly to na.color. #52
+
+## leafem 0.1.6
+
+new features:
+
+  * new function addReactiveFeatures to show/hide one layer when clicking on another. #38
+  
+bugfixes:
+
+  * imageQuery now properly updated in shiny. #27
+  * homeButton did not work for extents with xmin = 0. #40
+  
+miscellaneous:
+
+  * add(Raster/Stars)RGB default quantile stretching now between 0 & 1.
 
 
 ## leafem 0.1.3

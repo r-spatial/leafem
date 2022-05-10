@@ -39,5 +39,5 @@ but can be overridden.}
 }
 \description{
 Add tiled raster data pyramids from a local folder that was created with
-  gdal2tiles.py (see \url{https://gdal.org/gdal2tiles.html} for details).
+  gdal2tiles.py (see \url{https://gdal.org/programs/gdal2tiles.html} for details).
 }

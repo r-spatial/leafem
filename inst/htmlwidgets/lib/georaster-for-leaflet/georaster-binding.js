@@ -151,7 +151,7 @@ LeafletWidget.methods.addGeotiff = function (url,
               vals = evalMath(arith, values);
             }
             let clr = scale.domain(domain);
-            if (isNaN(vals)) return nacol;
+            if (isNaN(vals) || vals === georaster.noDataValue) return nacol;
             return clr(vals).hex();
           };
         } else {
@@ -189,7 +189,8 @@ LeafletWidget.methods.addCOG = function (url,
                                          options,
                                          colorOptions,
                                          pixelValuesToColorFn,
-                                         autozoom) {
+                                         autozoom,
+                                         rgb) {
 
   var map = this;
 
@@ -203,6 +204,66 @@ LeafletWidget.methods.addCOG = function (url,
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
 
+    if (colorOptions !== null) {
+      // get color palette etc
+      const cols = colorOptions.palette;
+      let scale = chroma.scale(cols);
+      let domain = colorOptions.domain;
+      let nacol = colorOptions["na.color"];
+      if (colorOptions.breaks !== null) {
+        scale = scale.classes(colorOptions.breaks);
+      }
+/*
+    let mins = georaster.mins;
+    let maxs = georaster.maxs;
+
+    // get raster min/max values
+    let min;
+    if (typeof(mins) === "object") {
+      min = Math.min.apply(null, mins.filter(naExclude));
+    }
+    if (typeof(mins) === "number") {
+      min = mins;
+    }
+
+    let max;
+    if (typeof(maxs) === "object") {
+      max = Math.max.apply(null, maxs.filter(naExclude));
+    }
+    if (typeof(maxs) === "number") {
+      max = maxs;
+    }
+
+    // define domain using min max
+    if (domain === null) {
+      domain = [min, max];
+    }
+
+    // if rgb, scale values to 0 - 255
+    if (rgb) {
+      if (max !== 255) {
+        georaster.values = deepMap(
+          georaster.values
+          , x => scaleValue(x, [min,max], [0, 255])
+        );
+      }
+    }
+*/
+      // define pixel value -> colorm mapping (if not provided)
+      if (pixelValuesToColorFn === null) {
+        pixelValuesToColorFn = values => {
+          //let vals;
+          let clr = scale.domain(domain);
+          if (isNaN(values) || values === georaster.noDataValue) return nacol;
+          //console.log(values);
+          return clr(values).hex();
+        };
+      } else {
+        pixelValuesToColorFn = pixelValuesToColorFn;
+      }
+    }
+
+
     /*
         GeoRasterLayer is an extension of GridLayer,
         which means can use GridLayer options like opacity.
@@ -210,9 +271,10 @@ LeafletWidget.methods.addCOG = function (url,
         http://leafletjs.com/reference-1.2.0.html#gridlayer
     */
     var layer = new GeoRasterLayer({
-        georaster: georaster,
+        georaster,
         resolution: resolution,
         opacity: opacity,
+        pixelValuesToColorFn: pixelValuesToColorFn,
         pane: pane
     });
     map.layerManager.addLayer(layer, null, layerId, group);

@@ -1,8 +1,7 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.1.4
-Date: 2021-01-23
+Version: 0.2.0
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -47,7 +46,12 @@ Authors@R:
              comment = "georaster-layer-for-leaflet"),
       person(given = "Yeedle",
              family = "Neuwirth",
-             role = "ctb"))
+             role = "ctb"),
+      person(given = "Kevin",  
+             family = "Cazelles", 
+             role = "ctb",
+             email = "kevin.cazelles@gmail.com", 
+             comment = c(ORCID = "0000-0001-6619-9874")))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: Provides extensions for packages 'leaflet' & 'mapdeck', 
     many of which are used by package 'mapview'. 
@@ -57,25 +61,28 @@ Description: Provides extensions for packages 'leaflet' & 'mapdeck',
     mouse pointer and zoom-to-layer buttons. Additionally, provides a feature 
     type agnostic function to add points, lines, polygons to a map.
 License: MIT + file LICENSE
-URL: https://github.com/r-spatial/leafem
+URL: https://github.com/r-spatial/leafem,
+    https://r-spatial.github.io/leafem/
 BugReports: https://github.com/r-spatial/leafem/issues
 Depends:
     R (>= 3.1.0)
 Imports:
     base64enc,
+    geojsonsf,
     htmltools (>= 0.3),
     htmlwidgets,
     leaflet (>= 2.0.1),
+    methods,
     raster,
     sf,
     png
 Suggests:
     clipr,
-    gdalUtils,
     leafgl,
     mapdeck,
     plainview,
+    rgdal,
     stars
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
+LazyData: false
+RoxygenNote: 7.1.2

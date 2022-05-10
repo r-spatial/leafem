@@ -3,14 +3,16 @@
 
 # leafem - leaflet extensions for mapview
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/r-spatial/leafem/workflows/R-CMD-check/badge.svg)](https://github.com/r-spatial/leafem/actions)
 [![cran
 checks](https://cranchecks.info/badges/worst/leafem)](https://cran.r-project.org/web/checks/check_results_leafem.html)
-[![Travis build
-status](https://travis-ci.org/r-spatial/leafem.svg?branch=master)](https://travis-ci.org/r-spatial/leafem)
-[![monthly](http://cranlogs.r-pkg.org/badges/leafem)](https://www.rpackages.io/package/leafem)
-[![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)](https://www.rpackages.io/package/leafem)
+![monthly](http://cranlogs.r-pkg.org/badges/leafem)
+![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)
 [![CRAN](http://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)
 [![status](https://tinyverse.netlify.com/badge/leafem)](https://CRAN.R-project.org/package=leafem)
+<!-- badges: end -->
 
 `leafem` provides extensions for package `leaflet` many of which are
 used by package `mapview`. The intention of this package is to enhance
@@ -104,4 +106,6 @@ leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/
 ### Code of Conduct
 
 Please note that the ‘leafem’ project is released with a [Contributor
-Code of Conduct](https://github.com/r-spatial/leafem/blob/master/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+Code of
+Conduct](https://github.com/r-spatial/leafem/blob/master/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.

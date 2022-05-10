@@ -221,6 +221,7 @@ addGeotiff = function(map,
       position = "topright",
       className = paste("info legend rastervals", "className")
     )
+  }
 
   if (is.null(colorOptions)) {
     colorOptions = colorOptions()
@@ -434,3 +435,4 @@ extractBands = function(fun) {
   bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   return(sort(unique(bands)))
 }
+

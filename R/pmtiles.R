@@ -1,3 +1,22 @@
+#' Add vector tiles
+#'
+#' This function add vector tiles, as created by
+#' [tippecanoe](https://github.com/protomaps/tippecanoe), a software project
+#' that builds vector tiles stored as .mbtiles files originally developed by
+#' MapBox but subsequently maintained by protomaps.
+#'
+#'
+#' @param map A \code{leaflet} or \code{mapview} map.
+#' @param url The URL of vector tiles to add
+#' @param layerName The name of the layer from the tiles to add
+#' @param style Style elements to add
+#' @param layerId The id of the layer to add
+#' @param group The group that the layer belongs to if any
+#' @examples
+#' library(leaflet)
+#' u_mbtiles = "https://www.carbon.place/tiles/pct/"
+#' leaflet() %>% addProviderTiles("OpenStreetMap") %>% addPMTiles(u_mbtiles, layerName = "bicycle")
+#' @export
 addPMTiles = function(
     map
     , url
@@ -58,6 +77,7 @@ addPMTiles = function(
 #' @param color line color
 #' @param do_stroke logical, whether polygon borders should be drawn
 #' @param width line width
+#' @inheritParams addPMTiles
 #'
 #' @export
 paintRules = function(

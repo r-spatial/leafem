@@ -14,7 +14,7 @@
 #' @param group The group that the layer belongs to if any
 #' @examples
 #' library(leaflet)
-#' u_mbtiles = "https://www.carbon.place/tiles/pct/"
+#' u_mbtiles = "https://www.carbon.place/tiles/pct/{x}/{y}/{z}.pbf"
 #' leaflet() %>% addProviderTiles("OpenStreetMap") %>% addPMTiles(u_mbtiles, layerName = "bicycle")
 #' @export
 addPMTiles = function(

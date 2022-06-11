@@ -34,6 +34,6 @@ MapBox but subsequently maintained by protomaps.
 }
 \examples{
 library(leaflet)
-u_mbtiles = "https://www.carbon.place/tiles/pct/"
+u_mbtiles = "https://www.carbon.place/tiles/pct/{x}/{y}/{z}.pbf"
 leaflet() \%>\% addProviderTiles("OpenStreetMap") \%>\% addPMTiles(u_mbtiles, layerName = "bicycle")
 }

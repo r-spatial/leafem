@@ -1,30 +1,30 @@
-addPMTiles = function(map, file, layerId = NULL, group = NULL) {
+addPMTiles = function(map, url, layerId = NULL, group = NULL) {
 
-  if (!is.null(file)) {
-    if (!file.exists(file)) {
-      stop(
-        sprintf(
-          "file %s does not seem to exist"
-          , file
-        )
-        , call. = FALSE
-      )
-    }
-    path_layer = tempfile()
-    dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
-    # path_layer = paste0(path_layer, "/", layerId)
-    # dir.create(path_layer)
-
-    file.copy(file, path_layer, overwrite = TRUE)
-    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
-  }
+  # if (!is.null(file)) {
+  #   if (!file.exists(file)) {
+  #     stop(
+  #       sprintf(
+  #         "file %s does not seem to exist"
+  #         , file
+  #       )
+  #       , call. = FALSE
+  #     )
+  #   }
+  #   path_layer = tempfile()
+  #   dir.create(path_layer)
+  #   path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
+  #   # path_layer = paste0(path_layer, "/", layerId)
+  #   # dir.create(path_layer)
+  #
+  #   file.copy(file, path_layer, overwrite = TRUE)
+  #   # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
+  # }
 
 
   map$dependencies <- c(
     map$dependencies
     , leafletPMTilesDependencies()
-    , fileAttachment(path_layer, layerId)
+    # , fileAttachment(path_layer, layerId)
   )
 
   leaflet::invokeMethod(
@@ -32,7 +32,7 @@ addPMTiles = function(map, file, layerId = NULL, group = NULL) {
     , data = leaflet::getMapData(map)
     , method = "addPMTiles"
     # , paste0(path_layer, "/", basename(file))
-    , path_layer
+    , url
     , layerId
     , group
   )

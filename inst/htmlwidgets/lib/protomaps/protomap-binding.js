@@ -1,7 +1,9 @@
-LeafletWidget.methods.addPMTiles = function(url,
-                                         layerId,
-                                         group
-                                         ) {
+LeafletWidget.methods.addPMTiles = function(
+  url
+  , layerId
+  , group
+  , style
+) {
 
   var map = this;
   // debugger;
@@ -9,12 +11,12 @@ LeafletWidget.methods.addPMTiles = function(url,
   // data_fl = data_fl.href;
 
   let paint_rules = [{
-    dataLayer: "zcta",
+    dataLayer: style.layer,
     symbolizer: new protomaps.PolygonSymbolizer({
-      fill:"#ff0000",
-      do_stroke: true,
-      width: 0.5,
-      color: "#000000"
+      fill: style.fillColor,
+      do_stroke: style.do_stroke,
+      width: style.width,
+      color: style.color
     })
   }]
 
@@ -24,6 +26,8 @@ LeafletWidget.methods.addPMTiles = function(url,
     paint_rules: paint_rules,
     label_rules: []
   })
+
+  debugger;
 
   map.layerManager.addLayer(layer, null, layerId, group);
   return map;

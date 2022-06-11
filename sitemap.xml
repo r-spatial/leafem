@@ -76,6 +76,9 @@
     <loc>https://r-spatial.github.io/leafem/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://r-spatial.github.io/leafem/reference/paintRules.html</loc>
+  </url>
+  <url>
     <loc>https://r-spatial.github.io/leafem/reference/updateLayersControl.html</loc>
   </url>
 </urlset>

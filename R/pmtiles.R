@@ -1,31 +1,33 @@
 addPMTiles = function(
     map
-    , url
+    , url = NULL
+    , file = NULL
     , layerName
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
 ) {
 
-  # if (!is.null(file)) {
-  #   if (!file.exists(file)) {
-  #     stop(
-  #       sprintf(
-  #         "file %s does not seem to exist"
-  #         , file
-  #       )
-  #       , call. = FALSE
-  #     )
-  #   }
-  #   path_layer = tempfile()
-  #   dir.create(path_layer)
-  #   path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
-  #   # path_layer = paste0(path_layer, "/", layerId)
-  #   # dir.create(path_layer)
-  #
-  #   file.copy(file, path_layer, overwrite = TRUE)
-  #   # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
-  # }
+  path_layer = NULL
+  if (!is.null(file)) {
+    if (!file.exists(file)) {
+      stop(
+        sprintf(
+          "file %s does not seem to exist"
+          , file
+        )
+        , call. = FALSE
+      )
+    }
+    path_layer = tempfile()
+    dir.create(path_layer)
+    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
+    # path_layer = paste0(path_layer, "/", layerId)
+    # dir.create(path_layer)
+
+    file.copy(file, path_layer, overwrite = TRUE)
+    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
+  }
 
   if (length(paintRules) == 0) {
     stop(
@@ -37,8 +39,14 @@ addPMTiles = function(
   map$dependencies <- c(
     map$dependencies
     , leafletPMTilesDependencies()
-    # , fileAttachment(path_layer, layerId)
   )
+
+  if (!is.null(file)) {
+    map$dependencies <- c(
+      map$dependencies
+      , fileAttachment(path_layer, layerId)
+    )
+  }
 
   leaflet::invokeMethod(
     map
@@ -46,6 +54,7 @@ addPMTiles = function(
     , method = "addPMTiles"
     # , paste0(path_layer, "/", basename(file))
     , url
+    , path_layer
     , layerId
     , group
     , style
@@ -61,11 +70,11 @@ addPMTiles = function(
 #'
 #' @export
 paintRules = function(
-  layer
-  , fillColor = "#0033ff66"
-  , color = "#0033ffcc"
-  , do_stroke = TRUE
-  , width = 0.5
+    layer
+    , fillColor = "#0033ff66"
+    , color = "#0033ffcc"
+    , do_stroke = TRUE
+    , width = 0.5
 ) {
 
   if (missing(layer)) {
@@ -92,9 +101,22 @@ leafletPMTilesDependencies = function() {
       "PMTiles",
       '0.0.1',
       system.file("htmlwidgets/lib/protomaps", package = "leafem"),
-      script = c(
-        "protomap-binding.js"
-        , "protomaps.min.js"
+      script = list(
+        src = c(
+          "protomap-binding.js"
+        )
+        , crossorigin = "anonymous"
+      )
+    )
+    , htmltools::htmlDependency(
+      "protomaps",
+      '0.0.1',
+      system.file("htmlwidgets/lib/protomaps", package = "leafem"),
+      script = list(
+        src = c(
+          "protomaps.min.js"
+        )
+        , crossorigin = "anonymous"
       )
     )
   )

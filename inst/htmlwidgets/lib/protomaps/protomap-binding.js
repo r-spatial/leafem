@@ -1,5 +1,6 @@
 LeafletWidget.methods.addPMTiles = function(
   url
+  , file
   , layerId
   , group
   , style
@@ -9,6 +10,15 @@ LeafletWidget.methods.addPMTiles = function(
   // debugger;
   // var data_fl = document.getElementById(layerId + '-1-attachment');
   // data_fl = data_fl.href;
+
+  var data_fl = document.getElementById(layerId + '-1-attachment');
+
+  if (data_fl === null) {
+    url = url;
+  } else {
+    url = data_fl.href;
+  }
+
 
   let paint_rules = [{
     dataLayer: style.layer,

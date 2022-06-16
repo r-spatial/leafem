@@ -367,10 +367,11 @@ addFgb = function(map,
     group = basename(tools::file_path_sans_ext(file))
 
   if (is.null(layerId)) layerId = group
-  layerId = gsub("\\.", "_", layerId)
-  layerId = gsub(" ", "", layerId)
-  layerId = gsub('\\"', '', layerId)
-  layerId = gsub("\\'", "", layerId)
+  layerId = gsub("[[:punct:] ]", "_", layerId)
+  # layerId = gsub("\\.", "_", layerId)
+  # layerId = gsub(" ", "", layerId)
+  # layerId = gsub('\\"', '', layerId)
+  # layerId = gsub("\\'", "", layerId)
 
   if (!is.null(file)) {
     if (!file.exists(file)) {

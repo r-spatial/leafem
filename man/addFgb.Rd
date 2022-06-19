@@ -24,6 +24,8 @@ addFgb(
   options = NULL,
   className = NULL,
   scale = scaleOptions(),
+  minZoom = NULL,
+  maxZoom = NULL,
   ...
 )
 }

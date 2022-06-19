@@ -354,7 +354,12 @@ addFgb = function(map,
                   options = NULL,
                   className = NULL,
                   scale = scaleOptions(),
+                  minZoom = NULL,
+                  maxZoom = NULL,
                   ...) {
+
+
+  scaleFields = NULL
 
   # if (!is.null(fillColor)) fill = TRUE
 
@@ -413,20 +418,41 @@ addFgb = function(map,
       , fileAttachment(path_layer, layerId)
     )
 
-    leaflet::invokeMethod(
-      map
-      , leaflet::getMapData(map)
-      , "addFlatGeoBuf"
-      , layerId
-      , group
-      , url
-      , popup
-      , label
-      , style_list
-      , options
-      , className
-      , scale
-    )
+    if (!is.null(minZoom)) {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBufFiltered"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+        , minZoom
+        , maxZoom
+      )
+    } else {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBuf"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+      )
+    }
   } else {
     style_list = list(radius = radius,
                       stroke = stroke,
@@ -445,20 +471,41 @@ addFgb = function(map,
       , chromaJsDependencies()
     )
 
-    leaflet::invokeMethod(
-      map
-      , leaflet::getMapData(map)
-      , "addFlatGeoBuf"
-      , layerId
-      , group
-      , url
-      , popup
-      , label
-      , style_list
-      , options
-      , className
-      , scale
-    )
+    if (!is.null(minZoom)) {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBufFiltered"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+        , minZoom
+        , maxZoom
+      )
+    } else {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBuf"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+      )
+    }
   }
 
 }

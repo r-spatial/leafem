@@ -1,18 +1,31 @@
 library(leaflet)
 library(leafem)
 
-url = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
-file = "/home/tim/Downloads/lds-nz-building-outlines/dunedin-building-outlines3857.pmtiles"
+url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
+url_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.fgb"
 
 m = leaflet() %>%
   addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron") %>%
   addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery") %>%
   leafem:::addPMTiles(
-    url = url
+    url = url_pmtiles
     , file = NULL
-    , layerId = "test"
-    , group = "test1"
-    , style = paintRules(layer = "zcta")
+    , layerId = "pmtiles"
+    , group = "pmtiles"
+    , style = paintRules(layer = "nz-building-outlines")
+  ) %>%
+  addFgb(
+    url = url_fgb
+    , group = "fgb"
+    , layerId = "fgb"
+    , label = "suburb_locality"
+    , popup = TRUE
+    , fill = TRUE
+    , fillColor = "violet"
+    , fillOpacity = 0.8
+    , color = "black"
+    , weight = 1
+    , minZoom = 15
   ) %>%
   addMouseCoordinates() %>%
   setView(173.89, -40.65, zoom = 6) %>%
@@ -21,7 +34,10 @@ m = leaflet() %>%
       "CartoDB.Positron"
       , "Esri.WorldImagery"
     )
-    , overlayGroups = "test1"
+    , overlayGroups = c(
+      "pmtiles"
+      , "fgb"
+    )
   )
 
 mapview::mapshot(

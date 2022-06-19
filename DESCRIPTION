@@ -1,7 +1,7 @@
 Package: leafem
 Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.2.0.9003
+Version: 0.2.0.9004
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",

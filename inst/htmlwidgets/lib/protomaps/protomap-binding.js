@@ -40,5 +40,13 @@ LeafletWidget.methods.addPMTiles = function(
   debugger;
 
   map.layerManager.addLayer(layer, null, layerId, group);
+  if (map.hasLayer(layer)) {
+    map.on("click", ev => {
+      for (let result of layer.queryFeatures(ev.latlng.lng,ev.latlng.lat)) {
+        console.log(result[1][0].feature.props);
+        layer.bindPopup(json2table(result[1][0].feature.props)); //FIXME HERE!
+      }
+    });
+  };
   return map;
 };

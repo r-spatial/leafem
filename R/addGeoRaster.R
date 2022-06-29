@@ -207,8 +207,25 @@ addGeotiff = function(map,
   if (is.null(layerId)) layerId = group
   layerId = gsub("\\.", "_", layerId)
 
+  if (grepl("\\s", layerId)) {
+    warning("The layerId is invalid. Maybe it contains spaces?")
+  }
+
+  ## Add Legend Control if `imagequery` == TRUE
+  if (TRUE) {
+    ctrl_nm = paste("rasterValues", layerId, sep = "-")
+    map = leaflet::addControl(
+      map,
+      html = "",
+      layerId = ctrl_nm,
+      position = "topright",
+      className = paste("info legend rastervals", "className")
+    )
+  }
+
   if (is.null(colorOptions)) {
     colorOptions = colorOptions()
+
   }
 
   if (is.null(arith)) {
@@ -386,6 +403,7 @@ leafletGeoRasterDependencies = function() {
       system.file("htmlwidgets/lib/georaster-for-leaflet", package = "leafem"),
       script = c(
         "georaster.min.js"
+        , "geoblaze.js"
         , "georaster-layer-for-leaflet-3.7.1.min.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
@@ -417,3 +435,4 @@ extractBands = function(fun) {
   bands = as.numeric(unlist(regmatches(band_calc, idx_r)))
   return(sort(unique(bands)))
 }
+

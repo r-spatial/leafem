@@ -1,8 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 2.0.4
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-06-20T17:46Z
+last_built: 2022-07-03T15:38Z
 urls:
   reference: https://r-spatial.github.io/leafem/reference
   article: https://r-spatial.github.io/leafem/articles

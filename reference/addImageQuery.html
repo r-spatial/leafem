@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">leafem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9006</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,20 +51,20 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addImageQuery</span><span class="op">(</span>
-  <span class="va">map</span>,
-  <span class="va">x</span>,
-  band <span class="op">=</span> <span class="fl">1</span>,
-  group <span class="op">=</span> <span class="cn">NULL</span>,
-  layerId <span class="op">=</span> <span class="cn">NULL</span>,
-  project <span class="op">=</span> <span class="cn">TRUE</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mousemove"</span>, <span class="st">"click"</span><span class="op">)</span>,
-  <span class="va">digits</span>,
-  position <span class="op">=</span> <span class="st">"topright"</span>,
-  prefix <span class="op">=</span> <span class="st">"Layer"</span>,
-  className <span class="op">=</span> <span class="st">""</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addImageQuery</span><span class="op">(</span></span>
+<span>  <span class="va">map</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  band <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  layerId <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  project <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mousemove"</span>, <span class="st">"click"</span><span class="op">)</span>,</span>
+<span>  <span class="va">digits</span>,</span>
+<span>  position <span class="op">=</span> <span class="st">"topright"</span>,</span>
+<span>  prefix <span class="op">=</span> <span class="st">"Layer"</span>,</span>
+<span>  className <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -140,21 +140,21 @@ numeric values (i.e. numeric/integer and factor values are supported).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"plainview"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
-<span class="r-in">    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/plainview/" class="external-link">plainview</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="st">"OpenStreetMap"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addRasterImage.html" class="external-link">addRasterImage</a></span><span class="op">(</span><span class="va">poppendorf</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="cn">TRUE</span>, group <span class="op">=</span> <span class="st">"poppendorf"</span>,</span>
-<span class="r-in">                     layerId <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu">addImageQuery</span><span class="op">(</span><span class="va">poppendorf</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                    layerId <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addLayersControl.html" class="external-link">addLayersControl</a></span><span class="op">(</span>overlayGroups <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"plainview"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/plainview/" class="external-link">plainview</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="st">"OpenStreetMap"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addRasterImage.html" class="external-link">addRasterImage</a></span><span class="op">(</span><span class="va">poppendorf</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="cn">TRUE</span>, group <span class="op">=</span> <span class="st">"poppendorf"</span>,</span></span>
+<span class="r-in"><span>                     layerId <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu">addImageQuery</span><span class="op">(</span><span class="va">poppendorf</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                    layerId <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addLayersControl.html" class="external-link">addLayersControl</a></span><span class="op">(</span>overlayGroups <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -166,7 +166,7 @@ numeric values (i.e. numeric/integer and factor values are supported).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

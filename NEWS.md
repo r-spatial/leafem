@@ -1,4 +1,4 @@
-## leafem 0.2.0.9005 (2022-06-20)
+## leafem 0.2.0.9006 (2022-07-03)
 
 #### ✨ features and improvements
 

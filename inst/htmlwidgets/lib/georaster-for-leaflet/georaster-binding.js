@@ -145,7 +145,6 @@ LeafletWidget.methods.addCOG = function (url,
                                          rgb) {
 
   var map = this;
-
   var pane;  // could also use let
   if (options.pane === undefined) {
     pane = 'tilePane';
@@ -155,7 +154,7 @@ LeafletWidget.methods.addCOG = function (url,
 
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
-
+debugger;
     if (colorOptions !== null) {
       // get color palette etc
       const cols = colorOptions.palette;
@@ -165,6 +164,7 @@ LeafletWidget.methods.addCOG = function (url,
       if (colorOptions.breaks !== null) {
         scale = scale.classes(colorOptions.breaks);
       }
+    }
 /*
     let mins = georaster.mins;
     let maxs = georaster.maxs;
@@ -201,6 +201,15 @@ LeafletWidget.methods.addCOG = function (url,
       }
     }
 */
+
+       pixelValuesToColorFn = values => {
+            var r = values[rgb[0]-1];
+            var g = values[rgb[1]-1];
+            var b = values[rgb[2]-1];
+            return rgbToHex(r, g, b);
+       }
+
+/*
       // define pixel value -> colorm mapping (if not provided)
       if (pixelValuesToColorFn === null) {
         pixelValuesToColorFn = values => {
@@ -214,7 +223,7 @@ LeafletWidget.methods.addCOG = function (url,
         pixelValuesToColorFn = pixelValuesToColorFn;
       }
     }
-
+*/
 
     /*
         GeoRasterLayer is an extension of GridLayer,

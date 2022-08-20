@@ -386,7 +386,7 @@ leafletGeoRasterDependencies = function() {
       system.file("htmlwidgets/lib/georaster-for-leaflet", package = "leafem"),
       script = c(
         "georaster.min.js"
-        , "georaster-layer-for-leaflet-3.7.1.min.js"
+        , "georaster-layer-for-leaflet-3.8.0.min.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
         , "mathjs.min.js"

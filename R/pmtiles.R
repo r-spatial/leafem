@@ -39,6 +39,7 @@ addPMTiles = function(
   map$dependencies <- c(
     map$dependencies
     , leafletPMTilesDependencies()
+    , fgbDependencies()
   )
 
   if (!is.null(file)) {

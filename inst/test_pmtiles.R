@@ -1,8 +1,10 @@
 library(leaflet)
 library(leafem)
 
-url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
+# url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines_max14.pmtiles"
 url_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.fgb"
+# url_pmtiles = "http://localhost/test-tiles/nz-building-outlines_max14.pmtiles"
+url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
 
 m = leaflet() %>%
   addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron") %>%
@@ -14,19 +16,19 @@ m = leaflet() %>%
     , group = "pmtiles"
     , style = paintRules(layer = "nz-building-outlines")
   ) %>%
-  addFgb(
-    url = url_fgb
-    , group = "fgb"
-    , layerId = "fgb"
-    , label = "suburb_locality"
-    , popup = TRUE
-    , fill = TRUE
-    , fillColor = "violet"
-    , fillOpacity = 0.8
-    , color = "black"
-    , weight = 1
-    , minZoom = 15
-  ) %>%
+  # addFgb(
+  #   url = url_fgb
+  #   , group = "fgb"
+  #   , layerId = "fgb"
+  #   , label = "suburb_locality"
+  #   , popup = TRUE
+  #   , fill = TRUE
+  #   , fillColor = "violet"
+  #   , fillOpacity = 0.8
+  #   , color = "black"
+  #   , weight = 1
+  #   , minZoom = 15
+  # ) %>%
   addMouseCoordinates() %>%
   setView(173.89, -40.65, zoom = 6) %>%
   addLayersControl(

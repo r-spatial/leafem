@@ -9,7 +9,10 @@ paintRules(
   fillColor = "#0033ff66",
   color = "#0033ffcc",
   do_stroke = TRUE,
-  width = 0.5
+  width = 0.5,
+  radius = 3,
+  stroke = "#000000",
+  opacity = 1
 )
 }
 \arguments{
@@ -20,6 +23,12 @@ paintRules(
 \item{do_stroke}{logical, whether polygon borders should be drawn}
 
 \item{width}{line width}
+
+\item{radius}{point radius}
+
+\item{stroke}{color point border}
+
+\item{opacity}{point opacity}
 }
 \description{
 Styling options for PMTiles

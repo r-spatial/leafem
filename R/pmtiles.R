@@ -1,4 +1,4 @@
-addPMTiles = function(
+addPMTilesPolygons = function(
     map
     , url = NULL
     , file = NULL
@@ -40,6 +40,7 @@ addPMTiles = function(
     map$dependencies
     , leafletPMTilesDependencies()
     , fgbDependencies()
+    , chromaJsDependencies()
   )
 
   if (!is.null(file)) {
@@ -52,7 +53,73 @@ addPMTiles = function(
   leaflet::invokeMethod(
     map
     , data = leaflet::getMapData(map)
-    , method = "addPMTiles"
+    , method = "addPMTilesPolygons"
+    # , paste0(path_layer, "/", basename(file))
+    , url
+    , path_layer
+    , layerId
+    , group
+    , style
+  )
+}
+
+
+addPMTilesPoints = function(
+    map
+    , url = NULL
+    , file = NULL
+    , layerName
+    , style = paintRules(layer = layerName)
+    , layerId = NULL
+    , group = NULL
+) {
+
+  path_layer = NULL
+  if (!is.null(file)) {
+    if (!file.exists(file)) {
+      stop(
+        sprintf(
+          "file %s does not seem to exist"
+          , file
+        )
+        , call. = FALSE
+      )
+    }
+    path_layer = tempfile()
+    dir.create(path_layer)
+    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
+    # path_layer = paste0(path_layer, "/", layerId)
+    # dir.create(path_layer)
+
+    file.copy(file, path_layer, overwrite = TRUE)
+    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
+  }
+
+  if (length(paintRules) == 0) {
+    stop(
+      "need at least one paint rule set to know which layer to visualise"
+      , call. = FALSE
+    )
+  }
+
+  map$dependencies <- c(
+    map$dependencies
+    , leafletPMTilesDependencies()
+    , fgbDependencies()
+    , chromaJsDependencies()
+  )
+
+  if (!is.null(file)) {
+    map$dependencies <- c(
+      map$dependencies
+      , fileAttachment(path_layer, layerId)
+    )
+  }
+
+  leaflet::invokeMethod(
+    map
+    , data = leaflet::getMapData(map)
+    , method = "addPMTilesPoints"
     # , paste0(path_layer, "/", basename(file))
     , url
     , path_layer
@@ -68,6 +135,9 @@ addPMTiles = function(
 #' @param color line color
 #' @param do_stroke logical, whether polygon borders should be drawn
 #' @param width line width
+#' @param radius point radius
+#' @param stroke color point border
+#' @param opacity point opacity
 #'
 #' @export
 paintRules = function(
@@ -76,6 +146,9 @@ paintRules = function(
     , color = "#0033ffcc"
     , do_stroke = TRUE
     , width = 0.5
+    , radius = 3
+    , stroke = "#000000"
+    , opacity = 1
 ) {
 
   if (missing(layer)) {
@@ -91,6 +164,9 @@ paintRules = function(
     , color = color
     , do_stroke = do_stroke
     , width = width
+    , radius = radius
+    , stroke = stroke
+    , opacity = opacity
   )
 
 }

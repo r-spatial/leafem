@@ -4,17 +4,17 @@ library(leafem)
 # url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines_max14.pmtiles"
 # url_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.fgb"
 # url_pmtiles = "http://localhost/test-tiles/nz-building-outlines_max14.pmtiles"
-url_pmtiles = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
-url_rivers = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers.pmtiles"
-url_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers.fgb"
+# url_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers.fgb"
+url_nzbuildings = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
 url_depoints = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/depoints.pmtiles"
-
+url_rivers = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers_africa.pmtiles"
+url_rivers_fgb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers_africa.fgb"
 
 m = leaflet() %>%
   addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron") %>%
   addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery") %>%
-  leafem:::addPMTilesPolygons(
-    url = url_pmtiles
+  leafem:::addPMPolygons(
+    url = url_nzbuildings
     , layerId = "nzbuildings"
     , group = "nzbuildings"
     , style = paintRules(
@@ -23,7 +23,7 @@ m = leaflet() %>%
       , stroke = "green"
     )
   ) %>%
-  leafem:::addPMTilesPoints(
+  leafem:::addPMPoints(
     url = url_depoints
     , layerId = "depoints"
     , group = "depoints"
@@ -33,19 +33,27 @@ m = leaflet() %>%
       , stroke = "green"
     )
   ) %>%
-  # addFgb(
-  #   url = url_fgb
-  #   , group = "fgb"
-  #   , layerId = "fgb"
-  #   # , label = "suburb_locality"
-  #   , popup = TRUE
-  #   , fill = FALSE
-  #   , fillColor = "violet"
-  #   , fillOpacity = 0.8
-  #   , color = "black"
-  #   , weight = 1
-  #   , minZoom = 3
-  # ) %>%
+  leafem:::addPMPolylines(
+    url = url_rivers
+    , layerId = "rivers"
+    , group = "rivers"
+    , style = paintRules(
+      layer = "rivers_africa"
+      , color = "blue"
+    )
+  ) %>%
+  addFgb(
+    url = url_rivers_fgb
+    , group = "fgb"
+    , layerId = "fgb"
+    # , label = "suburb_locality"
+    , popup = TRUE
+    , fill = FALSE
+    , color = "black"
+    , opacity = 1
+    , weight = 1
+    , minZoom = 8
+  ) %>%
   addMouseCoordinates() %>%
   # setView(173.89, -40.65, zoom = 6) %>%
   setView(0, 0, zoom = 2) %>%
@@ -57,6 +65,7 @@ m = leaflet() %>%
     , overlayGroups = c(
       "nzbuildings"
       , "depoints"
+      , "rivers"
     )
   )
 

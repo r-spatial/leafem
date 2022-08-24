@@ -1,4 +1,4 @@
-addPMTilesPolygons = function(
+addPMPolygons = function(
     map
     , url = NULL
     , file = NULL
@@ -6,6 +6,7 @@ addPMTilesPolygons = function(
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
+    , pane = "overlayPane"
 ) {
 
   path_layer = NULL
@@ -53,18 +54,19 @@ addPMTilesPolygons = function(
   leaflet::invokeMethod(
     map
     , data = leaflet::getMapData(map)
-    , method = "addPMTilesPolygons"
+    , method = "addPMPolygons"
     # , paste0(path_layer, "/", basename(file))
     , url
     , path_layer
     , layerId
     , group
     , style
+    , pane
   )
 }
 
 
-addPMTilesPoints = function(
+addPMPoints = function(
     map
     , url = NULL
     , file = NULL
@@ -72,6 +74,7 @@ addPMTilesPoints = function(
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
+    , pane = "overlayPane"
 ) {
 
   path_layer = NULL
@@ -119,18 +122,88 @@ addPMTilesPoints = function(
   leaflet::invokeMethod(
     map
     , data = leaflet::getMapData(map)
-    , method = "addPMTilesPoints"
+    , method = "addPMPoints"
     # , paste0(path_layer, "/", basename(file))
     , url
     , path_layer
     , layerId
     , group
     , style
+    , pane
+  )
+}
+
+
+addPMPolylines = function(
+    map
+    , url = NULL
+    , file = NULL
+    , layerName
+    , style = paintRules(layer = layerName)
+    , layerId = NULL
+    , group = NULL
+    , pane = "overlayPane"
+) {
+
+  path_layer = NULL
+  if (!is.null(file)) {
+    if (!file.exists(file)) {
+      stop(
+        sprintf(
+          "file %s does not seem to exist"
+          , file
+        )
+        , call. = FALSE
+      )
+    }
+    path_layer = tempfile()
+    dir.create(path_layer)
+    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
+    # path_layer = paste0(path_layer, "/", layerId)
+    # dir.create(path_layer)
+
+    file.copy(file, path_layer, overwrite = TRUE)
+    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
+  }
+
+  if (length(paintRules) == 0) {
+    stop(
+      "need at least one paint rule set to know which layer to visualise"
+      , call. = FALSE
+    )
+  }
+
+  map$dependencies <- c(
+    map$dependencies
+    , leafletPMTilesDependencies()
+    , fgbDependencies()
+    , chromaJsDependencies()
+  )
+
+  if (!is.null(file)) {
+    map$dependencies <- c(
+      map$dependencies
+      , fileAttachment(path_layer, layerId)
+    )
+  }
+
+  leaflet::invokeMethod(
+    map
+    , data = leaflet::getMapData(map)
+    , method = "addPMPolylines"
+    # , paste0(path_layer, "/", basename(file))
+    , url
+    , path_layer
+    , layerId
+    , group
+    , style
+    , pane
   )
 }
 
 #' Styling options for PMTiles
 #'
+#' @param layer the name of the layer in the PMTiles file to visualise.
 #' @param fillColor fill color for polygons
 #' @param color line color
 #' @param do_stroke logical, whether polygon borders should be drawn
@@ -138,6 +211,9 @@ addPMTilesPoints = function(
 #' @param radius point radius
 #' @param stroke color point border
 #' @param opacity point opacity
+#' @param dash either `NULL` (default) for a solid line or a numeric vector
+#'   of length 2 denoting segment length and spce between segments (in pixels),
+#'   e.g. `c(5, 3)`
 #'
 #' @export
 paintRules = function(
@@ -149,6 +225,7 @@ paintRules = function(
     , radius = 3
     , stroke = "#000000"
     , opacity = 1
+    , dash = NULL
 ) {
 
   if (missing(layer)) {
@@ -167,6 +244,7 @@ paintRules = function(
     , radius = radius
     , stroke = stroke
     , opacity = opacity
+    , dash = dash
   )
 
 }

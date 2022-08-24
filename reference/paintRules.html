@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">leafem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9009</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,13 +59,18 @@
 <span>  width <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  radius <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  stroke <span class="op">=</span> <span class="st">"#000000"</span>,</span>
-<span>  opacity <span class="op">=</span> <span class="fl">1</span></span>
+<span>  opacity <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  dash <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>fillColor</dt>
+    <dl><dt>layer</dt>
+<dd><p>the name of the layer in the PMTiles file to visualise.</p></dd>
+
+
+<dt>fillColor</dt>
 <dd><p>fill color for polygons</p></dd>
 
 
@@ -91,6 +96,12 @@
 
 <dt>opacity</dt>
 <dd><p>point opacity</p></dd>
+
+
+<dt>dash</dt>
+<dd><p>either `NULL` (default) for a solid line or a numeric vector
+of length 2 denoting segment length and spce between segments (in pixels),
+e.g. `c(5, 3)`</p></dd>
 
 </dl></div>
 

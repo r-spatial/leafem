@@ -1,6 +1,5 @@
 LeafletWidget.methods.addPMPolygons = function(
   url
-  , file
   , layerId
   , group
   , style
@@ -8,18 +7,6 @@ LeafletWidget.methods.addPMPolygons = function(
 ) {
 
   var map = this;
-  // debugger;
-  // var data_fl = document.getElementById(layerId + '-1-attachment');
-  // data_fl = data_fl.href;
-
-  var data_fl = document.getElementById(layerId + '-1-attachment');
-
-  if (data_fl === null) {
-    url = url;
-  } else {
-    url = data_fl.href;
-  }
-
 
   let paint_rules = [{
     dataLayer: style.layer,
@@ -62,7 +49,6 @@ LeafletWidget.methods.addPMPolygons = function(
 
 LeafletWidget.methods.addPMPoints = function(
   url
-  , file
   , layerId
   , group
   , style
@@ -70,18 +56,6 @@ LeafletWidget.methods.addPMPoints = function(
 ) {
 
   var map = this;
-  // debugger;
-  // var data_fl = document.getElementById(layerId + '-1-attachment');
-  // data_fl = data_fl.href;
-
-  var data_fl = document.getElementById(layerId + '-1-attachment');
-
-  if (data_fl === null) {
-    url = url;
-  } else {
-    url = data_fl.href;
-  }
-
 
   let paint_rules = [{
     dataLayer: style.layer,
@@ -124,7 +98,6 @@ LeafletWidget.methods.addPMPoints = function(
 
 LeafletWidget.methods.addPMPolylines = function(
   url
-  , file
   , layerId
   , group
   , style
@@ -132,18 +105,6 @@ LeafletWidget.methods.addPMPolylines = function(
 ) {
 
   var map = this;
-  // debugger;
-  // var data_fl = document.getElementById(layerId + '-1-attachment');
-  // data_fl = data_fl.href;
-
-  var data_fl = document.getElementById(layerId + '-1-attachment');
-
-  if (data_fl === null) {
-    url = url;
-  } else {
-    url = data_fl.href;
-  }
-
 
   let paint_rules = [{
     dataLayer: style.layer,

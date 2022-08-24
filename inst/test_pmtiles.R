@@ -40,6 +40,7 @@ m = leaflet() %>%
     , style = paintRules(
       layer = "rivers_africa"
       , color = "blue"
+      , dash = c(5, 3)
     )
   ) %>%
   addFgb(

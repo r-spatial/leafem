@@ -2,6 +2,8 @@
 
 #### ✨ features and improvements
 
+  * new suite of functions to add PMTiles served from S3 bucket.
+
 #### 🐛 bug fixes
 
 #### 💬 documentation etc

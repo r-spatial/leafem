@@ -1,34 +1,53 @@
+#' Add vector tiles stored as PMTiles in an AWS S3 bucket to a leaflet map.
+#'
+#' @details
+#'   These functions can be used to add cloud optimized vector tiles data in
+#'   the `.pmtiles` format stored in an Amazon Web Services (AWS) S3 bucket to a
+#'   leaflet map. For instructions on how to create these files, see
+#'   \url{https://github.com/protomaps/PMTiles}.
+#'
+#'   NOTE: You may not see the tiles rendered in the RStudio viewer pane. Make
+#'   sure to open the map in a browser.
+#'
+#' @param map the map to add to.
+#' @param url the url to the tiles to be served.
+#' @param style styling for the layer. See \link{paintRules} for details.
+#' @param layerId the layer id.
+#' @param group group name.
+#' @param pane the map pane to which the layer should be added. See
+#'   [leaflet](addMapPane) for details.
+#'
+#' @examples
+#' ## PMPolygons
+#' library(leaflet)
+#' library(leafem)
+#'
+#' url_nzbuildings = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
+#'
+#' leaflet() %>%
+#'   addTiles() %>%
+#'   addPMPolygons(
+#'     url = url_nzbuildings
+#'     , layerId = "nzbuildings"
+#'     , group = "nzbuildings"
+#'     , style = paintRules(
+#'       layer = "nz-building-outlines"
+#'       , fillColor = "pink"
+#'       , stroke = "green"
+#'     )
+#'   ) %>%
+#'   setView(173.50, -40.80, 6)
+#'
+#' @name addPMPolygons
+#' @export addPMPolygons
 addPMPolygons = function(
     map
-    , url = NULL
-    , file = NULL
-    , layerName
+    , url
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
 ) {
-
-  path_layer = NULL
-  if (!is.null(file)) {
-    if (!file.exists(file)) {
-      stop(
-        sprintf(
-          "file %s does not seem to exist"
-          , file
-        )
-        , call. = FALSE
-      )
-    }
-    path_layer = tempfile()
-    dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
-    # path_layer = paste0(path_layer, "/", layerId)
-    # dir.create(path_layer)
-
-    file.copy(file, path_layer, overwrite = TRUE)
-    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
-  }
 
   if (length(paintRules) == 0) {
     stop(
@@ -43,13 +62,6 @@ addPMPolygons = function(
     , fgbDependencies()
     , chromaJsDependencies()
   )
-
-  if (!is.null(file)) {
-    map$dependencies <- c(
-      map$dependencies
-      , fileAttachment(path_layer, layerId)
-    )
-  }
 
   leaflet::invokeMethod(
     map
@@ -57,7 +69,6 @@ addPMPolygons = function(
     , method = "addPMPolygons"
     # , paste0(path_layer, "/", basename(file))
     , url
-    , path_layer
     , layerId
     , group
     , style
@@ -65,38 +76,40 @@ addPMPolygons = function(
   )
 }
 
-
+#' Add point data stored as PMTiles
+#'
+#' @examples
+#' ## PMPoints
+#' library(leaflet)
+#' library(leafem)
+#'
+#' url_depoints = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/depoints.pmtiles"
+#'
+#' leaflet() %>%
+#'   addTiles() %>%
+#'   addPMPoints(
+#'     url = url_depoints
+#'     , layerId = "depoints"
+#'     , group = "depoints"
+#'     , style = paintRules(
+#'       layer = "depoints"
+#'       , fillColor = "black"
+#'       , stroke = "white"
+#'       , radius = 4
+#'     )
+#'   ) %>%
+#'   setView(10, 51, 6)
+#'
+#' @describeIn addPMPolygons add points stored as PMTiles
+#' @export
 addPMPoints = function(
     map
-    , url = NULL
-    , file = NULL
-    , layerName
+    , url
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
 ) {
-
-  path_layer = NULL
-  if (!is.null(file)) {
-    if (!file.exists(file)) {
-      stop(
-        sprintf(
-          "file %s does not seem to exist"
-          , file
-        )
-        , call. = FALSE
-      )
-    }
-    path_layer = tempfile()
-    dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
-    # path_layer = paste0(path_layer, "/", layerId)
-    # dir.create(path_layer)
-
-    file.copy(file, path_layer, overwrite = TRUE)
-    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
-  }
 
   if (length(paintRules) == 0) {
     stop(
@@ -111,13 +124,6 @@ addPMPoints = function(
     , fgbDependencies()
     , chromaJsDependencies()
   )
-
-  if (!is.null(file)) {
-    map$dependencies <- c(
-      map$dependencies
-      , fileAttachment(path_layer, layerId)
-    )
-  }
 
   leaflet::invokeMethod(
     map
@@ -125,7 +131,6 @@ addPMPoints = function(
     , method = "addPMPoints"
     # , paste0(path_layer, "/", basename(file))
     , url
-    , path_layer
     , layerId
     , group
     , style
@@ -133,38 +138,39 @@ addPMPoints = function(
   )
 }
 
-
+#' Add polylines stored as PMTiles
+#'
+#' @examples
+#' ## PMPolylines
+#' library(leaflet)
+#' library(leafem)
+#'
+#' url_rivers = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/rivers_africa.pmtiles"
+#'
+#' ## NOTE: these will only render until a zoom level of 7!!
+#' leaflet() %>%
+#'   addTiles() %>%
+#'   addPMPolylines(
+#'     url = url_rivers
+#'     , layerId = "rivers"
+#'     , group = "rivers"
+#'     , style = paintRules(
+#'       layer = "rivers_africa"
+#'       , color = "blue"
+#'     )
+#'   ) %>%
+#'   setView(24, 2.5, 4)
+#'
+#' @describeIn addPMPolygons add ploylines stored as PMTiles
+#' @export
 addPMPolylines = function(
     map
-    , url = NULL
-    , file = NULL
-    , layerName
+    , url
     , style = paintRules(layer = layerName)
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
 ) {
-
-  path_layer = NULL
-  if (!is.null(file)) {
-    if (!file.exists(file)) {
-      stop(
-        sprintf(
-          "file %s does not seem to exist"
-          , file
-        )
-        , call. = FALSE
-      )
-    }
-    path_layer = tempfile()
-    dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.pmtiles")
-    # path_layer = paste0(path_layer, "/", layerId)
-    # dir.create(path_layer)
-
-    file.copy(file, path_layer, overwrite = TRUE)
-    # file.copy(file, path_layer, overwrite = TRUE, recursive = TRUE)
-  }
 
   if (length(paintRules) == 0) {
     stop(
@@ -180,20 +186,12 @@ addPMPolylines = function(
     , chromaJsDependencies()
   )
 
-  if (!is.null(file)) {
-    map$dependencies <- c(
-      map$dependencies
-      , fileAttachment(path_layer, layerId)
-    )
-  }
-
   leaflet::invokeMethod(
     map
     , data = leaflet::getMapData(map)
     , method = "addPMPolylines"
     # , paste0(path_layer, "/", basename(file))
     , url
-    , path_layer
     , layerId
     , group
     , style

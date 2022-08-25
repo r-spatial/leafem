@@ -4,6 +4,7 @@ LeafletWidget.methods.addPMPolygons = function(
   , group
   , style
   , pane
+  , attribution
 ) {
 
   var map = this;
@@ -18,14 +19,13 @@ LeafletWidget.methods.addPMPolygons = function(
     })
   }]
 
-  var layers = layers || {};
-
   layers[layerId] = protomaps.leafletLayer({
     url: url,
     // url: data_fl,
     paint_rules: paint_rules,
     label_rules: [],
-    pane: pane
+    pane: pane,
+    attribution: attribution
   })
 
   // debugger;
@@ -53,6 +53,7 @@ LeafletWidget.methods.addPMPoints = function(
   , group
   , style
   , pane
+  , attribution
 ) {
 
   var map = this;
@@ -74,7 +75,8 @@ LeafletWidget.methods.addPMPoints = function(
     // url: data_fl,
     paint_rules: paint_rules,
     label_rules: [],
-    pane: pane
+    pane: pane,
+    attribution: attribution
   })
 
   // debugger;
@@ -102,6 +104,7 @@ LeafletWidget.methods.addPMPolylines = function(
   , group
   , style
   , pane
+  , attribution
 ) {
 
   var map = this;
@@ -123,7 +126,8 @@ LeafletWidget.methods.addPMPolylines = function(
     // url: data_fl,
     paint_rules: paint_rules,
     label_rules: [],
-    pane: pane
+    pane: pane,
+    attribution: attribution
   })
 
   // debugger;

@@ -47,6 +47,7 @@ addPMPolygons = function(
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
+    , attribution = NULL
 ) {
 
   if (length(paintRules) == 0) {
@@ -73,6 +74,7 @@ addPMPolygons = function(
     , group
     , style
     , pane
+    , attribution
   )
 }
 
@@ -109,6 +111,7 @@ addPMPoints = function(
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
+    , attribution = NULL
 ) {
 
   if (length(paintRules) == 0) {
@@ -135,6 +138,7 @@ addPMPoints = function(
     , group
     , style
     , pane
+    , attribution
   )
 }
 
@@ -170,6 +174,7 @@ addPMPolylines = function(
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
+    , attribution = NULL
 ) {
 
   if (length(paintRules) == 0) {
@@ -196,6 +201,7 @@ addPMPolylines = function(
     , group
     , style
     , pane
+    , attribution
   )
 }
 

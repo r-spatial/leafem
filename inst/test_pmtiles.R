@@ -22,6 +22,7 @@ m = leaflet() %>%
       , fillColor = "pink"
       , stroke = "green"
     )
+    , attribution = '<a href="https://data.linz.govt.nz">LINZ Data Service licensed for reuse under CC BY 4.0</a>'
   ) %>%
   leafem:::addPMPoints(
     url = url_depoints

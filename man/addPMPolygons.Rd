@@ -12,7 +12,8 @@ addPMPolygons(
   style = paintRules(layer = layerName),
   layerId = NULL,
   group = NULL,
-  pane = "overlayPane"
+  pane = "overlayPane",
+  attribution = NULL
 )
 
 addPMPoints(
@@ -21,7 +22,8 @@ addPMPoints(
   style = paintRules(layer = layerName),
   layerId = NULL,
   group = NULL,
-  pane = "overlayPane"
+  pane = "overlayPane",
+  attribution = NULL
 )
 
 addPMPolylines(
@@ -30,7 +32,8 @@ addPMPolylines(
   style = paintRules(layer = layerName),
   layerId = NULL,
   group = NULL,
-  pane = "overlayPane"
+  pane = "overlayPane",
+  attribution = NULL
 )
 }
 \arguments{

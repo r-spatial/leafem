@@ -154,7 +154,7 @@ LeafletWidget.methods.addCOG = function (url,
 
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
-debugger;
+/*
     if (colorOptions !== null) {
       // get color palette etc
       const cols = colorOptions.palette;
@@ -165,6 +165,7 @@ debugger;
         scale = scale.classes(colorOptions.breaks);
       }
     }
+*/
 /*
     let mins = georaster.mins;
     let maxs = georaster.maxs;
@@ -202,13 +203,6 @@ debugger;
     }
 */
 
-       pixelValuesToColorFn = values => {
-            var r = values[rgb[0]-1];
-            var g = values[rgb[1]-1];
-            var b = values[rgb[2]-1];
-            return rgbToHex(r, g, b);
-       }
-
 /*
       // define pixel value -> colorm mapping (if not provided)
       if (pixelValuesToColorFn === null) {
@@ -235,7 +229,7 @@ debugger;
         georaster,
         resolution: resolution,
         opacity: opacity,
-        pixelValuesToColorFn: pixelValuesToColorFn,
+        // pixelValuesToColorFn: pixelValuesToColorFn,
         pane: pane
     });
     map.layerManager.addLayer(layer, null, layerId, group);

@@ -17,7 +17,9 @@ LeafletWidget.methods.addPMPolygons = function(
       width: style.width,
       color: style.color
     })
-  }]
+  }];
+
+  var layers = layers || {};
 
   layers[layerId] = protomaps.leafletLayer({
     url: url,
@@ -26,7 +28,7 @@ LeafletWidget.methods.addPMPolygons = function(
     label_rules: [],
     pane: pane,
     attribution: attribution
-  })
+  });
 
   // debugger;
 
@@ -42,7 +44,7 @@ LeafletWidget.methods.addPMPolygons = function(
         }
       }
     });
-  };
+  }
   return map;
 };
 
@@ -66,7 +68,7 @@ LeafletWidget.methods.addPMPoints = function(
       width: style.width,
       radius: style.radius
     })
-  }]
+  }];
 
   var layers = layers || {};
 
@@ -77,7 +79,7 @@ LeafletWidget.methods.addPMPoints = function(
     label_rules: [],
     pane: pane,
     attribution: attribution
-  })
+  });
 
   // debugger;
 
@@ -93,7 +95,7 @@ LeafletWidget.methods.addPMPoints = function(
         }
       }
     });
-  };
+  }
   return map;
 };
 
@@ -117,7 +119,7 @@ LeafletWidget.methods.addPMPolylines = function(
       width: style.width,
       opacity: style.opacity
     })
-  }]
+  }];
 
   var layers = layers || {};
 
@@ -128,7 +130,7 @@ LeafletWidget.methods.addPMPolylines = function(
     label_rules: [],
     pane: pane,
     attribution: attribution
-  })
+  });
 
   // debugger;
 
@@ -144,6 +146,6 @@ LeafletWidget.methods.addPMPolylines = function(
         }
       }
     });
-  };
+  }
   return map;
 };

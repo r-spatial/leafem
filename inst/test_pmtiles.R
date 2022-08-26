@@ -73,7 +73,7 @@ m = leaflet() %>%
 
 mapview::mapshot(
   m
-  , url = "/home/tim/Downloads/pmtilesmap/index.html"
+  , url = "/home/tim/tappelhans/privat/data/pmtilesmap/index.html"
 )
 
 servr::httd("/home/tim/Downloads/pmtilesmap/")

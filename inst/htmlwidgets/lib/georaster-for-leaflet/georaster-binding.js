@@ -154,6 +154,22 @@ LeafletWidget.methods.addCOG = function (url,
 
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
+
+    var layer = new GeoRasterLayer({
+      georaster,
+      resolution: resolution,
+      opacity: opacity,
+      pixelValuesToColorFn: pixelValuesToColorFn,
+      pane: pane
+    });
+    map.layerManager.addLayer(layer, null, layerId, group);
+
+    if (autozoom) {
+      map.fitBounds(layer.getBounds());
+    }
+  });
+};
+
 /*
     if (colorOptions !== null) {
       // get color palette etc
@@ -225,17 +241,4 @@ LeafletWidget.methods.addCOG = function (url,
         Just make sure to include the georaster option!
         http://leafletjs.com/reference-1.2.0.html#gridlayer
     */
-    var layer = new GeoRasterLayer({
-        georaster,
-        resolution: resolution,
-        opacity: opacity,
-        // pixelValuesToColorFn: pixelValuesToColorFn,
-        pane: pane
-    });
-    map.layerManager.addLayer(layer, null, layerId, group);
 
-    if (autozoom) {
-      map.fitBounds(layer.getBounds());
-    }
-  });
-};

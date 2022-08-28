@@ -16,18 +16,19 @@
 #' @param group group name.
 #' @param pane the map pane to which the layer should be added. See
 #'   [leaflet](addMapPane) for details.
+#' @param attribution optional attribution character string.
 #'
 #' @examples
 #' ## PMPolygons
 #' library(leaflet)
 #' library(leafem)
 #'
-#' url_nzbuildings = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
+#' url_nzb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
 #'
 #' leaflet() %>%
 #'   addTiles() %>%
 #'   addPMPolygons(
-#'     url = url_nzbuildings
+#'     url = url_nzb
 #'     , layerId = "nzbuildings"
 #'     , group = "nzbuildings"
 #'     , style = paintRules(
@@ -43,14 +44,14 @@
 addPMPolygons = function(
     map
     , url
-    , style = paintRules(layer = layerName)
+    , style
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
     , attribution = NULL
 ) {
 
-  if (length(paintRules) == 0) {
+  if (length(style) == 0) {
     stop(
       "need at least one paint rule set to know which layer to visualise"
       , call. = FALSE
@@ -107,14 +108,14 @@ addPMPolygons = function(
 addPMPoints = function(
     map
     , url
-    , style = paintRules(layer = layerName)
+    , style
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
     , attribution = NULL
 ) {
 
-  if (length(paintRules) == 0) {
+  if (length(style) == 0) {
     stop(
       "need at least one paint rule set to know which layer to visualise"
       , call. = FALSE
@@ -170,14 +171,14 @@ addPMPoints = function(
 addPMPolylines = function(
     map
     , url
-    , style = paintRules(layer = layerName)
+    , style
     , layerId = NULL
     , group = NULL
     , pane = "overlayPane"
     , attribution = NULL
 ) {
 
-  if (length(paintRules) == 0) {
+  if (length(style) == 0) {
     stop(
       "need at least one paint rule set to know which layer to visualise"
       , call. = FALSE

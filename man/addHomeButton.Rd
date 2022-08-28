@@ -28,9 +28,9 @@ provided extent / bbox.
 }
 \section{Functions}{
 \itemize{
-\item \code{removeHomeButton}: remove a homeButton from a map
-}}
+\item \code{removeHomeButton()}: remove a homeButton from a map
 
+}}
 \examples{
 library(leaflet)
 library(raster)

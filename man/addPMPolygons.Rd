@@ -9,7 +9,7 @@
 addPMPolygons(
   map,
   url,
-  style = paintRules(layer = layerName),
+  style,
   layerId = NULL,
   group = NULL,
   pane = "overlayPane",
@@ -19,7 +19,7 @@ addPMPolygons(
 addPMPoints(
   map,
   url,
-  style = paintRules(layer = layerName),
+  style,
   layerId = NULL,
   group = NULL,
   pane = "overlayPane",
@@ -29,7 +29,7 @@ addPMPoints(
 addPMPolylines(
   map,
   url,
-  style = paintRules(layer = layerName),
+  style,
   layerId = NULL,
   group = NULL,
   pane = "overlayPane",
@@ -49,6 +49,8 @@ addPMPolylines(
 
 \item{pane}{the map pane to which the layer should be added. See
 [leaflet](addMapPane) for details.}
+
+\item{attribution}{optional attribution character string.}
 }
 \description{
 Add vector tiles stored as PMTiles in an AWS S3 bucket to a leaflet map.
@@ -68,22 +70,22 @@ These functions can be used to add cloud optimized vector tiles data in
 }
 \section{Functions}{
 \itemize{
-\item \code{addPMPoints}: add points stored as PMTiles
+\item \code{addPMPoints()}: add points stored as PMTiles
 
-\item \code{addPMPolylines}: add ploylines stored as PMTiles
+\item \code{addPMPolylines()}: add ploylines stored as PMTiles
+
 }}
-
 \examples{
 ## PMPolygons
 library(leaflet)
 library(leafem)
 
-url_nzbuildings = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
+url_nzb = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/nz-building-outlines.pmtiles"
 
 leaflet() \%>\%
   addTiles() \%>\%
   addPMPolygons(
-    url = url_nzbuildings
+    url = url_nzb
     , layerId = "nzbuildings"
     , group = "nzbuildings"
     , style = paintRules(

@@ -3,8 +3,9 @@
 #' @description
 #' Add JavaScript functioality to enable copying of the current view bouding box
 #' to the clipboard. The \code{copy.btn} argument expects a valid keycode
-#' \code{event.code} such as "KeyE" (the default). Use \url{https://keycode.info/}
-#' to find the approprate codes for your keyboard.
+#' \code{event.code} such as "KeyE" (the default).
+#' Use \url{https://www.toptal.com/developers/keycode/} to find the
+#' approprate codes for your keyboard.
 #'
 #' @param map a mapview or leaflet object.
 #' @param event.code the JavaScript event.code for ley strokes.
@@ -17,7 +18,7 @@
 #'     addCopyExtent(event.code = "KeyE") %>%
 #'     addMouseCoordinates()
 #'
-#'   # now click on the map (!) and zoom to anwhere in the map, then press 'e' on
+#'   # now click on the map (!) and zoom to anywhere in the map, then press 'e' on
 #'   # your keyboard. This will copy the current extent/bounding box as a JSON object
 #'   # to your clipboard which can then be parsed with:
 #'

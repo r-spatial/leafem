@@ -76,6 +76,10 @@ to define css for the popup.}
 \item{scale}{named list with instructions on how to scale radius, width,
 opacity, fillOpacity if those are to be mapped to an attribute column.}
 
+\item{minZoom}{minimum zoom level at which data should be rendered.}
+
+\item{maxZoom}{maximum zoom level at which data should be rendered.}
+
 \item{...}{currently not used.}
 }
 \description{

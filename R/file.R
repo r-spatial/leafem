@@ -303,6 +303,8 @@ addTileFolder = function(map,
 #'   to define css for the popup.
 #' @param scale named list with instructions on how to scale radius, width,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
+#' @param minZoom minimum zoom level at which data should be rendered.
+#' @param maxZoom maximum zoom level at which data should be rendered.
 #' @param ... currently not used.
 #'
 #' @examples

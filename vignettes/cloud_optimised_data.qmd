@@ -1,0 +1,160 @@
+---
+title: "Creating cloud optimised data"
+author: "Tim Appelhans"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    self-contained: true
+    code-fold: false
+    toc: true
+    toc-depth: 4
+engine: 
+  knitr
+---
+
+::: column-page
+```{r}
+#| include=FALSE
+knitr::opts_chunk$set(comment = NA)
+hooks = knitr::knit_hooks$get()
+hook_foldable = function(type) {
+  force(type)
+  function(x, options) {
+    res = hooks[[type]](x, options)
+    
+    if (isFALSE(options[[paste0("fold.", type)]])) return(res)
+    
+    paste0(
+      "<details><summary>", type, "</summary>\n\n",
+      res,
+      "\n\n</details>"
+    )
+  }
+}
+knitr::knit_hooks$set(
+  output = hook_foldable("output"),
+  plot = hook_foldable("plot")
+)
+```
+
+
+## Intro
+
+The future of data analysis likely lies in the cloud. Meaning, most data and even maybe analysis tools will not live on laptops or desktops anymore, but will reside in centralised data stores and analysis computing infrastructure. As such, it becomes more and more important to enable remote access to the data and have tools that can visualise that data locally without having to copy the whole data first.
+
+In the last decade or so, there has been much development in creating tools that optimise data structures so that they can be streamed from a remote location rather than having to download the whole thing. So called `https` range requests have become the de facto standard for partial data streaming. This is also the technology used when we watch Netflix or listen to Spotify, we can start watching/listening instantly as we don't need to download everything first, but get served what we are seeing/hearing chunk after chunk. Geospatial cloud optimised data gets served a the similar manner. Only parts of the data that we are currently interested in are being served from the remote location. However, while movie or music data ususally get streamed linearly, i.e. from beginning to end, geospatial data will be served with regard to the spatial extent we are interested in. These geospatial chunks are generally referred to as `tiles`. Hence, cloud optimised data needs some sort of spatial index so that spatial queries are fast enough and the data lookup does not hinder streaming. Spatial indexes are a topic of their own and will not be covered in this document.
+
+This document serves as a compilation of possible approaches to create and store cloud optimised geospatial data.
+
+## Software
+
+In order to create cloud optimised data sets, we will need a few different tools (R is actually not one of them). As always, we can (and should) make a distinction between raster data and vector data.
+
+### Raster data
+
+In order to create cloud optimised tiled raster data sets, the ever-powerful **GDAL** software is what we will use. There are many installation instructions on the wild wild web for GDAL, but the R inclined user is referred to the [sf package README](https://github.com/r-spatial/sf#installing). GDAL has a very powerful command line interface (CLI) that we can use to verify that we have a working GDAL installation on our system.
+
+```{sh}
+#| eval: true
+gdalinfo --version
+```
+
+### Vector data
+
+Creating vector tiles is a bit more work as the structure of the data is not quite as organised as for regular raster data. Chunking raster data to created tiles is easy as it is made up of squares (pixels) so cutting out some of them is straight forward. With vector data we generally follow the same approach for creating vector tiles. In addition to GDAL we need some specialised tiling and indexing software to create cloud optimised vector data sets, namely `tippecanoe` and `PMTiles`. `tippecanoe` was created by MapBox, has now found a new home at [`@protomaps`](https://github.com/protomaps). `PMTiles` is also part of the protomaps suite of software. 
+
+#### Tippencanoe
+
+To install `tippecanoe` we can follow these [installation instructions](https://github.com/protomaps/tippecanoe#installation)
+
+```{sh}
+#| eval: false
+git clone https://github.com/protomaps/tippecanoe.git
+cd tippecanoe
+make -j
+make install
+```
+
+To verify we have a working installation of `tippecanoe`
+
+```{sh}
+tippecanoe --version
+```
+
+#### PMTiles
+
+Installation instructions for `PMTiles` can be found [here](https://github.com/protomaps/PMTiles#python). I've chosen the python version of the program, as I had a working python installation, so installing that was easiest:
+
+```{sh}
+#| eval: false
+pip install pmtiles
+```
+
+To verify the installation was successful:
+
+```{sh}
+pmtiles-convert -h
+```
+
+That's all the software we need to create our cloud optimised data. So let's see how.
+
+
+## Creation
+
+### Cloud optimised raster data
+
+GDAL has a dedicated driver to create cloud optimised geotiffs (COGs). But to get a working COG, there's one more step we need. Assuming we have a geotiff that we want to make cloud optimised, i.e. turn into a COG, it is not enough to simply [`gdal_translate`](https://gdal.org/programs/gdal_translate.html#gdal-translate) it. As a first step we need to create overviews of the data using [`gdaladdo`](https://gdal.org/programs/gdaladdo.html).
+
+```{sh}
+#| eval: false
+gdaladdo -r average -b 1 -b 2 -b 3 natearth_3857.tif
+```
+
+Here, we create overviews for bands 1, 2 & 3 using resampling method `average`. This is what the resulting file looks like (see the `Band` information towards the end of the output):
+
+```{sh}
+gdalinfo /home/tim/tappelhans/privat/data/HYP_HR_SR_OB_DR/natearth_3857.tif
+```
+
+Now that we have thos overviews, we can `gdal_translate` this file to a COG. Note that the file ending of COGs is also `.tif`.
+
+```{sh}
+#| eval: false
+gdal_translate natearth_3857.tif natearth_3857_cog.tif -of COG
+```
+
+And the result:
+
+```{sh}
+gdalinfo /home/tim/tappelhans/privat/data/HYP_HR_SR_OB_DR/natearth_3857_cog.tif
+```
+
+Not much different, but in the section called `Image Structure Metadata:` we see a `Layout=COG`. That is what we want and we can now use our COG. In the case of this file, it was uploaded to a public AWS S3 bucket located at `https://raster-tiles-data.s3.eu-central-1.amazonaws.com/natearth_3857_cog.tif` that we can now visualise on a `leaflet` map using `leafem::adCOG()`
+
+```{r}
+library(leaflet)
+library(leafem)
+
+url = "https://raster-tiles-data.s3.eu-central-1.amazonaws.com/natearth_3857_cog.tif"
+
+leaflet() |>
+  addTiles() |>
+  leafem:::addCOG(
+    url = url
+    , group = "COG"
+    , resolution = 64
+    , autozoom = TRUE
+  )
+```
+
+
+### Cloud optimised vector tiles
+
+In order to create vector tiles we need to ensure 2 things:
+
+1. For use with leaflet, our data needs to be in geographic coordinates (`EPSG:4326`)
+2. For `tippecanoe` we need our data to be either in `.geojson` or `.fgb` (FlatGeobuf) format. I recommend the latter. 
+
+
+
+:::

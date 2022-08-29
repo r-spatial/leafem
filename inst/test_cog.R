@@ -4,13 +4,14 @@ library(leafem)
 cog_url = "https://raster-tiles-data.s3.eu-central-1.amazonaws.com/natearth_3857_cog.tif"
 # cog_url = "https://storage.googleapis.com/pdd-stac/disasters/hurricane-harvey/0831/20170831_172754_101c_3b_Visual.tif"
 url_depoints = "https://vector-tiles-data.s3.eu-central-1.amazonaws.com/depoints.pmtiles"
+url = "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/46/X/DG/2022/8/S2B_46XDG_20220829_0_L2A/L2A_PVI.tif"
 
 m = leaflet() %>%
   # setView(lng =-70.09841, lat = -33.037, zoom = 13) %>%
   addTiles(group = "osm") %>%
   # addMapPane("cog", zIndex = 500) %>%
   leafem:::addCOG(
-    url = cog_url
+    url = url
     , group = "RGB"
     , layerId = "test"
     , opacity = 1

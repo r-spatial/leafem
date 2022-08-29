@@ -152,20 +152,22 @@ LeafletWidget.methods.addCOG = function (url,
     pane = options.pane;
   }
 
+  var layers = layers || {};
+
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
 
-    var layer = new GeoRasterLayer({
+    layers[layerId] = new GeoRasterLayer({
       georaster,
       resolution: resolution,
       opacity: opacity,
       pixelValuesToColorFn: pixelValuesToColorFn,
       pane: pane
     });
-    map.layerManager.addLayer(layer, null, layerId, group);
+    map.layerManager.addLayer(layers[layerId], null, layerId, group);
 
     if (autozoom) {
-      map.fitBounds(layer.getBounds());
+      map.fitBounds(layers[layerId].getBounds());
     }
   });
 };

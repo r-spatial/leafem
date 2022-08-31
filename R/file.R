@@ -421,6 +421,9 @@ addFgb = function(map,
     )
 
     if (!is.null(minZoom)) {
+      if (is.null(maxZoom)) {
+        maxZoom = 19
+      }
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -474,6 +477,9 @@ addFgb = function(map,
     )
 
     if (!is.null(minZoom)) {
+      if (is.null(maxZoom)) {
+        maxZoom = 19
+      }
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)

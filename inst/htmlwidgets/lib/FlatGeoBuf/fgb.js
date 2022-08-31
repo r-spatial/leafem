@@ -298,33 +298,25 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       };
   }
 
-  // track the previous results so we can remove them when adding new results
-  let previousResults = L.layerGroup();
-  map.layerManager.addLayer(previousResults, null, layerId, group);
+  var previousResults = previousResults || {};
+  previousResults[layerId] = L.layerGroup();
+  map.layerManager.addLayer(previousResults[layerId], null, layerId, group);
+
   async function updateResults() {
+      var nextResults = nextResults || {};
+      nextResults[layerId] = L.layerGroup();
+      map.layerManager.addLayer(nextResults[layerId], null, layerId, group);
       // remove the old results
-      map.layerManager.removeLayer(previousResults, layerId);
-      previousResults.remove();
-      const nextResults = L.layerGroup();
-      map.layerManager.addLayer(nextResults, null, layerId, group);
-      previousResults = nextResults;
+      map.layerManager.removeLayer(previousResults[layerId], layerId);
+      previousResults[layerId].remove();
+      previousResults[layerId] = nextResults[layerId];
 
       // Use flatgeobuf JavaScript API to iterate features as geojson.
       // Because we specify a bounding box, flatgeobuf will only fetch the resubset of data,
       // rather than the entire file.
       const iter = flatgeobuf.deserialize(data_fl, fgBoundingBox(), handleHeaderMeta);
 
-      const colorScale = ((d) => {
-                    return d > 750 ? '#800026' :
-                        d > 500 ? '#BD0026' :
-                        d > 250  ? '#E31A1C' :
-                        d > 100 ? '#FC4E2A' :
-                        d > 50   ? '#FD8D3C' :
-                        d > 25  ? '#FEB24C' :
-                        d > 10   ? '#FED976' :
-                        '#FFEDA0'
-      });
-if (map.getZoom() >= minZoom & map.hasLayer(previousResults)) {
+    if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[layerId])) {
       for await (const feature of iter) {
             if (popup) {
               pop = makePopup(popup, className);
@@ -373,9 +365,9 @@ if (map.getZoom() >= minZoom & map.hasLayer(previousResults)) {
                 }, {sticky: true});
               }
             }
-         lyr.addTo(nextResults);
+         lyr.addTo(nextResults[layerId]);
       }
-  }
+    }
   }
   // if the user is panning around alot, only update once per second max
   //updateResults = _.throttle(updateResults, 1000);
@@ -383,12 +375,12 @@ if (map.getZoom() >= minZoom & map.hasLayer(previousResults)) {
   // show results based on the initial map
   updateResults();
   // ...and update the results whenever the map moves
-  map.on("moveend", function(s){
+  map.on("moveend", function(s) {
       //rectangle.setBounds(getBoundForRect());
       updateResults();
   });
   map.on('layeradd', function(event) {
-     if(event.layer == previousResults) {
+     if(event.layer == previousResults[layerId]) {
          updateResults();
      }
 });

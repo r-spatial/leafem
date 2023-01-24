@@ -357,7 +357,7 @@ addFgb = function(map,
                   className = NULL,
                   scale = scaleOptions(),
                   minZoom = NULL,
-                  maxZoom = NULL,
+                  maxZoom = 52,
                   ...) {
 
 

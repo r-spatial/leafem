@@ -308,7 +308,7 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       map.layerManager.addLayer(nextResults[layerId], null, layerId, group);
       // remove the old results
       map.layerManager.removeLayer(previousResults[layerId], layerId);
-      previousResults[layerId].remove();
+      // previousResults[layerId].remove();
       previousResults[layerId] = nextResults[layerId];
 
       // Use flatgeobuf JavaScript API to iterate features as geojson.
@@ -370,7 +370,7 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
     }
   }
   // if the user is panning around alot, only update once per second max
-  //updateResults = _.throttle(updateResults, 1000);
+  updateResults = _.throttle(updateResults, 1000);
 
   // show results based on the initial map
   updateResults();

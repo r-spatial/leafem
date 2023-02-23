@@ -1,3 +1,29 @@
+function mouseHandler(mapId, layerId, group, eventName, extraInfo) {
+  return function(e) {
+    if (!HTMLWidgets.shinyMode) return;
+
+    let latLng = e.target.getLatLng ? e.target.getLatLng() : e.latlng;
+    if (latLng) {
+      // retrieve only lat, lon values to remove prototype
+      //   and extra parameters added by 3rd party modules
+      // these objects are for json serialization, not javascript
+      let latLngVal = L.latLng(latLng); // make sure it has consistent shape
+      latLng = {lat: latLngVal.lat, lng: latLngVal.lng};
+    }
+    let eventInfo = $.extend(
+      {
+        id: layerId,
+        ".nonce": Math.random()  // force reactivity
+      },
+      group !== null ? {group: group} : null,
+      latLng,
+      extraInfo
+    );
+
+    Shiny.onInputChange(mapId + "_" + eventName, eventInfo);
+  };
+}
+
 LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 group,
                                                 url,
@@ -101,7 +127,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 }, {sticky: true});
               }
             }
-
+            lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
+            lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
+            lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
             map.layerManager.addLayer(lyr, null, null, group);
             it.next().then(handleResult);
           }
@@ -365,12 +393,16 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
                 }, {sticky: true});
               }
             }
+
+         lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
+         lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
+         lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
          lyr.addTo(nextResults[layerId]);
       }
     }
   }
   // if the user is panning around alot, only update once per second max
-  updateResults = _.throttle(updateResults, 1000);
+  // updateResults = _.throttle(updateResults, 1000);
 
   // show results based on the initial map
   updateResults();

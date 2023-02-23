@@ -1,5 +1,4 @@
 Package: leafem
-Type: Package
 Title: 'leaflet' Extensions for 'mapview'
 Version: 0.2.0.9015
 Authors@R:

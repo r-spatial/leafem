@@ -3,6 +3,7 @@
 #### ✨ features and improvements
 
   * new suite of functions to add PMTiles served from S3 bucket.
+  * `addFgb()` now responds to click, mouseover & mouseout in shiny (thanks to @dfriend21). #64 
 
 #### 🐛 bug fixes
 

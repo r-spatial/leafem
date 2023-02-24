@@ -1,5 +1,8 @@
 addLayerSelector <- function(map, layers, layerId) {
-  map$dependencies <- c(map$dependencies, leafletLayerSelectorDependencies())
+  map$dependencies <- c(
+    map$dependencies
+    , leafletLayerSelectorDependencies()
+    , chromaJsDependencies())
   leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)

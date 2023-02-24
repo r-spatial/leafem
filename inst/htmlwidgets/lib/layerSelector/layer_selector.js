@@ -47,6 +47,7 @@ updateLayerStyle = function(map) {
   var layer = lyr;
   layer.eachLayer(function(layer) {
     console.log(layer.feature.properties[colname]);
+    layer.setStyle({fillColor: chroma.random(), fillOpacity: 0.8})
   });
 };
 

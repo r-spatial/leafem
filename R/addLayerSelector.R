@@ -1,6 +1,12 @@
-addLayerSelector <- function(map, layers) {
+addLayerSelector <- function(map, layers, layerId) {
   map$dependencies <- c(map$dependencies, leafletLayerSelectorDependencies())
-  leaflet::invokeMethod(map, leaflet::getMapData(map), 'addLayerSelector', layers)
+  leaflet::invokeMethod(
+    map
+    , leaflet::getMapData(map)
+    , 'addLayerSelector'
+    , layers
+    , layerId
+  )
 }
 
 leafletLayerSelectorDependencies <- function() {

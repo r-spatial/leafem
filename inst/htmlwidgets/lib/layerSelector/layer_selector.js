@@ -1,8 +1,12 @@
-LeafletWidget.methods.addLayerSelector = function (layers) {
+LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
 
   var map = this;
 
-  innerhtml = '<select id="layerSelector" onchange = "chosenLayer()" >';
+  window["lyr"] = map.layerManager.getLayer("geojson", layerId);
+
+  let innerhtml = '<select id="layerSelector" onchange = "updateLayerStyle()" >';
+  let txt = '<option> ---choose layer--- </option>';
+  innerhtml = innerhtml + txt;
   for(var i = 0; i < layers.length; i++) {
     txt = '<option>' + layers[i] + '</option>';
     innerhtml = innerhtml + txt;
@@ -18,15 +22,41 @@ LeafletWidget.methods.addLayerSelector = function (layers) {
   };
   selectr.addTo(map);
 
+  //updateLayerStyle(lyr);
+  //console.log(chosenLayer());
+  return this;
+
 };
 
-chosenLayer = function() {
-  var sel = document.getElementById("layerSelector");
-  console.log(sel.options[sel.selectedIndex].text);
+getLayer = function() {
+  var lyr = map.layerManager.getLayer("geojson", layerId);
+  return(lyr);
 }
 
+updateLayerStyle = function(map) {
+  var sel = document.getElementById("layerSelector");
+  var colname = sel.options[sel.selectedIndex].text;
+  console.log(colname);
+  //console.log(colname);
+  let fill = ''
+  if (colname === "NUTS_ID") {
+    fill = "pink"
+  } else {
+    fill = "black"
+  };
+  var layer = lyr;
+  layer.eachLayer(function(layer) {
+    console.log(layer.feature.properties[colname]);
+  });
+};
 
 /*
+chosenLayer = function() {
+  var sel = document.getElementById("layerSelector");
+  var layer = sel.options[sel.selectedIndex].text;
+  //console.log(layer);
+  return layer;
+}
 var geojsonLayer = L.geoJson(...); // a GeoJSON layer declared in the outer scope
 
 function restyleLayer(propertyName) {

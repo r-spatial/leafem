@@ -2,9 +2,11 @@ LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
 
   var map = this;
 
-  window["lyr"] = map.layerManager.getLayer("geojson", layerId);
+  var featurecollections = featurecollections || {};
+  featurecollections[layerId]  = map.layerManager.getLayer("geojson", layerId);
+  window.featurecollections = featurecollections;
 
-  let innerhtml = '<select id="layerSelector" onchange = "updateLayerStyle()" >';
+  let innerhtml = '<select name="' + layerId + '" id="layerSelector" onchange = "updateLayerStyle(this.name)" >';
   let txt = '<option> ---choose layer--- </option>';
   innerhtml = innerhtml + txt;
   for(var i = 0; i < layers.length; i++) {
@@ -28,54 +30,33 @@ LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
 
 };
 
-getLayer = function() {
+getLayer = function(layerId) {
   var lyr = map.layerManager.getLayer("geojson", layerId);
   return(lyr);
 }
 
-updateLayerStyle = function(map) {
+updateLayerStyle = function(layerId) {
   var sel = document.getElementById("layerSelector");
   var colname = sel.options[sel.selectedIndex].text;
-  console.log(colname);
-  //console.log(colname);
-  let fill = ''
-  if (colname === "NUTS_ID") {
-    fill = "pink"
-  } else {
-    fill = "black"
-  };
-  var layer = lyr;
+  console.log(layerId);
+
+  var layer = featurecollections[layerId];
+
+  var vals = [];
+  layer_keys = Object.keys(layer._layers);
+  for (var i = 0; i < layer_keys.length; i++) {
+    vals[i] = layer._layers[layer_keys[i]].feature.properties[colname]
+  }
+  mn = Math.min(...vals);
+  mx = Math.max(...vals);
+  var col = chroma.scale("YlGnBu").domain([mn, mx]);
+
   layer.eachLayer(function(layer) {
     console.log(layer.feature.properties[colname]);
-    layer.setStyle({fillColor: chroma.random(), fillOpacity: 0.8})
+    if (colname === "---choose layer---") {
+      layer.setStyle(layer.defaultOptions.style(layer.feature));
+    } else {
+      layer.setStyle({fillColor: col(layer.feature.properties[colname]), fillOpacity: 0.9})
+    }
   });
 };
-
-/*
-chosenLayer = function() {
-  var sel = document.getElementById("layerSelector");
-  var layer = sel.options[sel.selectedIndex].text;
-  //console.log(layer);
-  return layer;
-}
-var geojsonLayer = L.geoJson(...); // a GeoJSON layer declared in the outer scope
-
-function restyleLayer(propertyName) {
-
-    geojsonLayer.eachLayer(function(featureInstanceLayer) {
-        propertyValue = featureInstanceLayer.feature.properties[propertyName];
-
-        // Your function that determines a fill color for a particular
-        // property name and value.
-        var myFillColor = getColor(propertyName, propertyValue);
-
-        featureInstanceLayer.setStyle({
-            fillColor: myFillColor,
-            fillOpacity: 0.8,
-            weight: 0.5
-        });
-    });
-}
-
-restyleLayer('myProperty');
-*/

@@ -2,11 +2,11 @@ LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
 
   var map = this;
 
-  var featurecollections = featurecollections || {};
+  var featurecollections = window.featurecollections || featurecollections || {};
   featurecollections[layerId]  = map.layerManager.getLayer("geojson", layerId);
   window.featurecollections = featurecollections;
 
-  let innerhtml = '<select name="' + layerId + '" id="layerSelector" onchange = "updateLayerStyle(this.name)" >';
+  let innerhtml = '<label><strong>' + layerId + ': </strong></label><br><select name="' + layerId + '" id="layerSelector-' + layerId + '" onchange = "updateLayerStyle(this.name)" >';
   let txt = '<option> ---choose layer--- </option>';
   innerhtml = innerhtml + txt;
   for(var i = 0; i < layers.length; i++) {
@@ -36,7 +36,7 @@ getLayer = function(layerId) {
 }
 
 updateLayerStyle = function(layerId) {
-  var sel = document.getElementById("layerSelector");
+  var sel = document.getElementById("layerSelector-" + layerId);
   var colname = sel.options[sel.selectedIndex].text;
   console.log(layerId);
 

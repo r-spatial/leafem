@@ -1,12 +1,16 @@
-LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
+LeafletWidget.methods.addGeoJSONLayerSelector = function (layers, layerId) {
 
   var map = this;
 
-  var featurecollections = window.featurecollections || featurecollections || {};
-  featurecollections[layerId]  = map.layerManager.getLayer("geojson", layerId);
-  window.featurecollections = featurecollections;
+  updateLayerStyle = updateLayerStyler(map, layerId);
 
-  let innerhtml = '<label><strong>' + layerId + ': </strong></label><br><select name="' + layerId + '" id="layerSelector-' + layerId + '" onchange = "updateLayerStyle(this.name)" >';
+  let innerhtml = '<label><strong>' +
+    layerId +
+    ': </strong></label><br><select name="' +
+    layerId +
+    '" id="layerSelector-' +
+    layerId +
+    '" onchange = "updateLayerStyle(this.name)" >';
   let txt = '<option> ---choose layer--- </option>';
   innerhtml = innerhtml + txt;
   for(var i = 0; i < layers.length; i++) {
@@ -24,40 +28,40 @@ LeafletWidget.methods.addLayerSelector = function (layers, layerId) {
   };
   selectr.addTo(map);
 
-  //updateLayerStyle(lyr);
-  //console.log(chosenLayer());
-  return this;
-
 };
 
-getLayer = function(layerId) {
-  var lyr = map.layerManager.getLayer("geojson", layerId);
-  return(lyr);
-}
+updateLayerStyler = function(map, layerId) {
 
-updateLayerStyle = function(layerId) {
-  var sel = document.getElementById("layerSelector-" + layerId);
-  var colname = sel.options[sel.selectedIndex].text;
-  console.log(layerId);
+  layerFunc = function(layerId) {
 
-  var layer = featurecollections[layerId];
+  var layer = map.layerManager.getLayer("geojson", layerId);
 
-  var vals = [];
-  layer_keys = Object.keys(layer._layers);
-  for (var i = 0; i < layer_keys.length; i++) {
-    vals[i] = layer._layers[layer_keys[i]].feature.properties[colname]
-  }
+    var sel = document.getElementById("layerSelector-" + layerId);
+    var colname = sel.options[sel.selectedIndex].text;
+    console.log(layerId);
 
-  let colorFun = colFunc(vals);
+    // var layer = featurecollections[layerId];
 
-  layer.eachLayer(function(layer) {
-    console.log(layer.feature.properties[colname]);
-    if (colname === "---choose layer---") {
-      layer.setStyle(layer.defaultOptions.style(layer.feature));
-    } else {
-      layer.setStyle({fillColor: colorFun(layer.feature.properties[colname]), fillOpacity: 0.9})
+    var vals = [];
+    layer_keys = Object.keys(layer._layers);
+    for (var i = 0; i < layer_keys.length; i++) {
+      vals[i] = layer._layers[layer_keys[i]].feature.properties[colname]
     }
-  });
+
+    let colorFun = colFunc(vals);
+
+    layer.eachLayer(function(layer) {
+      console.log(layer.feature.properties[colname]);
+      if (colname === "---choose layer---") {
+        layer.setStyle(layer.defaultOptions.style(layer.feature));
+      } else {
+        layer.setStyle({fillColor: colorFun(layer.feature.properties[colname]), fillOpacity: 0.9})
+      }
+    });
+  };
+
+  return layerFunc;
+
 };
 
 colFunc = function(values) {

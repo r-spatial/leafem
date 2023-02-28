@@ -1,18 +1,18 @@
-addLayerSelector <- function(map, layers, layerId) {
+addGeoJSONLayerSelector <- function(map, layers, layerId) {
   map$dependencies <- c(
     map$dependencies
-    , leafletLayerSelectorDependencies()
+    , leafletGeoJSONLayerSelectorDependencies()
     , chromaJsDependencies())
   leaflet::invokeMethod(
     map
     , leaflet::getMapData(map)
-    , 'addLayerSelector'
+    , 'addGeoJSONLayerSelector'
     , layers
     , layerId
   )
 }
 
-leafletLayerSelectorDependencies <- function() {
+leafletGeoJSONLayerSelectorDependencies <- function() {
   list(
     htmltools::htmlDependency(
       "LayerSelector",

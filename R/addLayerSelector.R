@@ -1,4 +1,12 @@
-addGeoJSONLayerSelector <- function(map, layers, layerId) {
+addGeoJSONLayerSelector <- function(
+    map
+    , layers
+    , layerId
+    , options = colorOptions()
+) {
+
+  if (inherits(map, "mapview")) map = mapview2leaflet(map)
+
   map$dependencies <- c(
     map$dependencies
     , leafletGeoJSONLayerSelectorDependencies()
@@ -9,6 +17,7 @@ addGeoJSONLayerSelector <- function(map, layers, layerId) {
     , 'addGeoJSONLayerSelector'
     , layers
     , layerId
+    , options
   )
 }
 

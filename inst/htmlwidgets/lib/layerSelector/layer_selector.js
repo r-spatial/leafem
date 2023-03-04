@@ -1,8 +1,13 @@
-LeafletWidget.methods.addGeoJSONLayerSelector = function (layers, layerId) {
+LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
+                                                         layerId,
+                                                         options) {
 
   var map = this;
 
-  updateLayerStyle = updateLayerStyler(map, layerId);
+  window.styleOpts = window.styleOpts || {};
+  window.styleOpts[layerId] = options;
+
+  updateLayerStyle = updateLayerStyler(map, layerId, styleOpts);
 
   let innerhtml = '<label><strong>' +
     layerId +
@@ -30,7 +35,7 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function (layers, layerId) {
 
 };
 
-updateLayerStyler = function(map, layerId) {
+updateLayerStyler = function(map, layerId, options) {
 
   layerFunc = function(layerId) {
 
@@ -40,15 +45,13 @@ updateLayerStyler = function(map, layerId) {
     var colname = sel.options[sel.selectedIndex].text;
     console.log(layerId);
 
-    // var layer = featurecollections[layerId];
-
     var vals = [];
     layer_keys = Object.keys(layer._layers);
     for (var i = 0; i < layer_keys.length; i++) {
       vals[i] = layer._layers[layer_keys[i]].feature.properties[colname]
     }
 
-    let colorFun = colFunc(vals);
+    let colorFun = colFunc(vals, options[layerId][colname]);
 
     layer.eachLayer(function(layer) {
       console.log(layer.feature.properties[colname]);
@@ -64,14 +67,27 @@ updateLayerStyler = function(map, layerId) {
 
 };
 
-colFunc = function(values) {
+colFunc = function(values, options) {
 
   let col;
 
+  if (options === undefined) {
+    options = {};
+    options.palette = null;
+    options.breaks = null;
+    options.domain = null;
+    options.nacol = null;
+  }
+
   if (typeof(values[0]) === 'number') {
-    mn = Math.min(...values);
-    mx = Math.max(...values);
-    col = chroma.scale("YlOrRd").domain([mn, mx]);
+    // domain
+    if (options.domain === null) {
+      mn = Math.min(...values);
+      mx = Math.max(...values);
+      col = chroma.scale("YlOrRd").domain([mn, mx]);
+    } else {
+      col = chroma.scale("YlOrRd").domain(options.domain);
+    }
   } else if (typeof(values[0]) === 'string') {
     //var arr = ["c", "a", "b", "b"];
     let unique = [...new Set(values)];

@@ -1,5 +1,6 @@
 LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
                                                          layerId,
+                                                         position,
                                                          options) {
 
   var map = this;
@@ -24,7 +25,7 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
   }
   innerhtml = innerhtml + '</select>'
 
-  var selectr = L.control({position: 'topright'});
+  var selectr = L.control({position: position});
   selectr.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'layerSelector');
       div.innerHTML = innerhtml;
@@ -58,7 +59,14 @@ updateLayerStyler = function(map, layerId, options) {
       if (colname === "---choose layer---") {
         layer.setStyle(layer.defaultOptions.style(layer.feature));
       } else {
-        layer.setStyle({fillColor: colorFun(layer.feature.properties[colname]), fillOpacity: 0.9})
+        layer.setStyle(
+          {
+            fillColor: colorFun(layer.feature.properties[colname]),
+            fillOpacity: 0.9,
+            color: colorFun(layer.feature.properties[colname]),
+            opacity: 0.9
+          }
+        )
       }
     });
   };

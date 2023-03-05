@@ -2,6 +2,7 @@ addGeoJSONLayerSelector <- function(
     map
     , layers
     , layerId
+    , position = "topleft"
     , options = colorOptions()
 ) {
 
@@ -17,6 +18,7 @@ addGeoJSONLayerSelector <- function(
     , 'addGeoJSONLayerSelector'
     , layers
     , layerId
+    , position
     , options
   )
 }

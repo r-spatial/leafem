@@ -42,6 +42,26 @@ updateLayerStyler = function(map, layerId, options) {
 
   var layer = map.layerManager.getLayer("geojson", layerId);
 
+  if (layer.getLayers()[0].feature.geometry.type === "Point") {
+    var fg = L.featureGroup();
+    map.eachLayer((layer)=>{
+     if(layer instanceof L.Marker || layer instanceof L.CircleMarker){
+      fg.addLayer(layer);
+     }
+    });
+    console.log(fg.toGeoJSON());
+
+    lyr = L.geoJSON(fg.toGeoJSON(), {
+      pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {});
+      }
+    });
+
+    map.layerManager.removeLayer("geojson", layerId);
+    map.layerManager.addLayer(lyr, "geojson", layerId);
+    layer = map.layerManager.getLayer("geojson", layerId);
+  }
+
     var sel = document.getElementById("layerSelector-" + layerId);
     var colname = sel.options[sel.selectedIndex].text;
     console.log(layerId);

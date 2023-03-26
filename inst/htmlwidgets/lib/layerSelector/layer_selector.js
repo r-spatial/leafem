@@ -1,5 +1,6 @@
 LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
                                                          layerId,
+                                                         group,
                                                          position,
                                                          options) {
 
@@ -8,7 +9,7 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
   window.styleOpts = window.styleOpts || {};
   window.styleOpts[layerId] = options;
 
-  updateLayerStyle = updateLayerStyler(map, layerId, styleOpts);
+  updateLayerStyle = updateLayerStyler(map, layerId, styleOpts, group);
 
   let innerhtml = '<label><strong>' +
     layerId +
@@ -36,16 +37,17 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
 
 };
 
-updateLayerStyler = function(map, layerId, options) {
+updateLayerStyler = function(map, layerId, options, group) {
 
   layerFunc = function(layerId) {
 
   var layer = map.layerManager.getLayer("geojson", layerId);
 
-  if (layer.getLayers()[0].feature.geometry.type === "Point") {
+  //if (layer.getLayers()[0].feature.geometry.type === "Point") {
+  if (layer.getLayers()[0] instanceof L.Marker) {
     var fg = L.featureGroup();
     map.eachLayer((layer)=>{
-     if(layer instanceof L.Marker || layer instanceof L.CircleMarker){
+     if(layer instanceof L.Marker){ // || layer instanceof L.CircleMarker){
       fg.addLayer(layer);
      }
     });
@@ -58,7 +60,7 @@ updateLayerStyler = function(map, layerId, options) {
     });
 
     map.layerManager.removeLayer("geojson", layerId);
-    map.layerManager.addLayer(lyr, "geojson", layerId);
+    map.layerManager.addLayer(lyr, "geojson", layerId, group);
     layer = map.layerManager.getLayer("geojson", layerId);
   }
 
@@ -77,7 +79,8 @@ updateLayerStyler = function(map, layerId, options) {
     layer.eachLayer(function(layer) {
       console.log(layer.feature.properties[colname]);
       if (colname === "---choose layer---") {
-        layer.setStyle(layer.defaultOptions.style(layer.feature));
+        //layer.setStyle(layer.defaultOptions.style(layer.feature));
+        layer.setStyle(layer.defaultOptions.__proto__);
       } else {
         layer.setStyle(
           {

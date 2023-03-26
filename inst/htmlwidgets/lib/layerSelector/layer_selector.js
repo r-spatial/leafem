@@ -10,10 +10,11 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
   window.styleOpts[layerId] = options;
 
   updateLayerStyle = updateLayerStyler(map, layerId, styleOpts, group);
+  let lyrscntrl = document.getElementsByClassName("leaflet-control-layers-overlays")[0]
 
   let innerhtml = '<label><strong>' +
     layerId +
-    ': </strong></label><br><select name="' +
+    ': </strong></label><select name="' +
     layerId +
     '" id="layerSelector-' +
     layerId +
@@ -25,7 +26,7 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
     innerhtml = innerhtml + txt;
   }
   innerhtml = innerhtml + '</select>'
-
+/*
   var selectr = L.control({position: position});
   selectr.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'layerSelector');
@@ -34,6 +35,12 @@ LeafletWidget.methods.addGeoJSONLayerSelector = function(layers,
       return div;
   };
   selectr.addTo(map);
+*/
+  var mydiv = L.DomUtil.create('div', 'layerSelector');
+  mydiv.innerHTML = innerhtml;
+  mydiv.firstChild.onmousedown = mydiv.firstChild.ondblclick = L.DomEvent.stopPropagation;
+
+  lyrscntrl.append(mydiv);
 
 };
 
@@ -60,7 +67,7 @@ updateLayerStyler = function(map, layerId, options, group) {
     });
 
     map.layerManager.removeLayer("geojson", layerId);
-    map.layerManager.addLayer(lyr, "geojson", layerId, group);
+    map.layerManager.addLayer(lyr, "geojson", layerId, group); // FIX THIS (group)!
     layer = map.layerManager.getLayer("geojson", layerId);
   }
 
@@ -79,8 +86,11 @@ updateLayerStyler = function(map, layerId, options, group) {
     layer.eachLayer(function(layer) {
       console.log(layer.feature.properties[colname]);
       if (colname === "---choose layer---") {
-        //layer.setStyle(layer.defaultOptions.style(layer.feature));
-        layer.setStyle(layer.defaultOptions.__proto__);
+        if (layer.feature.geometry.type === "Point") {
+          layer.setStyle(layer.defaultOptions.__proto__);
+        } else {
+          layer.setStyle(layer.defaultOptions.style(layer.feature));
+        }
       } else {
         layer.setStyle(
           {

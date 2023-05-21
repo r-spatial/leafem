@@ -14,7 +14,7 @@ changeColorsDependencies <- function(){
     htmltools::htmlDependency(
       "changeColors",
       "0.0.1",
-      system.file("htmlwidgets/lib", package = "leafletColorChange"),
+      system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
       script = "gradientmaps.js"
     )
   )
@@ -27,7 +27,7 @@ changeColorsDependencies <- function(){
 #' @param map a mapview or leaflet object.
 #' @param className character; the class name to apply the color-change to. The layer(s)
 #'  must have had this class name assigned to it; see examples
-#' @param colors character vector; the colors that form the new color palette. Colors dd
+#' @param colors character vector; the colors that form the new color palette. Colors
 #'   can be either named colors in R (like "red" or "blue") or hexadecimal colors
 #' @examples
 #' if (interactive()) {

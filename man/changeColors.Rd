@@ -12,7 +12,7 @@ changeColors(map, className, colors)
 \item{className}{character; the class name to apply the color-change to. The layer(s)
 must have had this class name assigned to it; see examples}
 
-\item{colors}{character vector; the colors that form the new color palette. Colors dd
+\item{colors}{character vector; the colors that form the new color palette. Colors
 can be either named colors in R (like "red" or "blue") or hexadecimal colors}
 }
 \description{

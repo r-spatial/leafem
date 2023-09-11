@@ -82,10 +82,11 @@ Imports:
 Suggests:
     clipr,
     leafgl,
+    lwgeom,
     mapdeck,
     plainview,
     rgdal,
     stars
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

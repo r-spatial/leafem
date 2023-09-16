@@ -15,10 +15,12 @@
   * update flatgeobuf geojson js lib to latest version. (https://github.com/r-spatial/mapview/issues/411)
   * fix parsing of negative coordinates in `clip2sfc()`. @famuvie #45
   * remove offending character conversion in `addStaticLabels()`. @jannes-m #47
+  * address changes in latest `stars` version which caused CRAN ERRORs. #70
 
 #### 🍬 miscellaneous
 
   * removed `gdalUtils` dependency using new `sf::st_layers()` instead.
+  * remove `rgdal` from Suggests.
 
 ## leafem 0.1.8
 

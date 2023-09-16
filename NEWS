@@ -1,18 +1,9 @@
-leafem 0.2.0.9021 (2023-03-26)
+leafem 0.2.1 (2023-09-16)
 
 features and improvements
 
   * new suite of functions to add PMTiles served from S3 bucket.
   * addFgb() now responds to click, mouseover & mouseout in shiny (thanks to @dfriend21). #64
-
-bug fixes
-
-documentation etc
-
-miscellaneous
-
-
-leafem 0.2.0 (2022-04-16)
 
 features and improvements
 
@@ -25,12 +16,9 @@ bug fixes
   * fix parsing of negative coordinates in clip2sfc(). @famuvie #45
   * remove offending character conversion in addStaticLabels(). @jannes-m #47
 
-documentation etc
-
 miscellaneous
 
   * removed gdalUtils dependency using new sf::st_layers() instead.
-
 
 leafem 0.1.8
 
@@ -53,7 +41,6 @@ bugfixes:
 miscellaneous:
 
   * add(Raster/Stars)RGB default quantile stretching now between 0 & 1.
-
 
 leafem 0.1.3
 

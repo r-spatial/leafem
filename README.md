@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/r-spatial/leafem/workflows/R-CMD-check/badge.svg)](https://github.com/r-spatial/leafem/actions)
 [![cran
-checks](https://cranchecks.info/badges/worst/leafem)](https://cran.r-project.org/web/checks/check_results_leafem.html)
+checks](https://badges.cranchecks.info/worst/dplyr.svg)](https://cran.r-project.org/web/checks/check_results_leafem.html)
 ![monthly](http://cranlogs.r-pkg.org/badges/leafem)
 ![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)
 [![CRAN](http://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)

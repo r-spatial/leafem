@@ -85,7 +85,6 @@ Suggests:
     lwgeom,
     mapdeck,
     plainview,
-    rgdal,
     stars
 Encoding: UTF-8
 LazyData: false

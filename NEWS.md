@@ -1,13 +1,4 @@
-# leafem 0.2.2.9000 (2023-09-16)
-
-#### ✨ features and improvements
-
-#### 🐛 bug fixes
-
-#### 💬 documentation etc
-
-#### 🍬 miscellaneous
-
+# leafem 0.2.3 (2023-09-17)
 
 # leafem 0.2.2 (2023-09-16)
 

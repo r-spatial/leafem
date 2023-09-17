@@ -68,7 +68,9 @@ if (interactive()) {
   library(leaflet)
   library(leafem)
 
-  url = "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/46/X/DG/2022/8/S2B_46XDG_20220829_0_L2A/L2A_PVI.tif"
+  base_url = "https://sentinel-cogs.s3.us-west-2.amazonaws.com"
+  image_url = "sentinel-s2-l2a-cogs/46/X/DG/2022/8/S2B_46XDG_20220829_0_L2A/L2A_PVI.tif"
+  url = sprintf("\%s/\%s", base_url, image_url)
 
   leaflet() |>
     addTiles() |>

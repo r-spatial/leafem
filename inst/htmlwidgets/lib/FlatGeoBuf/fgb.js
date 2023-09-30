@@ -246,7 +246,7 @@ function updateStyle(style_obj, feature, scale, scaleValues) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
-      if (scaleValues !== undefined) {
+      if (scaleValues !== undefined & scaleValues !== null) {
         //if (Object.keys(feature.properties).includes(vals[i])) {
         if (scaleValues[i] === true) {
           vals[i] = rescale(

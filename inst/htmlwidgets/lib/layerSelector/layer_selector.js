@@ -120,7 +120,7 @@ colFunc = function(values, options) {
     options.nacol = null;
   }
 
-  if (typeof(values[0]) === 'number') {
+  if (typeof(values[0]) === 'number' | typeof(values[0]) === 'boolean') {
     // domain
     if (options.domain === null) {
       mn = Math.min(...values);
@@ -129,7 +129,7 @@ colFunc = function(values, options) {
     } else {
       col = chroma.scale("YlOrRd").domain(options.domain);
     }
-  } else if (typeof(values[0]) === 'string') {
+  } else if (typeof(values[0]) === 'string' | typeof(values[0]) === 'object') {
     //var arr = ["c", "a", "b", "b"];
     let unique = [...new Set(values)];
     clrs = chroma.scale("Set1").colors(unique.length);

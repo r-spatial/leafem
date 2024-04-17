@@ -100,16 +100,19 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               });
             }
 
-            lyr = L.geoJSON(result.value, {
-              pointToLayer: function (feature, latlng) {
+            lyr = L.geoJSON(result.value, Object.assign(
+              {
+                pointToLayer: function (feature, latlng) {
                   return L.circleMarker(latlng, options);
+                },
+                style: function(feature) {
+                  return updateStyle(style, feature, scale, scaleFields);
+                },
+                onEachFeature: pop,
+                pane: pane
               },
-              style: function(feature) {
-                return updateStyle(style, feature, scale, scaleFields);
-              },
-              onEachFeature: pop,
-              pane: pane
-            });
+              options)
+            );
 
             if (label) {
               if (Object.keys(result.value.properties).includes(label)) {

@@ -392,7 +392,7 @@ addFgb = function(map,
     }
     path_layer = tempfile()
     dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.fgb")
+    path_layer = paste0(path_layer, "/", group, "_layer.fgb")
 
     file.copy(file, path_layer, overwrite = TRUE)
 
@@ -417,7 +417,7 @@ addFgb = function(map,
 
     map$dependencies = c(
       map$dependencies
-      , fileAttachment(path_layer, layerId)
+      , fileAttachment(path_layer, group)
     )
 
     if (!is.null(minZoom)) {

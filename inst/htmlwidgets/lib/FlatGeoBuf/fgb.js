@@ -12,7 +12,7 @@ function mouseHandler(mapId, layerId, group, eventName, extraInfo) {
     }
     let eventInfo = $.extend(
       {
-        id: layerId,
+        id: e.layer.feature.properties[layerId].toString(),
         ".nonce": Math.random()  // force reactivity
       },
       group !== null ? {group: group} : null,
@@ -45,7 +45,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     pane = options.pane;
   }
 
-  var data_fl = document.getElementById(layerId + '-1-attachment');
+  var data_fl = document.getElementById(group + '-1-attachment');
 
   if (data_fl === null) {
     data_fl = url;
@@ -130,6 +130,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 }, {sticky: true});
               }
             }
+
             lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
             lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
             lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));

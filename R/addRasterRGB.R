@@ -72,7 +72,10 @@ addRasterRGB <- function(
     }
   }
 
-  if (inherits(x, "Raster")) {
+  if (inherits(x, "Raster") || inherits(x, "SpatRaster")) {
+    if (inherits(x, "SpatRaster")) {
+      x <- leaflet::projectRasterForLeaflet(x, "near")
+    }
 
     mat <- cbind(x[[r]][],
                  x[[g]][],
@@ -86,7 +89,7 @@ addRasterRGB <- function(
 
   } else {
 
-    stop("'x' must be a Raster* or stars object.")
+    stop("'x' must be a Raster*, stars or terra object.")
 
   }
 
@@ -118,11 +121,9 @@ addRasterRGB <- function(
   cols[!na_indx] <- grDevices::rgb(mat[!na_indx, ], alpha = 1)
   p <- function(x) cols
 
-  lyrs <- paste(r, g, b, sep = ".")
-
   dotlst = list(...)
   dotlst = utils::modifyList(dotlst, list(map = map, colors = p))
-  out <- if (inherits(x, "Raster")) {
+  out <- if (inherits(x, "Raster") || inherits(x, "SpatRaster")) {
     dotlst = utils::modifyList(dotlst, list(x = x[[r]]))
     do.call(addRasterImage, dotlst)
   } else {

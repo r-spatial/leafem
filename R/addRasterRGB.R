@@ -97,7 +97,7 @@ addRasterRGB <- function(
       }
     }
 
-    if (isTerra) {
+    if (isTerra && !terra::same.crs(x, "EPSG:3857")) {
       x <- leaflet::projectRasterForLeaflet(x, method)
     }
 
@@ -138,7 +138,7 @@ addRasterRGB <- function(
     mat <- apply(mat, 2, rscl)
   }
 
-  na_indx <- apply(mat, 1, anyNA)
+  na_indx <- rowSums(is.na(mat)) > 0
   cols <- mat[, 1]
   cols[na_indx] <- na.color
   cols[!na_indx] <- grDevices::rgb(mat[!na_indx, ], alpha = 1)
@@ -146,8 +146,11 @@ addRasterRGB <- function(
 
   dotlst = list(...)
   dotlst = utils::modifyList(dotlst, list(map = map, colors = p, method = method))
-  out <- if (isRaster || isTerra) {
+  out <- if (isRaster) {
     dotlst = utils::modifyList(dotlst, list(x = x[[r]]))
+    do.call(addRasterImage, dotlst)
+  } else if (isTerra) {
+    dotlst = utils::modifyList(dotlst, list(x = x[[r]], project = FALSE))
     do.call(addRasterImage, dotlst)
   } else {
     dotlst = utils::modifyList(dotlst, list(x = x))

@@ -59,7 +59,7 @@
 addLogo <- function(map,
                     img,
                     alpha = 1,
-                    src = c("remote", "local"),
+                    src = c("remote", "local", "base64"),
                     url,
                     position = c("topleft", "topright",
                                  "bottomleft", "bottomright"),
@@ -127,16 +127,15 @@ addLogo <- function(map,
   div_funk <- paste0("function(el, x, data) {
                      // we need a new div element because we have to handle
                      // the mouseover output seperately
-                     // debugger;
-                     function addElement () {
-                     // generate new div Element
-                     var newDiv = $(document.createElement('div'));
-                     // append at end of leaflet htmlwidget container
-                     $(el).append(newDiv);
-                     //provide ID and style
-                     newDiv.addClass('logo');\n",
-                     div,
-                     "return newDiv;
+                         function addElement () {
+                             // generate new div Element
+                             var newDiv = $(document.createElement('div'));
+                             // append at end of leaflet htmlwidget container
+                             $(el).append(newDiv);
+                             //provide ID and style
+                             newDiv.addClass('logo');\n",
+                             div,
+                             "return newDiv;
                      }")
 
   div_add <- paste0("// check for already existing logo class to not duplicate
@@ -160,15 +159,54 @@ addLogo <- function(map,
 
   div_html <- switch(src,
                      remote = remoteImage(img, alpha, url, width, height),
-                     local = localImage(img, alpha, url, width, height))
+                     local = localImage(img, alpha, url, width, height),
+                     base64 = base64Image(img, alpha, url, width, height))
 
-  render_stuff <- paste0(div_funk, div_add, div_html)
+  render_stuff <- htmltools::HTML(paste0(div_funk, div_add, div_html))
+  print(render_stuff)
 
   map <- htmlwidgets::onRender(map, render_stuff)
 
   return(map)
 }
 
+### Base64 Image
+base64Image <- function(img, alpha, url, width, height) {
+  img_src <- image_to_base64(img)
+  style <- paste0(' style="opacity:',
+                  alpha,
+                  ';filter:alpha(opacity=',
+                  alpha * 100, ');"')
+
+  if (missing(url)) {
+    div_html <- paste0("logo.html('<img src=",
+                       paste0('"', img_src, '"'),
+                       " width=", width, " height=", height, style,
+                       "></a>');
+                       var map = HTMLWidgets.find('#' + el.id).getMap();
+  };
+}");
+    # HTML(div_html)
+  } else {
+    div_html <- paste0("logo.html('<a href=", url, "><img src='", img_src,
+                       "', width=", width, ", height=", height, style,
+                       "></a>');
+                       var map = HTMLWidgets.find('#' + el.id).getMap();
+};
+}")
+  }
+
+  return(div_html)
+}
+
+image_to_base64 <- function(file) {
+  # Read the image file and convert it to base64
+  img_data <- readBin(file, "raw", file.info(file)$size)
+  img_base64 <- base64enc::base64encode(img_data)
+  img_type <- tools::file_ext(file)
+  img_src <- paste0("data:image/", img_type, ";base64,", img_base64)
+  return(img_src)
+}
 
 ### local image
 localImage <- function(img, alpha, url, width, height) {
@@ -205,9 +243,7 @@ localImage <- function(img, alpha, url, width, height) {
 
 ### remote image
 remoteImage <- function(img, alpha, url, width, height) {
-
   img <- paste0('"', img, '"')
-
   style <- paste0(', style="opacity:',
                   alpha,
                   ';filter:alpha(opacity=',

@@ -8,7 +8,7 @@ addLogo(
   map,
   img,
   alpha = 1,
-  src = c("remote", "local"),
+  src = c("remote", "local", "base64"),
   url,
   position = c("topleft", "topright", "bottomleft", "bottomright"),
   offset.x = 50,

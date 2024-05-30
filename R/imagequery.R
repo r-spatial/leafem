@@ -87,6 +87,13 @@ addImageQuery = function(map,
         projected <- sf::st_transform(x, crs = 4326)
       }
     }
+    if (inherits(x, "SpatRaster")) {
+      projected = terra::project(
+        x
+        , "epsg:4326"
+        , method = "near"
+      )
+    }
     if (inherits(x, "Raster")) {
       projected = raster::projectRaster(
         x

@@ -106,11 +106,16 @@ image2Array = function(x, band = 1) {
   switch(class(x)[1],
          "stars" = stars2Array(x, band = band),
          "RasterLayer" = rasterLayer2Array(x),
-         stop("can only query single raster or stars layers so far"))
+         "SpatRaster" = rasterLayer2Array(x),
+         stop("can only query single raster, stars or terra layers so far"))
 }
 
 rasterLayer2Array = function(x) {
-  x = as.matrix(x)
+  if (inherits(x, "SpatRaster")) {
+    x = as.matrix(x, wide = TRUE)
+  } else {
+    x = as.matrix(x)
+  }
   paste(
     sapply(seq(ncol(x)), function(i) {
       paste0(

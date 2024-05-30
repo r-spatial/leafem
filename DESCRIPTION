@@ -85,7 +85,8 @@ Suggests:
     lwgeom,
     mapdeck,
     plainview,
-    stars
+    stars,
+    terra
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.3.1

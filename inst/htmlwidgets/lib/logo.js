@@ -52,11 +52,12 @@ LeafletWidget.methods.addLogo = function(img, layerId, options) {
       logoDiv.appendChild(imgElement);
     }
 
-    // Remove any existing logo at the same position
+    // Remove an existing logo with the same layerId
     if (map.logos[layerId]) {
       map.logos[layerId].remove();
     }
 
+    // Append Logo to Map and add to map.logos
     map.getContainer().appendChild(logoDiv);
     map.logos[layerId] = logoDiv;
 
@@ -83,3 +84,4 @@ LeafletWidget.methods.showLogo = function(layerId) {
     $(map.logos[layerId]).show();
   }
 }
+

@@ -2,7 +2,14 @@ leafem 0.2.3.9001 (2024-04-17)
 
 features and improvements
 
+ * Added `removeLogo()`, `hideLogo()`, and `showLogo()` functions to manipulate logos on the map.
+ These functions utilize the new `layerId` argument in `addLogo()`. (#50, #49)
+
 bug fixes
+
+ * `addLogo()` was rewritten to correctly handle remote and local images in R, shiny and markdown.
+ Local images are now encoded using `base64enc::dataURI` and logos are added to the
+ map using a `layerId`. #43, #42, #16
 
 documentation etc
 

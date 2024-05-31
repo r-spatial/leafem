@@ -50,6 +50,10 @@ the disk, "remote" for web image sources).}
 \item{width}{width of the rendered image in pixels.}
 
 \item{height}{height of the rendered image in pixels.}
+
+\item{class}{optional class}
+
+\item{layerId}{an id for the logo div.}
 }
 \description{
 This function adds an image to a map. Both local and remote (web) image

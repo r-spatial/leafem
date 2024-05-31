@@ -30,6 +30,8 @@ logodeps <- function() {
 #' @param offset.y the offset in y direction from the chosen position (in pixels).
 #' @param width width of the rendered image in pixels.
 #' @param height height of the rendered image in pixels.
+#' @param layerId an id for the logo div.
+#' @param class optional class
 #'
 #' @examples
 #' library(leaflet)

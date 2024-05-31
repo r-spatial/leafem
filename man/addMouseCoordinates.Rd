@@ -55,11 +55,11 @@ though currently only copying of 'lon', 'lat' and 'zoom' are supported, not
 }
 \section{Functions}{
 \itemize{
-\item \code{removeMouseCoordinates}: remove mouse coordinates information from a map
+\item \code{removeMouseCoordinates()}: remove mouse coordinates information from a map
 
-\item \code{clip2sfc}: convert mouse coordinates from clipboard to sfc
+\item \code{clip2sfc()}: convert mouse coordinates from clipboard to sfc
+
 }}
-
 \examples{
 library(leaflet)
 

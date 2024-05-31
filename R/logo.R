@@ -170,6 +170,71 @@ addLogo <- function(map,
   return(map)
 }
 
+
+
+
+logodeps <- function() {
+  list(
+    htmltools::htmlDependency(
+      "logodeps",
+      version = "1.0.0",
+      system.file("htmlwidgets/lib/", package = "leafem"),
+      script = "logo.js",
+    )
+  )
+}
+
+#' addLogo2
+#' @inheritParams addLogo
+#' @export addLogo2
+#' @name addLogo2
+#' @rdname addLogo2
+#' @aliases addLogo2
+#'
+addLogo2 <- function(map,
+                    img,
+                    alpha = 1,
+                    src = c("remote", "local", "base64"),
+                    url = NULL,
+                    link = NULL,
+                    position = c("topleft", "topright",
+                                 "bottomleft", "bottomright"),
+                    offset.x = 50,
+                    offset.y = 13,
+                    width = 60,
+                    height = 60) {
+
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
+  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
+
+  src <- match.arg(src)
+  position <- match.arg(position)
+
+  map$dependencies <- c(map$dependencies, logodeps())
+
+  if (src == "local") {
+    fileext <- tools::file_ext(img)
+    if (fileext == "svg") fileext <- paste0(fileext, "+xml")
+    img <- base64enc::dataURI(file = img, mime = paste0("image/", fileext))
+  }
+
+  options <- list(
+    alpha = alpha,
+    url = url,
+    position = position,
+    offsetX = offset.x,
+    offsetY = offset.y,
+    width = width,
+    height = height
+  )
+
+  leaflet::invokeMethod(map,
+                        NULL,
+                        "addLogo",
+                        img, options)
+
+}
+
 ### Base64 Image
 base64Image <- function(img, alpha, url, width, height) {
   img_src <- image_to_base64(img)
@@ -198,7 +263,6 @@ base64Image <- function(img, alpha, url, width, height) {
 
   return(div_html)
 }
-
 image_to_base64 <- function(file) {
   # Read the image file and convert it to base64
   img_data <- readBin(file, "raw", file.info(file)$size)

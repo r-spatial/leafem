@@ -36,30 +36,32 @@
 #'
 #' # create some random data
 #' che = st_as_sf(gadmCHE)
-#' pts = st_as_sf(st_sample(che, 200))
-#' pts = st_join(pts, che[, "ID_1"])
+#' if (require(lwgeom)) {
+#'   pts = st_as_sf(st_sample(che, 200))
+#'   pts = st_join(pts, che[, "ID_1"])
 #'
-#' che = sf_geojson(che)
+#'   che = sf_geojson(che)
 #'
-#' leaflet() %>%
-#'   addTiles() %>%
-#'   addGeoJSON(che, group = "che") %>%
-#'   addReactiveFeatures(
-#'     pts
-#'     , srcLayer = "che"
-#'     , by = "ID_1"
-#'     , on = "click"
-#'     , group = "pts"
-#'     , style = list(color = "black", fillOpacity = 0.3)
-#'     , updateStyle = list(
-#'       opacity = 0.3
-#'       , fillOpacity = 0.3
-#'       , color = "forestgreen"
-#'       , fillColor = "forestgreen"
-#'     )
-#'   ) %>%
-#'   addMouseCoordinates() %>%
-#'   setView(lng = 8.31, lat = 46.75, zoom = 8)
+#'   leaflet() %>%
+#'     addTiles() %>%
+#'     addGeoJSON(che, group = "che") %>%
+#'     addReactiveFeatures(
+#'       pts
+#'       , srcLayer = "che"
+#'       , by = "ID_1"
+#'       , on = "click"
+#'       , group = "pts"
+#'       , style = list(color = "black", fillOpacity = 0.3)
+#'       , updateStyle = list(
+#'         opacity = 0.3
+#'         , fillOpacity = 0.3
+#'         , color = "forestgreen"
+#'         , fillColor = "forestgreen"
+#'       )
+#'     ) %>%
+#'     addMouseCoordinates() %>%
+#'     setView(lng = 8.31, lat = 46.75, zoom = 8)
+#' }
 #'
 #' @export addReactiveFeatures
 #' @name addReactiveFeatures

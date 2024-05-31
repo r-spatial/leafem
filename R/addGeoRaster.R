@@ -140,7 +140,8 @@ addGeoRaster = function(map,
 #' @param rgb logical, whether to render Geotiff as RGB.
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
-#'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
+#'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
+#'   some examples.
 #' @param autozoom whether to automatically zoom to the full extent of the layer.
 #'   Default is \code{TRUE}
 #' @param ... currently not used.
@@ -331,6 +332,60 @@ addGeotiff = function(map,
 }
 
 
+
+#' Add Cloud Optimised Geotiff (COG) to a leaflet map.
+#'
+#' @details
+#' This function will overlay Cloud Optimised Geotiff data from a remote url on
+#' a leaflet map. Like `addGeotiff` it uses the leaflet plugin
+#' 'georaster-layer-for-leaflet' to render the data. See `addGeotiff` for a bit
+#' more detail what that means.
+#'
+#' @param map the map to add the COG to.
+#' @param url url to the COG file to render.
+#' @param group he name of the group this COG should belong to.
+#' @param layerId the layerId.
+#' @param resolution the target resolution for the simple nearest neighbor
+#'   interpolation. Larger values will result in more detailed rendering,
+#'   but may impact performance. Default is 96 (pixels).
+#' @param opacity image opacity.
+#' @param options see [leaflet](tileOptions).
+#' @param colorOptions list defining the palette, breaks and na.color to be used.
+#'   Currently not used.
+#' @param pixelValuesToColorFn optional JS function to be passed to the browser.
+#'   Can be used to fine tune and manipulate the color mapping.
+#'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
+#'   some examples. Currently not used.
+#' @param autozoom whether to automatically zoom to the full extent of the layer.
+#'   Default is \code{TRUE}.
+#' @param rgb logical, whether to render Geotiff as RGB. Currently not used.
+#' @param ... currently not used.
+#'
+#' @return
+#' A leaflet map object.
+#'
+#' @examples
+#' if (interactive()) {
+#'   library(leaflet)
+#'   library(leafem)
+#'
+#'   base_url = "https://sentinel-cogs.s3.us-west-2.amazonaws.com"
+#'   image_url = "sentinel-s2-l2a-cogs/46/X/DG/2022/8/S2B_46XDG_20220829_0_L2A/L2A_PVI.tif"
+#'   url = sprintf("%s/%s", base_url, image_url)
+#'
+#'   leaflet() |>
+#'     addTiles() |>
+#'     leafem:::addCOG(
+#'       url = url
+#'       , group = "COG"
+#'       , resolution = 512
+#'       , autozoom = TRUE
+#'     )
+#' }
+#'
+#' @export addCOG
+#' @name addCOG
+#' @rdname addCOG
 addCOG = function(map,
                   url = NULL,
                   group = NULL,
@@ -408,6 +463,7 @@ leafletGeoRasterDependencies = function() {
         , "georaster-binding.js"
         , "georasterUtils.js"
         , "mathjs.min.js"
+        , "proj4-src.js"
       )
     )
   )

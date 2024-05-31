@@ -1,3 +1,29 @@
+function mouseHandler(mapId, layerId, group, eventName, extraInfo) {
+  return function(e) {
+    if (!HTMLWidgets.shinyMode) return;
+
+    let latLng = e.target.getLatLng ? e.target.getLatLng() : e.latlng;
+    if (latLng) {
+      // retrieve only lat, lon values to remove prototype
+      //   and extra parameters added by 3rd party modules
+      // these objects are for json serialization, not javascript
+      let latLngVal = L.latLng(latLng); // make sure it has consistent shape
+      latLng = {lat: latLngVal.lat, lng: latLngVal.lng};
+    }
+    let eventInfo = $.extend(
+      {
+        id: layerId,
+        ".nonce": Math.random()  // force reactivity
+      },
+      group !== null ? {group: group} : null,
+      latLng,
+      extraInfo
+    );
+
+    Shiny.onInputChange(mapId + "_" + eventName, eventInfo);
+  };
+}
+
 LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 group,
                                                 url,
@@ -60,7 +86,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               pop = null;
             }
 
-            if (scaleFields === undefined &
+            if (scaleFields === null &
                 result.value.properties !== undefined) {
               var vls = Object.values(style);
               scaleFields = [];
@@ -74,16 +100,19 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               });
             }
 
-            lyr = L.geoJSON(result.value, {
-              pointToLayer: function (feature, latlng) {
+            lyr = L.geoJSON(result.value, Object.assign(
+              {
+                pointToLayer: function (feature, latlng) {
                   return L.circleMarker(latlng, options);
+                },
+                style: function(feature) {
+                  return updateStyle(style, feature, scale, scaleFields);
+                },
+                onEachFeature: pop,
+                pane: pane
               },
-              style: function(feature) {
-                return updateStyle(style, feature, scale, scaleFields);
-              },
-              onEachFeature: pop,
-              pane: pane
-            });
+              options)
+            );
 
             if (label) {
               if (Object.keys(result.value.properties).includes(label)) {
@@ -101,7 +130,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 }, {sticky: true});
               }
             }
-
+            lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
+            lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
+            lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
             map.layerManager.addLayer(lyr, null, null, group);
             it.next().then(handleResult);
           }
@@ -218,7 +249,7 @@ function updateStyle(style_obj, feature, scale, scaleValues) {
     if (vals[i] === null) {
       out[cols[i]] = feature.properties[cols[i]];
     } else {
-      if (scaleValues !== undefined) {
+      if (scaleValues !== undefined & scaleValues !== null) {
         //if (Object.keys(feature.properties).includes(vals[i])) {
         if (scaleValues[i] === true) {
           vals[i] = rescale(
@@ -244,3 +275,148 @@ function rescale(value, to_min, to_max, from_min, from_max) {
   }
   return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
 }
+
+
+
+LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
+                                                 group,
+                                                 url,
+                                                 popup,
+                                                 label,
+                                                 style,
+                                                 options,
+                                                 className,
+                                                 scale,
+                                                 scaleFields,
+                                                 minZoom,
+                                                 maxZoom) {
+
+  var map = this;
+  var gl = false;
+  var pane;
+
+  if (options === null || options.pane === undefined) {
+    pane = 'overlayPane';
+  } else {
+    pane = options.pane;
+  }
+
+  var data_fl = document.getElementById(layerId + '-1-attachment');
+
+  if (data_fl === null) {
+    data_fl = url;
+  } else {
+    data_fl = data_fl.href;
+  }
+
+  var popUp;
+  var colnames = [];
+
+  function handleHeaderMeta(headerMeta) {
+    headerMeta.columns.forEach(function(col) {
+      colnames.push(col.name);
+    });
+  }
+
+  // convert the rect into the format flatgeobuf expects
+  function fgBoundingBox() {
+      const bounds = map.getBounds();
+      return {
+          minX: bounds.getWest(),
+          maxX: bounds.getEast(),
+          minY: bounds.getSouth(),
+          maxY: bounds.getNorth(),
+      };
+  }
+
+  var previousResults = previousResults || {};
+  previousResults[layerId] = L.layerGroup();
+  map.layerManager.addLayer(previousResults[layerId], null, layerId, group);
+
+  async function updateResults() {
+      var nextResults = nextResults || {};
+      nextResults[layerId] = L.layerGroup();
+      map.layerManager.addLayer(nextResults[layerId], null, layerId, group);
+      // remove the old results
+      map.layerManager.removeLayer(previousResults[layerId], layerId);
+      // previousResults[layerId].remove();
+      previousResults[layerId] = nextResults[layerId];
+
+      // Use flatgeobuf JavaScript API to iterate features as geojson.
+      // Because we specify a bounding box, flatgeobuf will only fetch the resubset of data,
+      // rather than the entire file.
+      const iter = flatgeobuf.deserialize(data_fl, fgBoundingBox(), handleHeaderMeta);
+
+    if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[layerId])) {
+      for await (const feature of iter) {
+            if (popup) {
+              pop = makePopup(popup, className);
+            } else {
+              pop = null;
+            }
+
+          if (scaleFields === null &
+                feature.properties !== undefined) {
+              var vls = Object.values(style);
+              scaleFields = [];
+              vls.forEach(function(name) {
+                //if (name in colnames) {
+                if (colnames.includes(name)) {
+                  scaleFields.push(true);
+                } else {
+                  scaleFields.push(false);
+                }
+              });
+            }
+
+          lyr = L.geoJSON(feature, {
+              pointToLayer: function (feature, latlng) {
+                  return L.circleMarker(latlng, options);
+              },
+              style: function(feature) {
+                return updateStyle(style, feature, scale, scaleFields);
+              },
+              onEachFeature: pop,
+              pane: pane
+            });
+
+            if (label) {
+              if (Object.keys(feature.properties).includes(label)) {
+                lyr.bindTooltip(function (layer) {
+                  return layer.feature.properties[label].toString();
+                }, {sticky: true});
+              } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
+                var lb = label[cntr];
+                lyr.bindTooltip(function (layer) {
+                  return(lb);
+                }, {sticky: true});
+              } else {
+                lyr.bindTooltip(function (layer) {
+                  return(label);
+                }, {sticky: true});
+              }
+            }
+
+         lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
+         lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
+         lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
+         lyr.addTo(nextResults[layerId]);
+      }
+    }
+  }
+  // if the user is panning around alot, only update once per second max
+  // updateResults = _.throttle(updateResults, 1000);
+
+  // show results based on the initial map
+  updateResults();
+  // ...and update the results whenever the map moves
+  map.on("moveend", function(s) {
+      //rectangle.setBounds(getBoundForRect());
+      updateResults();
+  });
+  map.on('layeradd', function(event) {
+     if(event.layer == previousResults[layerId]) {
+         updateResults();
+     }
+});
+};

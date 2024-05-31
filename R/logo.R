@@ -1,3 +1,15 @@
+logodeps <- function() {
+  list(
+    htmltools::htmlDependency(
+      "logodeps",
+      version = "1.0.0",
+      system.file("htmlwidgets/lib/", package = "leafem"),
+      script = "logo.js",
+    )
+  )
+}
+
+
 ### addLogo ##################################################################
 ##############################################################################
 #' add a local or remote image (png, jpg, gif, bmp, ...) to a leaflet map
@@ -50,6 +62,7 @@
 #' @export addLogo
 #' @name addLogo
 #' @rdname addLogo
+#' @importFrom leaflet filterNULL
 #' @aliases addLogo
 
 ## courtesy of
@@ -59,277 +72,89 @@
 addLogo <- function(map,
                     img,
                     alpha = 1,
-                    src = c("remote", "local", "base64"),
-                    url,
-                    position = c("topleft", "topright",
-                                 "bottomleft", "bottomright"),
-                    offset.x = 50,
-                    offset.y = 13,
-                    width = 60,
-                    height = 60) {
-  # check for duplication?
-  #  not sure of a good way to do this
-  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
-  stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
-
-  if (!missing(url)) url <- paste0('"', url, '"')
-
-  position <- position[1]
-  src <- src[1]
-
-
-  div_topleft <- paste0("newDiv.css({
-                        'position': 'absolute',
-                        'top': '", offset.y, "px',
-                        'left': '", offset.x, "px',
-                        'background-color': 'transparent',
-                        'border': '0px solid black',
-                        'width': '", width, "px',
-                        'height': '", height, "px',
-});")
-
-  div_topright <- paste0("newDiv.css({
-                         'position': 'absolute',
-                         'top': '", offset.y, "px',
-                         'right': '", offset.x, "px',
-                         'background-color': 'transparent',
-                         'border': '0px solid black',
-                         'width': '", width, "px',
-                         'height': '", height, "px',
-                         });")
-
-  div_bottomleft <- paste0("newDiv.css({
-                           'position': 'absolute',
-                           'bottom': '", offset.y, "px',
-                           'left': '", offset.x, "px',
-                           'background-color': 'transparent',
-                           'border': '0px solid black',
-                           'width': '", width, "px',
-                           'height': '", height, "px',
-                           });")
-
-  div_bottomright <- paste0("newDiv.css({
-                            'position': 'absolute',
-                            'bottom': '", offset.y, "px',
-                            'right': '", offset.x, "px',
-                            'background-color': 'transparent',
-                            'border': '0px solid black',
-                            'width': '", width, "px',
-                            'height': '", height, "px',
-                            });")
-
-  div <- switch(position,
-                topleft = div_topleft,
-                topright = div_topright,
-                bottomleft = div_bottomleft,
-                bottomright = div_bottomright)
-
-  div_funk <- paste0("function(el, x, data) {
-                     // we need a new div element because we have to handle
-                     // the mouseover output seperately
-                         function addElement () {
-                             // generate new div Element
-                             var newDiv = $(document.createElement('div'));
-                             // append at end of leaflet htmlwidget container
-                             $(el).append(newDiv);
-                             //provide ID and style
-                             newDiv.addClass('logo');\n",
-                             div,
-                             "return newDiv;
-                     }")
-
-  div_add <- paste0("// check for already existing logo class to not duplicate
-                    var logo = $(el).find('.logo');
-                    if(!logo.length) {
-                    logo = addElement();")
-
-  # if (missing(url)) {
-  #   div_html <- paste0("logo.html('<img src=", img,
-  #                      ", width=", width, "height=", height, "></a>');
-  #                      var map = HTMLWidgets.find('#' + el.id).getMap();
-  #                      };
-  #                      }")
-  # } else {
-  #   div_html <- paste0("logo.html('<a href=", url, "><img src=", img,
-  #                      ", width=", width, "height=", height, "></a>');
-  #                      var map = HTMLWidgets.find('#' + el.id).getMap();
-  #                      };
-  #                      }")
-  # }
-
-  div_html <- switch(src,
-                     remote = remoteImage(img, alpha, url, width, height),
-                     local = localImage(img, alpha, url, width, height),
-                     base64 = base64Image(img, alpha, url, width, height))
-
-  render_stuff <- htmltools::HTML(paste0(div_funk, div_add, div_html))
-  print(render_stuff)
-
-  map <- htmlwidgets::onRender(map, render_stuff)
-
-  return(map)
-}
-
-
-
-
-logodeps <- function() {
-  list(
-    htmltools::htmlDependency(
-      "logodeps",
-      version = "1.0.0",
-      system.file("htmlwidgets/lib/", package = "leafem"),
-      script = "logo.js",
-    )
-  )
-}
-
-#' addLogo2
-#' @inheritParams addLogo
-#' @export addLogo2
-#' @name addLogo2
-#' @rdname addLogo2
-#' @aliases addLogo2
-#'
-addLogo2 <- function(map,
-                    img,
-                    alpha = 1,
-                    src = c("remote", "local", "base64"),
+                    src = c("remote", "local"),
                     url = NULL,
-                    link = NULL,
                     position = c("topleft", "topright",
                                  "bottomleft", "bottomright"),
                     offset.x = 50,
                     offset.y = 13,
                     width = 60,
-                    height = 60) {
+                    height = 60,
+                    class = NULL,
+                    layerId = NULL) {
 
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
 
-  src <- match.arg(src)
+  # src <- match.arg(src)
   position <- match.arg(position)
 
   map$dependencies <- c(map$dependencies, logodeps())
 
-  if (src == "local") {
+  if (file.exists(img)) {
     fileext <- tools::file_ext(img)
     if (fileext == "svg") fileext <- paste0(fileext, "+xml")
     img <- base64enc::dataURI(file = img, mime = paste0("image/", fileext))
   }
 
-  options <- list(
+  options <- filterNULL(list(
     alpha = alpha,
     url = url,
     position = position,
     offsetX = offset.x,
     offsetY = offset.y,
     width = width,
-    height = height
-  )
+    height = height,
+    class = class
+  ))
 
-  leaflet::invokeMethod(map,
-                        NULL,
-                        "addLogo",
-                        img, options)
-
-}
-
-### Base64 Image
-base64Image <- function(img, alpha, url, width, height) {
-  img_src <- image_to_base64(img)
-  style <- paste0(' style="opacity:',
-                  alpha,
-                  ';filter:alpha(opacity=',
-                  alpha * 100, ');"')
-
-  if (missing(url)) {
-    div_html <- paste0("logo.html('<img src=",
-                       paste0('"', img_src, '"'),
-                       " width=", width, " height=", height, style,
-                       "></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-  };
-}");
-    # HTML(div_html)
-  } else {
-    div_html <- paste0("logo.html('<a href=", url, "><img src='", img_src,
-                       "', width=", width, ", height=", height, style,
-                       "></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-};
-}")
+  ## Make sure layerId is set and unique
+  if (is.null(layerId)) {
+    layerId <- as.character(as.numeric(Sys.time()))
   }
 
-  return(div_html)
-}
-image_to_base64 <- function(file) {
-  # Read the image file and convert it to base64
-  img_data <- readBin(file, "raw", file.info(file)$size)
-  img_base64 <- base64enc::base64encode(img_data)
-  img_type <- tools::file_ext(file)
-  img_src <- paste0("data:image/", img_type, ";base64,", img_base64)
-  return(img_src)
+  leaflet::invokeMethod(
+    map,
+    NULL,
+    "addLogo",
+    img,
+    layerId,
+    options)
 }
 
-### local image
-localImage <- function(img, alpha, url, width, height) {
-  nm <- basename(img)
-  drs <- file.path(tempdir(), "graphs")
-  if (!dir.exists(drs)) dir.create(drs)
-  fls <- file.path(drs, nm)
-  invisible(file.copy(img, file.path(drs, nm)))
-  rel_path <- paste0('"', file.path("..", basename(drs), basename(img)), '"')
-
-  style <- paste0(', style="opacity:',
-                  alpha,
-                  ';filter:alpha(opacity=',
-                  alpha * 100, ');"')
-
-  if (missing(url)) {
-    div_html <- paste0("logo.html('<img src=", rel_path,
-                       ", width=", width, ", height=", height, style,
-                       ", ></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-  };
-}")
-  } else {
-    div_html <- paste0("logo.html('<a href=", url, "><img src=", rel_path,
-                       ", width=", width, ", height=", height, style,
-                       "></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-};
-}")
-  }
-
-  return(div_html)
+#' removeLogo
+#' @inheritParams addLogo
+#' @rdname addLogo
+#' @export
+removeLogo <- function(map, layerId) {
+  leaflet::invokeMethod(
+    map,
+    NULL,
+    "removeLogo",
+    layerId)
 }
 
-### remote image
-remoteImage <- function(img, alpha, url, width, height) {
-  img <- paste0('"', img, '"')
-  style <- paste0(', style="opacity:',
-                  alpha,
-                  ';filter:alpha(opacity=',
-                  alpha * 100, ');"')
-
-  if (missing(url)) {
-    div_html <- paste0("logo.html('<img src=", img,
-                       ", width=", width, ", height=", height, style,
-                       "></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-                       };
-                       }")
-  } else {
-    div_html <- paste0("logo.html('<a href=", url, "><img src=", img,
-                       ", width=", width, ", height=", height, style,
-                       "></a>');
-                       var map = HTMLWidgets.find('#' + el.id).getMap();
-                       };
-                       }")
-  }
-
-  return(div_html)
+#' hideLogo
+#' @inheritParams addLogo
+#' @rdname addLogo
+#' @export
+hideLogo <- function(map, layerId) {
+  leaflet::invokeMethod(
+    map,
+    NULL,
+    "hideLogo",
+    layerId)
 }
 
-##############################################################################
+#' showLogo
+#' @inheritParams addLogo
+#' @rdname addLogo
+#' @export
+showLogo <- function(map, layerId) {
+  leaflet::invokeMethod(
+    map,
+    NULL,
+    "showLogo",
+    layerId)
+}
+

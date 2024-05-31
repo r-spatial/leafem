@@ -2,20 +2,31 @@
 % Please edit documentation in R/logo.R
 \name{addLogo}
 \alias{addLogo}
+\alias{removeLogo}
+\alias{hideLogo}
+\alias{showLogo}
 \title{add a local or remote image (png, jpg, gif, bmp, ...) to a leaflet map}
 \usage{
 addLogo(
   map,
   img,
   alpha = 1,
-  src = c("remote", "local", "base64"),
-  url,
+  src = c("remote", "local"),
+  url = NULL,
   position = c("topleft", "topright", "bottomleft", "bottomright"),
   offset.x = 50,
   offset.y = 13,
   width = 60,
-  height = 60
+  height = 60,
+  class = NULL,
+  layerId = NULL
 )
+
+removeLogo(map, layerId)
+
+hideLogo(map, layerId)
+
+showLogo(map, layerId)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}

@@ -1,10 +1,7 @@
-/* global LeafletWidget, $, L */
-
-LeafletWidget.methods.addLogo = function(img, options) {
+/* global LeafletWidget, L, $ */
+LeafletWidget.methods.addLogo = function(img, layerId, options) {
   (function() {
     var map = this;
-
-    console.log("ich bin hier drin")
 
     // Initialize logos array if not already present
     if (!map.logos) {
@@ -12,7 +9,8 @@ LeafletWidget.methods.addLogo = function(img, options) {
     }
 
     // Create a new div for the logo
-    var logoDiv = L.DomUtil.create('div', 'logo');
+    var logoDiv = L.DomUtil.create('div', options.class);
+    logoDiv.id = layerId;
     logoDiv.style.position = 'absolute';
     logoDiv.style.width = options.width + 'px';
     logoDiv.style.height = options.height + 'px';
@@ -24,22 +22,24 @@ LeafletWidget.methods.addLogo = function(img, options) {
         logoDiv.style.top = options.offsetY + 'px';
         logoDiv.style.left = options.offsetX + 'px';
         break;
-        case 'topright':
-          logoDiv.style.top = options.offsetY + 'px';
-          logoDiv.style.right = options.offsetX + 'px';
-          break;
-          case 'bottomleft':
-            logoDiv.style.bottom = options.offsetY + 'px';
-            logoDiv.style.left = options.offsetX + 'px';
-            break;
-            case 'bottomright':
-              logoDiv.style.bottom = options.offsetY + 'px';
-              logoDiv.style.right = options.offsetX + 'px';
-              break;
+      case 'topright':
+        logoDiv.style.top = options.offsetY + 'px';
+        logoDiv.style.right = options.offsetX + 'px';
+        break;
+      case 'bottomleft':
+        logoDiv.style.bottom = options.offsetY + 'px';
+        logoDiv.style.left = options.offsetX + 'px';
+        break;
+      case 'bottomright':
+        logoDiv.style.bottom = options.offsetY + 'px';
+        logoDiv.style.right = options.offsetX + 'px';
+        break;
     }
 
+    // Create img-tag and append to document
     var imgElement = document.createElement('img');
     imgElement.src = img;
+    imgElement.class = options.class;
     imgElement.width = options.width;
     imgElement.height = options.height;
     if (options.url) {
@@ -53,11 +53,33 @@ LeafletWidget.methods.addLogo = function(img, options) {
     }
 
     // Remove any existing logo at the same position
-    if (map.logos[options.position]) {
-      map.logos[options.position].remove();
+    if (map.logos[layerId]) {
+      map.logos[layerId].remove();
     }
 
     map.getContainer().appendChild(logoDiv);
-    map.logos[options.position] = logoDiv;
+    map.logos[layerId] = logoDiv;
+
   }).call(this);
 };
+
+LeafletWidget.methods.removeLogo = function(layerId) {
+  var map = this;
+  if (map.logos[layerId]) {
+    map.logos[layerId].remove();
+  }
+}
+
+LeafletWidget.methods.hideLogo = function(layerId) {
+  var map = this;
+  if (map.logos[layerId]) {
+    $(map.logos[layerId]).hide();
+  }
+}
+
+LeafletWidget.methods.showLogo = function(layerId) {
+  var map = this;
+  if (map.logos[layerId]) {
+    $(map.logos[layerId]).show();
+  }
+}

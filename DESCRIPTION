@@ -1,7 +1,6 @@
 Package: leafem
-Type: Package
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.2.0
+Version: 0.2.3.9002
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -47,6 +46,10 @@ Authors@R:
       person(given = "Yeedle",
              family = "Neuwirth",
              role = "ctb"),
+      person(given = "Derek",
+             family = "Friend",
+             role = "ctb",
+             email = "dafriend.r@gmail.com"),
       person(given = "Kevin",  
              family = "Cazelles", 
              role = "ctb",
@@ -79,9 +82,9 @@ Imports:
 Suggests:
     clipr,
     leafgl,
+    lwgeom,
     mapdeck,
     plainview,
-    rgdal,
     stars
 Encoding: UTF-8
 LazyData: false

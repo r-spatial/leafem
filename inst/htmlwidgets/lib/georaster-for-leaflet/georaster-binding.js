@@ -1,3 +1,49 @@
+function mouseHandler(map, georaster, layerId, group, eventName) {
+  return function(e) {
+    let outputWidget = getInfoLegend(layerId);
+    if (!(map.layerManager.getVisibleGroups().includes(group))) {
+      $(outputWidget).hide();
+      return;
+    }
+
+    let latLng = this.mouseEventToLatLng(e.originalEvent);
+    let val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
+
+    if (val) {
+      outputWidget.innerHTML = renderInfo(val, layerId, 1, "");
+      let eventInfo = $.extend({
+        id: layerId,
+        ".nonce": Math.random(),  // force reactivity
+        group: group ? group : null,
+        value: val[0]
+        },
+        e.latlng
+      );
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
+      }
+    } else {
+      $(outputWidget).hide();
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, null);
+      }
+    }
+  };
+}
+function renderInfo(val, layerId, digits, prefix) {
+  $(document.getElementById("rasterValues-" + layerId)).show();
+  let text = "<small>"+ "Layer"+ " <strong> "+ layerId + ": </strong>"+ val + "</small>";
+  return text;
+}
+function getInfoLegend(layerId) {
+  let element = window.document.getElementById("rasterValues-" + layerId);
+  if (element === null) {
+    console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
+  }
+  return element;
+}
+
+
 LeafletWidget.methods.addGeotiff = function (url,
                                              group,
                                              layerId,
@@ -122,14 +168,16 @@ LeafletWidget.methods.addGeotiff = function (url,
           opacity: opacity,
           pane: pane
         });
-        map.layerManager.addLayer(layer, null, layerId, group);
 
+        map.layerManager.addLayer(layer, "image", layerId, group);
         if (autozoom) {
           map.fitBounds(layer.getBounds());
         }
+        
+        map.on("click", mouseHandler(map, georaster, layerId, group, "georaster_click"), this);
+        map.on("mousemove", mouseHandler(map, georaster, layerId, group, "georaster_mousemove"), this);
       });
     });
-
 };
 
 
@@ -145,7 +193,6 @@ LeafletWidget.methods.addCOG = function (url,
                                          rgb) {
 
   var map = this;
-
   var pane;  // could also use let
   if (options.pane === undefined) {
     pane = 'tilePane';
@@ -153,9 +200,27 @@ LeafletWidget.methods.addCOG = function (url,
     pane = options.pane;
   }
 
+  var layers = layers || {};
+
   parseGeoraster(url).then(georaster => {
     console.log("georaster:", georaster);
 
+    layers[layerId] = new GeoRasterLayer({
+      georaster,
+      resolution: resolution,
+      opacity: opacity,
+      pixelValuesToColorFn: pixelValuesToColorFn,
+      pane: pane
+    });
+    map.layerManager.addLayer(layers[layerId], null, layerId, group);
+
+    if (autozoom) {
+      map.fitBounds(layers[layerId].getBounds());
+    }
+  });
+};
+
+/*
     if (colorOptions !== null) {
       // get color palette etc
       const cols = colorOptions.palette;
@@ -165,6 +230,8 @@ LeafletWidget.methods.addCOG = function (url,
       if (colorOptions.breaks !== null) {
         scale = scale.classes(colorOptions.breaks);
       }
+    }
+*/
 /*
     let mins = georaster.mins;
     let maxs = georaster.maxs;
@@ -201,6 +268,8 @@ LeafletWidget.methods.addCOG = function (url,
       }
     }
 */
+
+/*
       // define pixel value -> colorm mapping (if not provided)
       if (pixelValuesToColorFn === null) {
         pixelValuesToColorFn = values => {
@@ -214,7 +283,7 @@ LeafletWidget.methods.addCOG = function (url,
         pixelValuesToColorFn = pixelValuesToColorFn;
       }
     }
-
+*/
 
     /*
         GeoRasterLayer is an extension of GridLayer,
@@ -222,17 +291,4 @@ LeafletWidget.methods.addCOG = function (url,
         Just make sure to include the georaster option!
         http://leafletjs.com/reference-1.2.0.html#gridlayer
     */
-    var layer = new GeoRasterLayer({
-        georaster,
-        resolution: resolution,
-        opacity: opacity,
-        pixelValuesToColorFn: pixelValuesToColorFn,
-        pane: pane
-    });
-    map.layerManager.addLayer(layer, null, layerId, group);
 
-    if (autozoom) {
-      map.fitBounds(layer.getBounds());
-    }
-  });
-};

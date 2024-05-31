@@ -1,4 +1,22 @@
-## leafem 0.2.0 (2022-04-16)
+# leafem 0.2.3.9002 (2024-05-29)
+
+#### ✨ features and improvements
+
+#### 🐛 bug fixes
+
+#### 💬 documentation etc
+
+#### 🍬 miscellaneous
+
+
+# leafem 0.2.3 (2023-09-17)
+
+# leafem 0.2.2 (2023-09-16)
+
+#### ✨ features and improvements
+
+  * new suite of functions to add PMTiles served from S3 bucket.
+  * `addFgb()` now responds to click, mouseover & mouseout in shiny (thanks to @dfriend21). #64
 
 #### ✨ features and improvements
 
@@ -10,13 +28,12 @@
   * update flatgeobuf geojson js lib to latest version. (https://github.com/r-spatial/mapview/issues/411)
   * fix parsing of negative coordinates in `clip2sfc()`. @famuvie #45
   * remove offending character conversion in `addStaticLabels()`. @jannes-m #47
-
-#### 💬 documentation etc
+  * address changes in latest `stars` version which caused CRAN ERRORs. #70
 
 #### 🍬 miscellaneous
 
-  * removed `gdalUtils` dependency using new `sf::st_layers()` instead. 
-
+  * removed `gdalUtils` dependency using new `sf::st_layers()` instead.
+  * remove `rgdal` from Suggests.
 
 ## leafem 0.1.8
 
@@ -30,16 +47,15 @@ bugfixes:
 new features:
 
   * new function addReactiveFeatures to show/hide one layer when clicking on another. #38
-  
+
 bugfixes:
 
   * imageQuery now properly updated in shiny. #27
   * homeButton did not work for extents with xmin = 0. #40
-  
+
 miscellaneous:
 
   * add(Raster/Stars)RGB default quantile stretching now between 0 & 1.
-
 
 ## leafem 0.1.3
 
@@ -49,7 +65,7 @@ new features:
   * new functions addGeotiff and addGeoRaster to render large raster data using https://github.com/GeoTIFF/georaster-layer-for-leaflet
 
 bugfixes:
-  
+
   * don't use st_zm for addFeatures.mapdeck
   * remove mousecoords strip only if it exists. #23
   * addFgb now respects pane passed via options.
@@ -68,7 +84,7 @@ new features:
   * addFeatures now also works with leaflet_proxy objects. Thanks Lorento Busetto #2.
   * new function `addFgb` to add flatgeobuf files from file or url.
   * addImageQuery now much more robust. Also works with leaflet_proxy objects now. Thanks to Sebastian Gatscha #9, #12, #13
-  
+
 miscellaneous:
 
   * garnishMap now uses match.arg and tries to be more robust.

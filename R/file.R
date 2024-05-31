@@ -303,6 +303,8 @@ addTileFolder = function(map,
 #'   to define css for the popup.
 #' @param scale named list with instructions on how to scale radius, width,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
+#' @param minZoom minimum zoom level at which data should be rendered.
+#' @param maxZoom maximum zoom level at which data should be rendered.
 #' @param ... currently not used.
 #'
 #' @examples
@@ -354,7 +356,12 @@ addFgb = function(map,
                   options = NULL,
                   className = NULL,
                   scale = scaleOptions(),
+                  minZoom = NULL,
+                  maxZoom = 52,
                   ...) {
+
+
+  scaleFields = NULL
 
   # if (!is.null(fillColor)) fill = TRUE
 
@@ -367,10 +374,11 @@ addFgb = function(map,
     group = basename(tools::file_path_sans_ext(file))
 
   if (is.null(layerId)) layerId = group
-  layerId = gsub("\\.", "_", layerId)
-  layerId = gsub(" ", "", layerId)
-  layerId = gsub('\\"', '', layerId)
-  layerId = gsub("\\'", "", layerId)
+  layerId = gsub("[[:punct:] ]", "_", layerId)
+  # layerId = gsub("\\.", "_", layerId)
+  # layerId = gsub(" ", "", layerId)
+  # layerId = gsub('\\"', '', layerId)
+  # layerId = gsub("\\'", "", layerId)
 
   if (!is.null(file)) {
     if (!file.exists(file)) {
@@ -412,20 +420,44 @@ addFgb = function(map,
       , fileAttachment(path_layer, layerId)
     )
 
-    leaflet::invokeMethod(
-      map
-      , leaflet::getMapData(map)
-      , "addFlatGeoBuf"
-      , layerId
-      , group
-      , url
-      , popup
-      , label
-      , style_list
-      , options
-      , className
-      , scale
-    )
+    if (!is.null(minZoom)) {
+      if (is.null(maxZoom)) {
+        maxZoom = 19
+      }
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBufFiltered"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+        , minZoom
+        , maxZoom
+      )
+    } else {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBuf"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+      )
+    }
   } else {
     style_list = list(radius = radius,
                       stroke = stroke,
@@ -444,20 +476,44 @@ addFgb = function(map,
       , chromaJsDependencies()
     )
 
-    leaflet::invokeMethod(
-      map
-      , leaflet::getMapData(map)
-      , "addFlatGeoBuf"
-      , layerId
-      , group
-      , url
-      , popup
-      , label
-      , style_list
-      , options
-      , className
-      , scale
-    )
+    if (!is.null(minZoom)) {
+      if (is.null(maxZoom)) {
+        maxZoom = 19
+      }
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBufFiltered"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+        , minZoom
+        , maxZoom
+      )
+    } else {
+      leaflet::invokeMethod(
+        map
+        , leaflet::getMapData(map)
+        , "addFlatGeoBuf"
+        , layerId
+        , group
+        , url
+        , popup
+        , label
+        , style_list
+        , options
+        , className
+        , scale
+        , scaleFields
+      )
+    }
   }
 
 }

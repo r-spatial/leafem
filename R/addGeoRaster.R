@@ -459,7 +459,7 @@ leafletGeoRasterDependencies = function() {
       script = c(
         "georaster.min.js"
         , "geoblaze.js"
-        , "georaster-layer-for-leaflet-3.7.1.min.js"
+        , "georaster-layer-for-leaflet.min.js"
         , "georaster-binding.js"
         , "georasterUtils.js"
         , "mathjs.min.js"

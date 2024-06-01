@@ -2,20 +2,34 @@
 % Please edit documentation in R/logo.R
 \name{addLogo}
 \alias{addLogo}
+\alias{updateLogo}
+\alias{removeLogo}
+\alias{hideLogo}
+\alias{showLogo}
 \title{add a local or remote image (png, jpg, gif, bmp, ...) to a leaflet map}
 \usage{
 addLogo(
   map,
   img,
   alpha = 1,
-  src = c("remote", "local"),
-  url,
+  src = NULL,
+  url = NULL,
   position = c("topleft", "topright", "bottomleft", "bottomright"),
   offset.x = 50,
   offset.y = 13,
   width = 60,
-  height = 60
+  height = 60,
+  class = NULL,
+  layerId = NULL
 )
+
+updateLogo(map, img, layerId)
+
+removeLogo(map, layerId)
+
+hideLogo(map, layerId)
+
+showLogo(map, layerId)
 }
 \arguments{
 \item{map}{a mapview or leaflet object.}
@@ -24,8 +38,8 @@ addLogo(
 
 \item{alpha}{opacity of the added image.}
 
-\item{src}{character specifying the source location ("local" for images from
-the disk, "remote" for web image sources).}
+\item{src}{DEPRECATED. The function now automatically determines if `img` is
+a local or remote image using `file.exists(img)`.}
 
 \item{url}{an optional URL to be opened when clicking on the image
 (e.g. company's homepage).}
@@ -39,6 +53,10 @@ the disk, "remote" for web image sources).}
 \item{width}{width of the rendered image in pixels.}
 
 \item{height}{height of the rendered image in pixels.}
+
+\item{class}{optional class}
+
+\item{layerId}{an id for the logo div.}
 }
 \description{
 This function adds an image to a map. Both local and remote (web) image

@@ -84,7 +84,7 @@ addStarsImage <- function(
   if (project) {
     # if we should project the data
     if (utils::packageVersion("stars") >= "0.4-1") {
-      projected = stars::st_warp(x, crs = 3857, method = method)
+      projected = stars::st_warp(x, crs = 3857, method = method, use_gdal = TRUE)
     } else {
       projected <- sf::st_transform(x, crs = 3857)
     }

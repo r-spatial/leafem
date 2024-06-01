@@ -14,6 +14,7 @@ addRasterRGB(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
+  method = c("auto", "bilinear", "near"),
   ...
 )
 
@@ -26,6 +27,7 @@ addStarsRGB(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
+  method = c("auto", "bilinear", "near"),
   ...
 )
 }
@@ -49,6 +51,11 @@ If both `domain` and `quantiles` are set to NULL, stretching is applied
 based on min-max values.}
 
 \item{na.color}{the color to be used for NA pixels}
+
+\item{method}{the method used for computing values of the new, projected raster image.
+\code{"bilinear"} (the default) is appropriate for continuous data,
+\code{"ngb"} - nearest neighbor - is appropriate for categorical data.
+Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
 
 \item{...}{additional arguments passed on to \code{\link{addRasterImage}}}
 }

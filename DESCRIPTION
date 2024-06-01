@@ -1,6 +1,6 @@
 Package: leafem
 Title: 'leaflet' Extensions for 'mapview'
-Version: 0.2.3.9002
+Version: 0.2.3.9005
 Authors@R:
     c(person(given = "Tim",
              family = "Appelhans",
@@ -85,7 +85,9 @@ Suggests:
     lwgeom,
     mapdeck,
     plainview,
-    stars
+    stars,
+    terra,
+    tools
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.3.1

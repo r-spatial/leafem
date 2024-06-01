@@ -147,7 +147,7 @@ addGeoRaster = function(map,
 #'   Default is \code{TRUE}
 #' @param imagequery If \code{TRUE} a leaflet control with the hovered/clicked
 #'   value will appear on the map.
-#' @param queryOptions additional options for the control panel.
+#' @param imagequeryOptions additional options for the control panel.
 #' @param ... currently not used.
 #'
 #' @return
@@ -200,7 +200,7 @@ addGeotiff = function(map,
                       pixelValuesToColorFn = NULL,
                       autozoom = TRUE,
                       imagequery = TRUE,
-                      queryOptions = imagequeryOptions(),
+                      imagequeryOptions = NULL,
                       ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -218,17 +218,8 @@ addGeotiff = function(map,
     warning("The layerId is invalid. Maybe it contains spaces?")
   }
 
-  queryOptions[["imagequery"]] <- imagequery
-  if (isTRUE(imagequery)) {
-    ctrl_nm = paste("rasterValues", layerId, sep = "-")
-    map = leaflet::addControl(
-      map,
-      html = "",
-      layerId = ctrl_nm,
-      position = queryOptions[["position"]],
-      className = paste(queryOptions[["className"]], " rastervals")
-    )
-  }
+  if (missing(imagequeryOptions)) imagequeryOptions <- imagequeryOptions()
+  imagequeryOptions[["imagequery"]] <- imagequery
 
   if (is.null(colorOptions)) {
     colorOptions = colorOptions()
@@ -307,7 +298,7 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
-      , queryOptions
+      , imagequeryOptions
     )
   } else {
     map$dependencies <- c(
@@ -332,7 +323,7 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
-      , queryOptions
+      , imagequeryOptions
     )
   }
 
@@ -398,7 +389,7 @@ addCOG = function(map,
                   autozoom = TRUE,
                   rgb = FALSE,
                   imagequery = TRUE,
-                  queryOptions = imagequeryOptions(),
+                  imagequeryOptions = NULL,
                   ...) {
 
   if (is.null(group))
@@ -416,17 +407,8 @@ addCOG = function(map,
     , chromaJsDependencies()
   )
 
-  queryOptions[["imagequery"]] <- imagequery
-  if (isTRUE(imagequery)) {
-    ctrl_nm = paste("rasterValues", layerId, sep = "-")
-    map = leaflet::addControl(
-      map,
-      html = "",
-      layerId = ctrl_nm,
-      position = queryOptions[["position"]],
-      className = paste(queryOptions[["className"]], " rastervals")
-    )
-  }
+  if (missing(imagequeryOptions)) imagequeryOptions <- imagequeryOptions()
+  imagequeryOptions[["imagequery"]] <- imagequery
 
   leaflet::invokeMethod(
     map
@@ -442,7 +424,7 @@ addCOG = function(map,
     , pixelValuesToColorFn
     , autozoom
     , rgb
-    , queryOptions
+    , imagequeryOptions
   )
 }
 

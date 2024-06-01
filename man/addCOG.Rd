@@ -17,7 +17,7 @@ addCOG(
   autozoom = TRUE,
   rgb = FALSE,
   imagequery = TRUE,
-  queryOptions = imagequeryOptions(),
+  imagequeryOptions = NULL,
   ...
 )
 }
@@ -55,7 +55,7 @@ Default is \code{TRUE}}
 \item{imagequery}{If \code{TRUE} a leaflet control with the hovered/clicked
 value will appear on the map.}
 
-\item{queryOptions}{additional options for the control panel.}
+\item{imagequeryOptions}{additional options for the control panel.}
 
 \item{...}{currently not used.}
 }

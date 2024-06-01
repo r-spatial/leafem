@@ -23,6 +23,7 @@
 #'   If both `domain` and `quantiles` are set to NULL, stretching is applied
 #'   based on min-max values.
 #' @param na.color the color to be used for NA pixels
+#' @inheritParams leaflet::addRasterImage
 #' @param ... additional arguments passed on to \code{\link{addRasterImage}}
 #'
 #' @author
@@ -59,6 +60,7 @@ addRasterRGB <- function(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
+  method = c("auto", "bilinear", "near"),
   ...
 ) {
 
@@ -72,13 +74,55 @@ addRasterRGB <- function(
     }
   }
 
-  if (inherits(x, "Raster")) {
+  isRaster <- inherits(x, "Raster")
+  isTerra <- inherits(x, "SpatRaster")
+
+  if (isRaster || isTerra) {
+    method <- match.arg(method)
+    if (method == "auto") {
+      if (isRaster) {
+        raster_is_factor <- raster::is.factor(x[[r]])
+        has_colors = FALSE
+      }
+      if (isTerra) {
+        raster_is_factor <- terra::is.factor(x[[r]])
+        # there 1.5-50 has terra::has.colors(x)
+        ctab <- terra::coltab(x[[r]])[[1]]
+        has_colors <- !is.null(ctab)
+      }
+      if (raster_is_factor || has_colors) {
+        method <- "near"
+      } else {
+        method <- "bilinear"
+      }
+    }
+
+    if (!terra::same.crs(x, "EPSG:3857")) {
+      if (isRaster) {
+        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"))
+      }
+      if (isTerra) {
+        x = terra::project(x, y = "EPSG:3857", method = method)
+      }
+    }
 
     mat <- cbind(x[[r]][],
                  x[[g]][],
                  x[[b]][])
 
   } else if (inherits(x, "stars")) {
+    raster_is_factor <- is.factor(x[[1]])
+    method <- match.arg(method)
+    if (method == "auto") {
+      if (raster_is_factor) {
+        method <- "near"
+      } else {
+        method <- "bilinear"
+      }
+    }
+    x = suppressWarnings(
+      stars::st_warp(x, crs = "EPSG:3857", method = method, use_gdal = TRUE)
+    )
 
     mat <- cbind(as.vector(x[[1]][, , r]),
                  as.vector(x[[1]][, , g]),
@@ -86,10 +130,9 @@ addRasterRGB <- function(
 
   } else {
 
-    stop("'x' must be a Raster* or stars object.")
+    stop("'x' must be a Raster*, stars or terra object.")
 
   }
-
 
   if (!is.null(quantiles)) {
 
@@ -112,18 +155,19 @@ addRasterRGB <- function(
     mat <- apply(mat, 2, rscl)
   }
 
-  na_indx <- apply(mat, 1, anyNA)
+  na_indx <- rowSums(is.na(mat)) > 0
   cols <- mat[, 1]
   cols[na_indx] <- na.color
   cols[!na_indx] <- grDevices::rgb(mat[!na_indx, ], alpha = 1)
   p <- function(x) cols
 
-  lyrs <- paste(r, g, b, sep = ".")
-
   dotlst = list(...)
-  dotlst = utils::modifyList(dotlst, list(map = map, colors = p))
-  out <- if (inherits(x, "Raster")) {
+  dotlst = utils::modifyList(dotlst, list(map = map, colors = p, method = method))
+  out <- if (isRaster) {
     dotlst = utils::modifyList(dotlst, list(x = x[[r]]))
+    do.call(addRasterImage, dotlst)
+  } else if (isTerra) {
+    dotlst = utils::modifyList(dotlst, list(x = x[[r]], project = FALSE))
     do.call(addRasterImage, dotlst)
   } else {
     dotlst = utils::modifyList(dotlst, list(x = x))

@@ -14,8 +14,9 @@ addStarsImage(
   layerId = NULL,
   group = NULL,
   project = FALSE,
-  method = c("auto", "bilinear", "ngb"),
+  method = c("auto", "bilinear", "near"),
   maxBytes = 4 * 1024 * 1024,
+  options = gridOptions(),
   data = getMapData(map),
   ...
 )
@@ -27,9 +28,11 @@ addStarsImage(
 
 \item{band}{the band number to be plotted.}
 
-\item{colors}{the color palette (see colorNumeric) or function to use to
-color the raster values (hint: if providing a function, set na.color
-to "#00000000" to make NA areas transparent)}
+\item{colors}{the color palette (see \code{\link[leaflet]{colorNumeric}}) or function
+to use to color the raster values (hint: if providing a function, set
+\code{na.color} to \code{"#00000000"} to make \code{NA} areas transparent).
+The palette is ignored if \code{x} is a SpatRaster with a color table or if
+it has RGB channels.}
 
 \item{opacity}{the base opacity of the raster, expressed from 0 to 1}
 
@@ -37,21 +40,25 @@ to "#00000000" to make NA areas transparent)}
 
 \item{layerId}{the layer id}
 
-\item{group}{the name of the group this raster image should belong to
-(see the same parameter under addTiles)}
+\item{group}{the name of the group this raster image should belong to (see
+the same parameter under \code{\link[leaflet]{addTiles}})}
 
-\item{project}{if TRUE, automatically project x to the map projection
-expected by Leaflet (EPSG:3857); if FALSE, it's the caller's responsibility
-to ensure that x is already projected, and that extent(x) is
-expressed in WGS84 latitude/longitude coordinates}
+\item{project}{if \code{TRUE}, automatically project \code{x} to the map
+projection expected by Leaflet (\code{EPSG:3857}); if \code{FALSE}, it's
+the caller's responsibility to ensure that \code{x} is already projected,
+and that \code{extent(x)} is expressed in WGS84 latitude/longitude
+coordinates}
 
-\item{method}{the method used for computing values of the new,
-projected raster image. "bilinear" (the default) is appropriate for
-continuous data, "ngb" - nearest neighbor - is appropriate for categorical data.
-Ignored if project = FALSE. See projectRaster for details.}
+\item{method}{the method used for computing values of the new, projected raster image.
+\code{"bilinear"} (the default) is appropriate for continuous data,
+\code{"ngb"} - nearest neighbor - is appropriate for categorical data.
+Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
 
 \item{maxBytes}{the maximum number of bytes to allow for the projected image
 (before base64 encoding); defaults to 4MB.}
+
+\item{options}{a list of additional options, intended to be provided by
+a call to \code{\link[leaflet]{gridOptions}}}
 
 \item{data}{the data object from which the argument values are derived; by
 default, it is the \code{data} object provided to \code{leaflet()}

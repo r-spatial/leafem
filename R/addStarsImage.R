@@ -152,10 +152,12 @@ addStarsImage <- function(
   map = leaflet::invokeMethod(
     map, data, "addRasterImage", uri, latlng,
     layerId, group, options
-  ) %>%
-    leaflet::expandLimits(
-      c(bounds[2], bounds[4]),
-      c(bounds[1], bounds[3])
-    )
+  )
+
+  leaflet::expandLimits(
+    map,
+    c(bounds[2], bounds[4]),
+    c(bounds[1], bounds[3])
+  )
 
 }

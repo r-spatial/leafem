@@ -60,7 +60,7 @@ addRasterRGB <- function(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
-  method = c("auto", "bilinear", "ngb"),
+  method = c("auto", "bilinear", "near"),
   ...
 ) {
 
@@ -97,8 +97,13 @@ addRasterRGB <- function(
       }
     }
 
-    if (isTerra && !terra::same.crs(x, "EPSG:3857")) {
-      x <- leaflet::projectRasterForLeaflet(x, method)
+    if (!terra::same.crs(x, "EPSG:3857")) {
+      if (isRaster) {
+        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"))
+      }
+      if (isTerra) {
+        x = terra::project(x, y = "EPSG:3857", method = method)
+      }
     }
 
     mat <- cbind(x[[r]][],
@@ -106,6 +111,18 @@ addRasterRGB <- function(
                  x[[b]][])
 
   } else if (inherits(x, "stars")) {
+    raster_is_factor <- is.factor(x[[1]])
+    method <- match.arg(method)
+    if (method == "auto") {
+      if (raster_is_factor) {
+        method <- "near"
+      } else {
+        method <- "bilinear"
+      }
+    }
+    x = suppressWarnings(
+      stars::st_warp(x, crs = "EPSG:3857", method = method, use_gdal = TRUE)
+    )
 
     mat <- cbind(as.vector(x[[1]][, , r]),
                  as.vector(x[[1]][, , g]),

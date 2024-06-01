@@ -1,16 +1,22 @@
-function mouseHandler(map, georaster, layerId, group, eventName) {
+function mouseHandler(map, georaster, layerId, group, eventName, type, digits, prefix) {
   return function(e) {
-    let outputWidget = getInfoLegend(layerId);
+
+    let outputWidget = "";
+    let finaltype = "georaster_" + type;
+    outputWidget = getInfoLegend(layerId);
     if (!(map.layerManager.getVisibleGroups().includes(group))) {
       $(outputWidget).hide();
       return;
     }
 
     let latLng = this.mouseEventToLatLng(e.originalEvent);
+
     let val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
 
     if (val) {
-      outputWidget.innerHTML = renderInfo(val, layerId, 1, "");
+      if (finaltype == eventName) {
+        outputWidget.innerHTML = renderInfo(val, layerId, digits, prefix);
+      }
       let eventInfo = $.extend({
         id: layerId,
         ".nonce": Math.random(),  // force reactivity
@@ -23,7 +29,9 @@ function mouseHandler(map, georaster, layerId, group, eventName) {
         Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
       }
     } else {
-      $(outputWidget).hide();
+      if (finaltype == eventName) {
+        $(outputWidget).hide();
+      }
       if (HTMLWidgets.shinyMode) {
         Shiny.onInputChange(map.id + "_" + eventName, null);
       }
@@ -32,7 +40,12 @@ function mouseHandler(map, georaster, layerId, group, eventName) {
 }
 function renderInfo(val, layerId, digits, prefix) {
   $(document.getElementById("rasterValues-" + layerId)).show();
-  let text = "<small>"+ "Layer"+ " <strong> "+ layerId + ": </strong>"+ val + "</small>";
+  let text = "";
+  if(digits === "null" || digits === null) {
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val + "</small>";
+  } else {
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val[0].toFixed(digits)+ "</small>";
+  }
   return text;
 }
 function getInfoLegend(layerId) {
@@ -55,7 +68,10 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              colorOptions,
                                              rgb,
                                              pixelValuesToColorFn,
-                                             autozoom) {
+                                             autozoom,
+                                             type,
+                                             digits,
+                                             prefix) {
 
   var map = this;
 
@@ -173,9 +189,11 @@ LeafletWidget.methods.addGeotiff = function (url,
         if (autozoom) {
           map.fitBounds(layer.getBounds());
         }
-        
-        map.on("click", mouseHandler(map, georaster, layerId, group, "georaster_click"), this);
-        map.on("mousemove", mouseHandler(map, georaster, layerId, group, "georaster_mousemove"), this);
+
+        map.on("click", mouseHandler(map, georaster, layerId,
+          group, "georaster_click", type, digits, prefix), this);
+        map.on("mousemove", mouseHandler(map, georaster, layerId,
+          group, "georaster_mousemove", type, digits, prefix), this);
       });
     });
 };
@@ -190,7 +208,10 @@ LeafletWidget.methods.addCOG = function (url,
                                          colorOptions,
                                          pixelValuesToColorFn,
                                          autozoom,
-                                         rgb) {
+                                         rgb,
+                                         type,
+                                         digits,
+                                         prefix) {
 
   var map = this;
   var pane;  // could also use let
@@ -202,21 +223,30 @@ LeafletWidget.methods.addCOG = function (url,
 
   var layers = layers || {};
 
-  parseGeoraster(url).then(georaster => {
-    console.log("georaster:", georaster);
+  fetch(url).then((response) => {
+    response.arrayBuffer().then((arrayBuffer) => {
+      var georaster = parseGeoraster(arrayBuffer).then((georaster) => {
 
-    layers[layerId] = new GeoRasterLayer({
-      georaster,
-      resolution: resolution,
-      opacity: opacity,
-      pixelValuesToColorFn: pixelValuesToColorFn,
-      pane: pane
+        layers[layerId] = new GeoRasterLayer({
+          georaster,
+          resolution: resolution,
+          opacity: opacity,
+          pixelValuesToColorFn: pixelValuesToColorFn,
+          pane: pane
+        });
+        map.layerManager.addLayer(layers[layerId], null, layerId, group);
+
+        console.log("layers[layerId].georasters"); console.log(layers[layerId].georasters)
+        map.on("click", mouseHandler(map, layers[layerId].georasters[0], layerId,
+          group, "georaster_click", type, digits, prefix), this);
+        map.on("mousemove", mouseHandler(map, layers[layerId].georasters[0], layerId,
+          group, "georaster_mousemove", type, digits, prefix), this);
+
+        if (autozoom) {
+          map.fitBounds(layers[layerId].getBounds());
+        }
+      });
     });
-    map.layerManager.addLayer(layers[layerId], null, layerId, group);
-
-    if (autozoom) {
-      map.fitBounds(layers[layerId].getBounds());
-    }
   });
 };
 

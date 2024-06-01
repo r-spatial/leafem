@@ -50,7 +50,7 @@ See \url{https://github.com/r-spatial/leafem/issues/25} for some examples.}
 \item{autozoom}{whether to automatically zoom to the full extent of the layer.
 Default is \code{TRUE}}
 
-\item{...}{currently not used.}
+\item{...}{Further arguments passed to \code{\link[leafem]{addGeotiff}}.}
 }
 \value{
 A leaflet map object.

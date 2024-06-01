@@ -26,7 +26,7 @@
 #'   See \url{https://github.com/r-spatial/leafem/issues/25} for some examples.
 #' @param autozoom whether to automatically zoom to the full extent of the layer.
 #'   Default is \code{TRUE}
-#' @param ... currently not used.
+#' @param ... Further arguments passed to \code{\link[leafem]{addGeotiff}}.
 #'
 #' @return
 #' A leaflet map object.
@@ -98,7 +98,8 @@ addGeoRaster = function(map,
     , colorOptions = colorOptions
     , pixelValuesToColorFn = pixelValuesToColorFn
     , autozoom = autozoom
-  )
+    , ...
+    )
 
 }
 
@@ -144,7 +145,10 @@ addGeoRaster = function(map,
 #'   some examples.
 #' @param autozoom whether to automatically zoom to the full extent of the layer.
 #'   Default is \code{TRUE}
+#' @param imagequery If \code{TRUE} a leaflet control with the hovered/clicked
+#'   value will appear on the map.
 #' @param ... currently not used.
+#' @inheritParams addImageQuery
 #'
 #' @return
 #' A leaflet map object.
@@ -195,6 +199,12 @@ addGeotiff = function(map,
                       rgb = FALSE,
                       pixelValuesToColorFn = NULL,
                       autozoom = TRUE,
+                      imagequery = TRUE,
+                      className = "info legend",
+                      position = c("topright", "topleft", "bottomleft", "bottomright"),
+                      type = c("mousemove", "click"),
+                      digits = NULL,
+                      prefix = "Layer",
                       ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -212,15 +222,16 @@ addGeotiff = function(map,
     warning("The layerId is invalid. Maybe it contains spaces?")
   }
 
-  ## Add Legend Control if `imagequery` == TRUE
-  if (TRUE) {
+  type = match.arg(type)
+  if (isTRUE(imagequery)) {
+    position <- match.arg(position)
     ctrl_nm = paste("rasterValues", layerId, sep = "-")
     map = leaflet::addControl(
       map,
       html = "",
       layerId = ctrl_nm,
-      position = "topright",
-      className = paste("info legend rastervals", "className")
+      position = position,
+      className = paste(className, " rastervals")
     )
   }
 
@@ -302,6 +313,9 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
+      , type
+      , digits
+      , prefix
     )
   } else {
     map$dependencies <- c(
@@ -326,6 +340,9 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
+      , type
+      , digits
+      , prefix
     )
   }
 
@@ -343,23 +360,17 @@ addGeotiff = function(map,
 #'
 #' @param map the map to add the COG to.
 #' @param url url to the COG file to render.
-#' @param group he name of the group this COG should belong to.
-#' @param layerId the layerId.
-#' @param resolution the target resolution for the simple nearest neighbor
-#'   interpolation. Larger values will result in more detailed rendering,
-#'   but may impact performance. Default is 96 (pixels).
-#' @param opacity image opacity.
-#' @param options see [leaflet](tileOptions).
 #' @param colorOptions list defining the palette, breaks and na.color to be used.
 #'   Currently not used.
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
 #'   some examples. Currently not used.
-#' @param autozoom whether to automatically zoom to the full extent of the layer.
-#'   Default is \code{TRUE}.
 #' @param rgb logical, whether to render Geotiff as RGB. Currently not used.
 #' @param ... currently not used.
+#'
+#' @inheritParams addGeotiff
+#' @inheritParams addImageQuery
 #'
 #' @return
 #' A leaflet map object.
@@ -393,17 +404,45 @@ addCOG = function(map,
                   resolution = 96,
                   opacity = 0.8,
                   options = leaflet::tileOptions(),
-                  colorOptions = NULL, #colorOptions(),
+                  colorOptions = NULL,
                   pixelValuesToColorFn = NULL,
                   autozoom = TRUE,
                   rgb = FALSE,
+                  imagequery = TRUE,
+                  className = "info legend",
+                  position = c("topright", "topleft", "bottomleft", "bottomright"),
+                  digits = NULL,
+                  type = c("mousemove", "click"),
+                  prefix = "Layer",
                   ...) {
+
+  if (is.null(group))
+    group = basename(url)
+
+  if (is.null(layerId)) layerId = group
+  layerId = gsub("\\.", "_", layerId)
+  if (grepl("\\s", layerId)) {
+    warning("The layerId is invalid. Maybe it contains spaces?")
+  }
 
   map$dependencies <- c(
     map$dependencies
     , leafletGeoRasterDependencies()
     , chromaJsDependencies()
   )
+
+  type = match.arg(type)
+  if (isTRUE(imagequery)) {
+    position <- match.arg(position)
+    ctrl_nm = paste("rasterValues", layerId, sep = "-")
+    map = leaflet::addControl(
+      map,
+      html = "",
+      layerId = ctrl_nm,
+      position = position,
+      className = paste(className, " rastervals")
+    )
+  }
 
   leaflet::invokeMethod(
     map
@@ -419,6 +458,9 @@ addCOG = function(map,
     , pixelValuesToColorFn
     , autozoom
     , rgb
+    , type
+    , digits
+    , prefix
   )
 }
 

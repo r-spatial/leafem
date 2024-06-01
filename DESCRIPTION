@@ -86,6 +86,7 @@ Suggests:
     mapdeck,
     plainview,
     stars,
+    terra,
     tools
 Encoding: UTF-8
 LazyData: false

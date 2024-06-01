@@ -22,11 +22,7 @@ addGeotiff(
   pixelValuesToColorFn = NULL,
   autozoom = TRUE,
   imagequery = TRUE,
-  className = "info legend",
-  position = c("topright", "topleft", "bottomleft", "bottomright"),
-  type = c("mousemove", "click"),
-  digits = NULL,
-  prefix = "Layer",
+  queryOptions = imagequeryOptions(),
   ...
 )
 }
@@ -79,16 +75,7 @@ Default is \code{TRUE}}
 \item{imagequery}{If \code{TRUE} a leaflet control with the hovered/clicked
 value will appear on the map.}
 
-\item{className}{a character string to append to the control legend.}
-
-\item{position}{where to place the display field. Default is 'topright'.}
-
-\item{type}{whether query should occur on 'mousemove' or 'click'. Defaults
-to 'mousemove'.}
-
-\item{digits}{the number of digits to be shown in the display field.}
-
-\item{prefix}{a character string to be shown as prefix for the layerId.}
+\item{queryOptions}{additional options for the control panel.}
 
 \item{...}{currently not used.}
 }

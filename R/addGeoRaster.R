@@ -147,8 +147,8 @@ addGeoRaster = function(map,
 #'   Default is \code{TRUE}
 #' @param imagequery If \code{TRUE} a leaflet control with the hovered/clicked
 #'   value will appear on the map.
+#' @param queryOptions additional options for the control panel.
 #' @param ... currently not used.
-#' @inheritParams addImageQuery
 #'
 #' @return
 #' A leaflet map object.
@@ -200,11 +200,7 @@ addGeotiff = function(map,
                       pixelValuesToColorFn = NULL,
                       autozoom = TRUE,
                       imagequery = TRUE,
-                      className = "info legend",
-                      position = c("topright", "topleft", "bottomleft", "bottomright"),
-                      type = c("mousemove", "click"),
-                      digits = NULL,
-                      prefix = "Layer",
+                      queryOptions = imagequeryOptions(),
                       ...) {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
@@ -222,22 +218,20 @@ addGeotiff = function(map,
     warning("The layerId is invalid. Maybe it contains spaces?")
   }
 
-  type = match.arg(type)
+  queryOptions[["imagequery"]] <- imagequery
   if (isTRUE(imagequery)) {
-    position <- match.arg(position)
     ctrl_nm = paste("rasterValues", layerId, sep = "-")
     map = leaflet::addControl(
       map,
       html = "",
       layerId = ctrl_nm,
-      position = position,
-      className = paste(className, " rastervals")
+      position = queryOptions[["position"]],
+      className = paste(queryOptions[["className"]], " rastervals")
     )
   }
 
   if (is.null(colorOptions)) {
     colorOptions = colorOptions()
-
   }
 
   if (is.null(arith)) {
@@ -313,9 +307,7 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
-      , type
-      , digits
-      , prefix
+      , queryOptions
     )
   } else {
     map$dependencies <- c(
@@ -340,9 +332,7 @@ addGeotiff = function(map,
       , rgb
       , pixelValuesToColorFn
       , autozoom
-      , type
-      , digits
-      , prefix
+      , queryOptions
     )
   }
 
@@ -370,7 +360,6 @@ addGeotiff = function(map,
 #' @param ... currently not used.
 #'
 #' @inheritParams addGeotiff
-#' @inheritParams addImageQuery
 #'
 #' @return
 #' A leaflet map object.
@@ -409,11 +398,7 @@ addCOG = function(map,
                   autozoom = TRUE,
                   rgb = FALSE,
                   imagequery = TRUE,
-                  className = "info legend",
-                  position = c("topright", "topleft", "bottomleft", "bottomright"),
-                  digits = NULL,
-                  type = c("mousemove", "click"),
-                  prefix = "Layer",
+                  queryOptions = imagequeryOptions(),
                   ...) {
 
   if (is.null(group))
@@ -431,16 +416,15 @@ addCOG = function(map,
     , chromaJsDependencies()
   )
 
-  type = match.arg(type)
+  queryOptions[["imagequery"]] <- imagequery
   if (isTRUE(imagequery)) {
-    position <- match.arg(position)
     ctrl_nm = paste("rasterValues", layerId, sep = "-")
     map = leaflet::addControl(
       map,
       html = "",
       layerId = ctrl_nm,
-      position = position,
-      className = paste(className, " rastervals")
+      position = queryOptions[["position"]],
+      className = paste(queryOptions[["className"]], " rastervals")
     )
   }
 
@@ -458,12 +442,30 @@ addCOG = function(map,
     , pixelValuesToColorFn
     , autozoom
     , rgb
-    , type
-    , digits
-    , prefix
+    , queryOptions
   )
 }
 
+
+#' Imagequery options for addGeoRaster, addGeotiff and addCOG
+#'
+#' @inheritParams addImageQuery
+#' @export
+imagequeryOptions <- function(className = "info legend",
+                              position = c("topright", "topleft", "bottomleft", "bottomright"),
+                              type = c("mousemove", "click"),
+                              digits = NULL,
+                              prefix = "Layer") {
+  type = match.arg(type)
+  position <- match.arg(position)
+  list(
+    className = className,
+    position = position,
+    type = type,
+    digits = digits,
+    prefix = prefix
+  )
+}
 
 #' Color options for addGeoRaster and addGeotiff
 #'

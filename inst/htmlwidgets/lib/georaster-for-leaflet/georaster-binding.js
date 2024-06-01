@@ -1,9 +1,8 @@
-function mouseHandler(map, georaster, layerId, group, eventName, type, digits, prefix) {
+function mouseHandler(map, georaster, layerId, group, eventName, options) {
   return function(e) {
 
-    let outputWidget = "";
-    let finaltype = "georaster_" + type;
-    outputWidget = getInfoLegend(layerId);
+    let outputWidget = getInfoLegend(layerId);
+
     if (!(map.layerManager.getVisibleGroups().includes(group))) {
       $(outputWidget).hide();
       return;
@@ -13,9 +12,19 @@ function mouseHandler(map, georaster, layerId, group, eventName, type, digits, p
 
     let val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
 
+    let query = false
+    if ((options && options.imagequery)) {
+      query = options.imagequery
+    }
+    let type = ""
+    if ((options && options.type)) {
+      type = options.type
+    }
+    let finaltype = "georaster_" + type;
+
     if (val) {
-      if (finaltype == eventName) {
-        outputWidget.innerHTML = renderInfo(val, layerId, digits, prefix);
+      if (query && finaltype == eventName) {
+        outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix);
       }
       let eventInfo = $.extend({
         id: layerId,
@@ -29,7 +38,7 @@ function mouseHandler(map, georaster, layerId, group, eventName, type, digits, p
         Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
       }
     } else {
-      if (finaltype == eventName) {
+      if (query && finaltype == eventName) {
         $(outputWidget).hide();
       }
       if (HTMLWidgets.shinyMode) {
@@ -69,9 +78,7 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              rgb,
                                              pixelValuesToColorFn,
                                              autozoom,
-                                             type,
-                                             digits,
-                                             prefix) {
+                                             imagequeryOptions) {
 
   var map = this;
 
@@ -191,9 +198,9 @@ LeafletWidget.methods.addGeotiff = function (url,
         }
 
         map.on("click", mouseHandler(map, georaster, layerId,
-          group, "georaster_click", type, digits, prefix), this);
+          group, "georaster_click", imagequeryOptions), this);
         map.on("mousemove", mouseHandler(map, georaster, layerId,
-          group, "georaster_mousemove", type, digits, prefix), this);
+          group, "georaster_mousemove", imagequeryOptions), this);
       });
     });
 };
@@ -209,9 +216,7 @@ LeafletWidget.methods.addCOG = function (url,
                                          pixelValuesToColorFn,
                                          autozoom,
                                          rgb,
-                                         type,
-                                         digits,
-                                         prefix) {
+                                         imagequeryOptions) {
 
   var map = this;
   var pane;  // could also use let
@@ -236,11 +241,10 @@ LeafletWidget.methods.addCOG = function (url,
         });
         map.layerManager.addLayer(layers[layerId], null, layerId, group);
 
-        console.log("layers[layerId].georasters"); console.log(layers[layerId].georasters)
         map.on("click", mouseHandler(map, layers[layerId].georasters[0], layerId,
-          group, "georaster_click", type, digits, prefix), this);
+          group, "georaster_click", imagequeryOptions), this);
         map.on("mousemove", mouseHandler(map, layers[layerId].georasters[0], layerId,
-          group, "georaster_mousemove", type, digits, prefix), this);
+          group, "georaster_mousemove", imagequeryOptions), this);
 
         if (autozoom) {
           map.fitBounds(layers[layerId].getBounds());

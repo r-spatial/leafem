@@ -41,7 +41,7 @@ addStarsImage <- function(
   , layerId = NULL
   , group = NULL
   , project = FALSE
-  , method = c("auto", "bilinear", "ngb")
+  , method = c("auto", "bilinear", "near")
   , maxBytes = 4 * 1024 * 1024
   , options = gridOptions()
   , data = getMapData(map)
@@ -71,7 +71,7 @@ addStarsImage <- function(
   method <- match.arg(method)
   if (method == "auto") {
     if (raster_is_factor) {
-      method <- "ngb"
+      method <- "near"
     } else {
       method <- "bilinear"
     }
@@ -84,7 +84,7 @@ addStarsImage <- function(
   if (project) {
     # if we should project the data
     if (utils::packageVersion("stars") >= "0.4-1") {
-      projected = stars::st_warp(x, crs = 3857)
+      projected = stars::st_warp(x, crs = 3857, method = method)
     } else {
       projected <- sf::st_transform(x, crs = 3857)
     }
@@ -108,7 +108,7 @@ addStarsImage <- function(
   }
 
   if (!is.function(colors)) {
-    if (method == "ngb") {
+    if (method == "near") {
       # 'factors'
       colors <- leaflet::colorFactor(
         colors, domain = NULL, na.color = "#00000000", alpha = TRUE

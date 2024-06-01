@@ -14,7 +14,7 @@ addStarsImage(
   layerId = NULL,
   group = NULL,
   project = FALSE,
-  method = c("auto", "bilinear", "ngb"),
+  method = c("auto", "bilinear", "near"),
   maxBytes = 4 * 1024 * 1024,
   options = gridOptions(),
   data = getMapData(map),

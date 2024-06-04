@@ -21,6 +21,8 @@ addGeotiff(
   rgb = FALSE,
   pixelValuesToColorFn = NULL,
   autozoom = TRUE,
+  imagequery = TRUE,
+  imagequeryOptions = NULL,
   ...
 )
 }
@@ -69,6 +71,11 @@ some examples.}
 
 \item{autozoom}{whether to automatically zoom to the full extent of the layer.
 Default is \code{TRUE}}
+
+\item{imagequery}{If \code{TRUE} a leaflet control with the hovered/clicked
+value will appear on the map.}
+
+\item{imagequeryOptions}{additional options for the control panel.}
 
 \item{...}{currently not used.}
 }

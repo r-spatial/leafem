@@ -292,9 +292,9 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
                                                  minZoom,
                                                  maxZoom) {
 
-  var map = this;
-  var gl = false;
-  var pane;
+  const map = this;
+  let gl = false;
+  let pane;
 
   console.log("addFlatGeoBufFiltered")
 
@@ -304,7 +304,7 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
     pane = options.pane;
   }
 
-  var data_fl = document.getElementById(group + '-1-attachment');
+  let data_fl = document.getElementById(group + '-1-attachment');
 
   if (data_fl === null) {
     data_fl = url;
@@ -312,10 +312,13 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
     data_fl = data_fl.href;
   }
 
-  var popUp;
-  var colnames = [];
+  let popUp;
+  let colnames = [];
 
   function handleHeaderMeta(headerMeta) {
+    const header = document.getElementById('header')
+    const formatter = new JSONFormatter(headerMeta, 10)
+    header.appendChild(formatter.render())
     headerMeta.columns.forEach(function(col) {
       colnames.push(col.name);
     });
@@ -332,95 +335,97 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       };
   }
 
-  var previousResults = previousResults || {};
+  let previousResults = previousResults || {};
   previousResults[group] = L.layerGroup();
   map.layerManager.addLayer(previousResults[group], null, layerId, group);
 
   async function updateResults() {
-    console.log("updateResults")
-      var nextResults = nextResults || {};
-      nextResults[group] = L.layerGroup();
-      map.layerManager.addLayer(nextResults[group], null, layerId, group);
-      // remove the old results
-      map.layerManager.removeLayer(previousResults[group], layerId);
-      // previousResults[group].remove();
-      previousResults[group] = nextResults[group];
 
-      // Use flatgeobuf JavaScript API to iterate features as geojson.
-      // Because we specify a bounding box, flatgeobuf will only fetch the resubset of data,
-      // rather than the entire file.
-      const iter = flatgeobuf.deserialize(data_fl, fgBoundingBox(), handleHeaderMeta);
+    // remove the old results
+    map.layerManager.removeLayer(previousResults[group], layerId);
+    previousResults[group].remove();
+
+    let nextResults = nextResults || {};
+    nextResults[group] = L.layerGroup();
+    map.layerManager.addLayer(nextResults[group], null, layerId, group);
+
+    previousResults[group] = nextResults[group];
+
+    // Use flatgeobuf JavaScript API to iterate features as geojson.
+    // Because we specify a bounding box, flatgeobuf will only fetch the resubset of data,
+    // rather than the entire file.
+    let iter = flatgeobuf.deserialize(data_fl, fgBoundingBox(), handleHeaderMeta);
 
     if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[group])) {
-      for await (const feature of iter) {
-            if (popup) {
-              pop = makePopup(popup, className);
+
+      for await (let feature of iter) {
+
+        if (popup) {
+          pop = makePopup(popup, className);
+        } else {
+          pop = null;
+        }
+
+        if (scaleFields === null & feature.properties !== undefined) {
+          let vls = Object.values(style);
+          scaleFields = [];
+          vls.forEach(function(name) {
+            //if (name in colnames) {
+            if (colnames.includes(name)) {
+              scaleFields.push(true);
             } else {
-              pop = null;
+              scaleFields.push(false);
             }
+          });
+        }
 
-          if (scaleFields === null &
-                feature.properties !== undefined) {
-              var vls = Object.values(style);
-              scaleFields = [];
-              vls.forEach(function(name) {
-                //if (name in colnames) {
-                if (colnames.includes(name)) {
-                  scaleFields.push(true);
-                } else {
-                  scaleFields.push(false);
-                }
-              });
-            }
+        lyr = L.geoJSON(feature, {
+          pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, options);
+          },
+          style: function(feature) {
+            return updateStyle(style, feature, scale, scaleFields);
+          },
+          onEachFeature: pop,
+          pane: pane
+        });
 
-          lyr = L.geoJSON(feature, {
-              pointToLayer: function (feature, latlng) {
-                  return L.circleMarker(latlng, options);
-              },
-              style: function(feature) {
-                return updateStyle(style, feature, scale, scaleFields);
-              },
-              onEachFeature: pop,
-              pane: pane
-            });
+        if (label) {
+          if (Object.keys(feature.properties).includes(label)) {
+            lyr.bindTooltip(function (layer) {
+              return layer.feature.properties[label].toString();
+            }, {sticky: true});
+          } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
+            let lb = label[cntr];
+            lyr.bindTooltip(function (layer) {
+              return(lb);
+            }, {sticky: true});
+          } else {
+            lyr.bindTooltip(function (layer) {
+              return(label);
+            }, {sticky: true});
+          }
+        }
 
-            if (label) {
-              if (Object.keys(feature.properties).includes(label)) {
-                lyr.bindTooltip(function (layer) {
-                  return layer.feature.properties[label].toString();
-                }, {sticky: true});
-              } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
-                var lb = label[cntr];
-                lyr.bindTooltip(function (layer) {
-                  return(lb);
-                }, {sticky: true});
-              } else {
-                lyr.bindTooltip(function (layer) {
-                  return(label);
-                }, {sticky: true});
-              }
-            }
-
-         lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
-         lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
-         lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
-         lyr.addTo(nextResults[group]);
+        lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
+        lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
+        lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
+        lyr.addTo(nextResults[group]);
       }
     }
   }
-  // if the user is panning around alot, only update once per second max
-  // updateResults = _.throttle(updateResults, 1000);
 
   // show results based on the initial map
   updateResults();
+
   // ...and update the results whenever the map moves
   map.on("moveend", function(s) {
-      //rectangle.setBounds(getBoundForRect());
-      updateResults();
+    updateResults();
   });
   map.on('layeradd', function(event) {
-     if(event.layer == previousResults[group]) {
-         updateResults();
-     }
-});
+    if (event.layer == previousResults[group]) {
+      updateResults();
+    }
+  });
+
 };

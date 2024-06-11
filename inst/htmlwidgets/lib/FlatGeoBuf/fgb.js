@@ -296,13 +296,15 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   var gl = false;
   var pane;
 
+  console.log("addFlatGeoBufFiltered")
+
   if (options === null || options.pane === undefined) {
     pane = 'overlayPane';
   } else {
     pane = options.pane;
   }
 
-  var data_fl = document.getElementById(layerId + '-1-attachment');
+  var data_fl = document.getElementById(group + '-1-attachment');
 
   if (data_fl === null) {
     data_fl = url;
@@ -331,24 +333,25 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   }
 
   var previousResults = previousResults || {};
-  previousResults[layerId] = L.layerGroup();
-  map.layerManager.addLayer(previousResults[layerId], null, layerId, group);
+  previousResults[group] = L.layerGroup();
+  map.layerManager.addLayer(previousResults[group], null, layerId, group);
 
   async function updateResults() {
+    console.log("updateResults")
       var nextResults = nextResults || {};
-      nextResults[layerId] = L.layerGroup();
-      map.layerManager.addLayer(nextResults[layerId], null, layerId, group);
+      nextResults[group] = L.layerGroup();
+      map.layerManager.addLayer(nextResults[group], null, layerId, group);
       // remove the old results
-      map.layerManager.removeLayer(previousResults[layerId], layerId);
-      // previousResults[layerId].remove();
-      previousResults[layerId] = nextResults[layerId];
+      map.layerManager.removeLayer(previousResults[group], layerId);
+      // previousResults[group].remove();
+      previousResults[group] = nextResults[group];
 
       // Use flatgeobuf JavaScript API to iterate features as geojson.
       // Because we specify a bounding box, flatgeobuf will only fetch the resubset of data,
       // rather than the entire file.
       const iter = flatgeobuf.deserialize(data_fl, fgBoundingBox(), handleHeaderMeta);
 
-    if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[layerId])) {
+    if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[group])) {
       for await (const feature of iter) {
             if (popup) {
               pop = makePopup(popup, className);
@@ -401,7 +404,7 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
          lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
          lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
          lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
-         lyr.addTo(nextResults[layerId]);
+         lyr.addTo(nextResults[group]);
       }
     }
   }
@@ -416,7 +419,7 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       updateResults();
   });
   map.on('layeradd', function(event) {
-     if(event.layer == previousResults[layerId]) {
+     if(event.layer == previousResults[group]) {
          updateResults();
      }
 });

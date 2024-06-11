@@ -424,6 +424,8 @@ addFgb = function(map,
       if (is.null(maxZoom)) {
         maxZoom = 19
       }
+      print("!is.null(file)")
+      print("addFlatGeoBufFiltered")
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -480,6 +482,8 @@ addFgb = function(map,
       if (is.null(maxZoom)) {
         maxZoom = 19
       }
+      print("file = NULL")
+      print("addFlatGeoBufFiltered")
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)

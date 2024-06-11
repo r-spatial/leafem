@@ -28,7 +28,7 @@ addStarsImage(
 
 \item{band}{the band number to be plotted.}
 
-\item{colors}{the color palette (see \code{\link[leaflet]{colorNumeric}}) or function
+\item{colors}{the color palette (see \code{\link[leaflet:colorNumeric]{colorNumeric()}}) or function
 to use to color the raster values (hint: if providing a function, set
 \code{na.color} to \code{"#00000000"} to make \code{NA} areas transparent).
 The palette is ignored if \code{x} is a SpatRaster with a color table or if
@@ -41,7 +41,7 @@ it has RGB channels.}
 \item{layerId}{the layer id}
 
 \item{group}{the name of the group this raster image should belong to (see
-the same parameter under \code{\link[leaflet]{addTiles}})}
+the same parameter under \code{\link[leaflet:addTiles]{addTiles()}})}
 
 \item{project}{if \code{TRUE}, automatically project \code{x} to the map
 projection expected by Leaflet (\code{EPSG:3857}); if \code{FALSE}, it's
@@ -52,13 +52,13 @@ coordinates}
 \item{method}{the method used for computing values of the new, projected raster image.
 \code{"bilinear"} (the default) is appropriate for continuous data,
 \code{"ngb"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
+Ignored if \code{project = FALSE}. See \code{\link[=projectRaster]{projectRaster()}} for details.}
 
 \item{maxBytes}{the maximum number of bytes to allow for the projected image
 (before base64 encoding); defaults to 4MB.}
 
 \item{options}{a list of additional options, intended to be provided by
-a call to \code{\link[leaflet]{gridOptions}}}
+a call to \code{\link[leaflet:gridOptions]{gridOptions()}}}
 
 \item{data}{the data object from which the argument values are derived; by
 default, it is the \code{data} object provided to \code{leaflet()}

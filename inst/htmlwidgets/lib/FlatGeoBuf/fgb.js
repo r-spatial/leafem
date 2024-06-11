@@ -12,7 +12,7 @@ function mouseHandler(mapId, layerId, group, eventName, extraInfo) {
     }
     let eventInfo = $.extend(
       {
-        id: e.layer.feature.properties[layerId].toString(),
+        id: (e.layer.feature.properties[layerId]?.toString() ?? layerId.toString()),
         ".nonce": Math.random()  // force reactivity
       },
       group !== null ? {group: group} : null,

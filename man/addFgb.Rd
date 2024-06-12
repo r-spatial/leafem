@@ -26,6 +26,8 @@ addFgb(
   scale = scaleOptions(),
   minZoom = NULL,
   maxZoom = 52,
+  useWebgl = FALSE,
+  load_chunks = 1000,
   ...
 )
 }
@@ -79,6 +81,10 @@ opacity, fillOpacity if those are to be mapped to an attribute column.}
 \item{minZoom}{minimum zoom level at which data should be rendered.}
 
 \item{maxZoom}{maximum zoom level at which data should be rendered.}
+
+\item{useWebgl}{use `leafgl` if TRUE.}
+
+\item{load_chunks}{How many features should be drawn/updated at once. Default is 1000}
 
 \item{...}{currently not used.}
 }

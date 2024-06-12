@@ -55,7 +55,7 @@ based on min-max values.}
 \item{method}{the method used for computing values of the new, projected raster image.
 \code{"bilinear"} (the default) is appropriate for continuous data,
 \code{"ngb"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link[=projectRaster]{projectRaster()}} for details.}
+Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
 
 \item{...}{additional arguments passed on to \code{\link{addRasterImage}}}
 }

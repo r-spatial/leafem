@@ -305,6 +305,8 @@ addTileFolder = function(map,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
 #' @param minZoom minimum zoom level at which data should be rendered.
 #' @param maxZoom maximum zoom level at which data should be rendered.
+#' @param useWebgl use `leafgl` if TRUE.
+#' @param load_chunks How many features should be drawn/updated at once. Default is 1000
 #' @param ... currently not used.
 #'
 #' @examples
@@ -358,6 +360,8 @@ addFgb = function(map,
                   scale = scaleOptions(),
                   minZoom = NULL,
                   maxZoom = 52,
+                  useWebgl = FALSE,
+                  load_chunks = 1000,
                   ...) {
 
 
@@ -444,6 +448,9 @@ addFgb = function(map,
         , maxZoom
       )
     } else {
+      print("!is.null(file)")
+      print("addFlatGeoBuf")
+
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -458,6 +465,8 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
+        , useWebgl
+        , load_chunks
       )
     }
   } else {
@@ -516,6 +525,8 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
+        , useWebgl
+        , load_chunks
       )
     }
   }

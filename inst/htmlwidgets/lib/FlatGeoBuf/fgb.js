@@ -24,6 +24,7 @@ function mouseHandler(mapId, layerId, group, eventName, extraInfo) {
   };
 }
 
+
 LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 group,
                                                 url,
@@ -33,10 +34,12 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 options,
                                                 className,
                                                 scale,
-                                                scaleFields) {
+                                                scaleFields,
+                                                useWebgl,
+                                                load_chunks) {
 
   var map = this;
-  var gl = false;
+  var gl = useWebgl;
   var pane;
 
   if (options === null || options.pane === undefined) {
@@ -66,18 +69,89 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     // use fgb JavaScript API to iterate stream into results (features as geojson)
     // NOTE: would be more efficient with a special purpose Leaflet deserializer
     let it = flatgeobuf.deserialize(response.body, undefined, handleHeaderMeta);
-    var cntr = 0;
+    let cntr = 0;
+    let chunkSize = load_chunks;
+    let shapeslayer = null;
+    let geojson_array = [];
     // handle result
     function handleResult(result) {
         if (!result.done) {
           if (gl) {
-            map.layerManager.addLayer(
-              L.glify.shapes({
-                map: map,
-                data: result.value,
-                className: group
-              }).glLayer, null, null, group);
+            geojson_array.push(result.value);
+            console.log("Push Data");
+            if (geojson_array.length === chunkSize) {
+              if (!shapeslayer || !shapeslayer.layer) {
+                // Initialize leaflet.glify with the first chunk
+                console.log("Initializing leaflet.glify with the first chunk");
+                let data = {
+                        type: "FeatureCollection",
+                        features: geojson_array
+                };
+
+                var click_event = function(e, feature, addpopup, popup) {
+                  if (map.hasLayer(shapeslayer.layer)) {
+                    var idx = data.features.findIndex(k => k==feature);
+                    if (HTMLWidgets.shinyMode) {
+                      Shiny.setInputValue(map.id + "_glify_click", {
+                        id: layerId ? (typeof layerId === 'string' &&
+                            feature.properties.hasOwnProperty(layerId) ?
+                            feature.properties[layerId] : layerId[idx]) : idx + 1,
+                        group: Object.values(shapeslayer.layer._eventParents)[0].groupname,
+                        lat: e.latlng.lat,
+                        lng: e.latlng.lng,
+                        data: feature.properties
+                      });
+                    }
+                    if (addpopup) {
+                      let content = popup === true ? json2table(feature.properties) : (typeof popup === 'string' &&
+                          feature.properties.hasOwnProperty(popup) ? feature.properties[popup] : popup.toString());
+
+                      L.popup({ maxWidth: 2000 })
+                         .setLatLng(e.latlng)
+                         .setContent(content)
+                         .openOn(map);
+                    }
+                  }
+                };
+                var pop = function (e, feature) {
+                  click_event(e, feature, popup !== null, popup);
+                };
+                let tooltip = new L.Tooltip();
+                let hover_event = function(e, feature, addlabel, label) {
+                  if (map.hasLayer(shapeslayer.layer)) {
+                    if (addlabel && feature.properties.hasOwnProperty(label)) {
+                      tooltip
+                       .setLatLng(e.latlng)
+                       .setContent(feature.properties[[label]].toString())
+                       .addTo(map);
+                    }
+                  }
+                }
+                let hvr = function(e, feature) {
+                  hover_event(e, feature, label !== null, label);
+                }
+
+                shapeslayer = L.glify.shapes({
+                    map: map,
+                    //color: () => {return {r: 1,g: 0,b: 0,}},
+                    click: pop,
+                    hover: hvr,
+                    border: true,
+                    data: data,
+                    className: group,
+                    pane: pane
+                });
+                map.layerManager.addLayer(shapeslayer.layer, "glify", layerId, group);
+              } else {
+                // Insert the collected chunk into the shapeslayer
+                console.log("Inserting new chunk into shapeslayer");
+                shapeslayer.insert(geojson_array, cntr);
+              }
+              // Reset the array for the next chunk
+              geojson_array = [];
+            }
             it.next().then(handleResult);
+
           } else {
 
             if (popup) {
@@ -136,6 +210,33 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
             map.layerManager.addLayer(lyr, null, null, group);
             it.next().then(handleResult);
+          }
+
+        } else if (geojson_array.length > 0) {
+          if (gl) {
+            console.log("Processing remaining features, geojson_array length:", geojson_array.length);
+            // Insert any remaining features in geojson_array when done
+            if (!shapeslayer || !shapeslayer.layer) {
+              console.log("Draw single chunk");
+              shapeslayer = L.glify.shapes({
+                  map: map,
+                  data: {
+                      type: "FeatureCollection",
+                      features: geojson_array
+                  },
+                  className: group,
+                  pane: pane
+              });
+              map.layerManager.addLayer(shapeslayer.layer, "glify", layerId, group);
+            } else {
+              console.log("Inserting remaining chunk into shapeslayer");
+              shapeslayer.insert(geojson_array, cntr);
+              /*
+              geojson_array.forEach((feature, index) => {
+                shapeslayer.insert(feature, cntr + index);
+              });
+              */
+            }
           }
         }
         cntr += 1;
@@ -336,10 +437,13 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   }
 
   let previousResults = previousResults || {};
+  console.log("previousResults");console.log(previousResults)
   previousResults[group] = L.layerGroup();
+  console.log("previousResults[group]");console.log(previousResults[group])
   map.layerManager.addLayer(previousResults[group], null, layerId, group);
 
   async function updateResults() {
+    console.log("updateResults")
 
     // remove the old results
     map.layerManager.removeLayer(previousResults[group], layerId);

@@ -306,7 +306,8 @@ addTileFolder = function(map,
 #' @param minZoom minimum zoom level at which data should be rendered.
 #' @param maxZoom maximum zoom level at which data should be rendered.
 #' @param useWebgl use `leafgl` if TRUE.
-#' @param load_chunks How many features should be drawn/updated at once. Default is 1000
+#' @param chunkSize How many features should be drawn/updated at once. Default is 1000
+#' @inheritParams leaflet::highlightOptions
 #' @param ... currently not used.
 #'
 #' @examples
@@ -361,7 +362,8 @@ addFgb = function(map,
                   minZoom = NULL,
                   maxZoom = 52,
                   useWebgl = FALSE,
-                  load_chunks = 1000,
+                  chunkSize = 1000,
+                  highlightOptions = NULL,
                   ...) {
 
 
@@ -466,7 +468,8 @@ addFgb = function(map,
         , scale
         , scaleFields
         , useWebgl
-        , load_chunks
+        , chunkSize
+        , highlightOptions
       )
     }
   } else {
@@ -526,7 +529,8 @@ addFgb = function(map,
         , scale
         , scaleFields
         , useWebgl
-        , load_chunks
+        , chunkSize
+        , highlightOptions
       )
     }
   }

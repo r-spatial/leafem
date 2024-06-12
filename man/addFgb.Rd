@@ -27,7 +27,8 @@ addFgb(
   minZoom = NULL,
   maxZoom = 52,
   useWebgl = FALSE,
-  load_chunks = 1000,
+  chunkSize = 1000,
+  highlightOptions = NULL,
   ...
 )
 }
@@ -84,7 +85,9 @@ opacity, fillOpacity if those are to be mapped to an attribute column.}
 
 \item{useWebgl}{use `leafgl` if TRUE.}
 
-\item{load_chunks}{How many features should be drawn/updated at once. Default is 1000}
+\item{chunkSize}{How many features should be drawn/updated at once. Default is 1000}
+
+\item{highlightOptions}{Options for highlighting the shape on mouse over.}
 
 \item{...}{currently not used.}
 }

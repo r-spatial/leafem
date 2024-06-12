@@ -448,6 +448,7 @@ addFgb = function(map,
         , scaleFields
         , minZoom
         , maxZoom
+        , highlightOptions
       )
     } else {
       print("!is.null(file)")
@@ -512,6 +513,7 @@ addFgb = function(map,
         , scaleFields
         , minZoom
         , maxZoom
+        , highlightOptions
       )
     } else {
       leaflet::invokeMethod(

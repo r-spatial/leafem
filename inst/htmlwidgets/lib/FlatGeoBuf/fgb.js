@@ -443,7 +443,8 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
                                                  scale,
                                                  scaleFields,
                                                  minZoom,
-                                                 maxZoom) {
+                                                 maxZoom,
+                                                 highlightOptions) {
 
   const map = this;
   let gl = false;
@@ -488,11 +489,13 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       };
   }
 
-  let previousResults = previousResults || {};
-  console.log("previousResults");console.log(previousResults)
-  previousResults[group] = L.layerGroup();
-  console.log("previousResults[group]");console.log(previousResults[group])
-  map.layerManager.addLayer(previousResults[group], null, layerId, group);
+  let previousResults = nextResults = {};
+
+   // Initialize previousResults if not already initialized
+  if (!previousResults[group]) {
+    previousResults[group] = L.layerGroup();
+    map.layerManager.addLayer(previousResults[group], null, layerId, group);
+  }
 
   async function updateResults() {
     console.log("updateResults")
@@ -501,7 +504,6 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
     map.layerManager.removeLayer(previousResults[group], layerId);
     previousResults[group].remove();
 
-    let nextResults = nextResults || {};
     nextResults[group] = L.layerGroup();
     map.layerManager.addLayer(nextResults[group], null, layerId, group);
 
@@ -563,6 +565,27 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
           }
         }
 
+        if (highlightOptions && typeof highlightOptions === 'object' && Object.keys(highlightOptions).length > 0) {
+          lyr.on({
+            // highlight on hover
+            'mouseover': function(e) {
+                const layer = e.target;
+                layer.setStyle(highlightOptions);
+                if (highlightOptions.bringToFront) {
+                  layer.bringToFront();
+                }
+            },
+            // remove highlight when hover stops
+            'mouseout': function(e) {
+                const layer = e.target;
+                layer.setStyle(style);
+                if (highlightOptions.sendToBack) {
+                  layer.bringToBack();
+                }
+            }
+          })
+        }
+
         lyr.on("click", mouseHandler(map.id, layerId, group, "shape_click"));
         lyr.on("mouseover", mouseHandler(map.id, layerId, group, "shape_mouseover"));
         lyr.on("mouseout", mouseHandler(map.id, layerId, group, "shape_mouseout"));
@@ -572,14 +595,18 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   }
 
   // show results based on the initial map
+  console.log("init updateResults")
   updateResults();
 
   // ...and update the results whenever the map moves
   map.on("moveend", function(s) {
+    console.log("moveend triggers updateResults")
     updateResults();
   });
   map.on('layeradd', function(event) {
+    console.log("layeradd")
     if (event.layer == previousResults[group]) {
+      console.log("Trigger updateResults")
       updateResults();
     }
   });

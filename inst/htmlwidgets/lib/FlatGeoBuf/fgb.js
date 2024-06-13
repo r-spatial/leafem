@@ -327,6 +327,9 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   let colnames = [];
 
   function handleHeaderMeta(headerMeta) {
+    //const header = document.getElementById('header')
+    //const formatter = new JSONFormatter(headerMeta, 10)
+    //header.appendChild(formatter.render())
     headerMeta.columns.forEach(function(col) {
       colnames.push(col.name);
     });

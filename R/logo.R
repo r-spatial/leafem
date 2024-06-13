@@ -123,7 +123,6 @@ addLogo <- function(map,
 }
 
 #' updateLogo
-#' @inheritParams addLogo
 #' @rdname addLogo
 #' @export
 updateLogo <- function(map, img, layerId) {
@@ -137,7 +136,6 @@ updateLogo <- function(map, img, layerId) {
 }
 
 #' removeLogo
-#' @inheritParams addLogo
 #' @rdname addLogo
 #' @export
 removeLogo <- function(map, layerId) {
@@ -149,7 +147,6 @@ removeLogo <- function(map, layerId) {
 }
 
 #' hideLogo
-#' @inheritParams addLogo
 #' @rdname addLogo
 #' @export
 hideLogo <- function(map, layerId) {
@@ -161,7 +158,6 @@ hideLogo <- function(map, layerId) {
 }
 
 #' showLogo
-#' @inheritParams addLogo
 #' @rdname addLogo
 #' @export
 showLogo <- function(map, layerId) {

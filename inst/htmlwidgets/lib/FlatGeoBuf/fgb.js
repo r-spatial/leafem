@@ -136,11 +136,20 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
 
             }
 
-            if (addlabel && feature.properties.hasOwnProperty(label)) {
-                tooltip
-                    .setLatLng(e.latlng)
-                    .setContent(feature.properties[label].toString())
-                    .addTo(map);
+            if (addlabel) {
+              let content = "";
+              if (Object.keys(feature.properties).includes(label)) {
+                content = feature.properties[label].toString()
+              } else if (typeof(label) === "function") {
+                content = label(feature);
+              } else {
+                content = label;
+              }
+
+              tooltip
+                  .setLatLng(e.latlng)
+                  .setContent(content)
+                  .addTo(map);
             }
           }
         };
@@ -239,6 +248,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 lyr.bindTooltip(function (layer) {
                   return(lb);
                 }, {sticky: true});
+              } else if (typeof(label) === "function") {
+                lyr.bindTooltip(label, {sticky: true});
               } else {
                 lyr.bindTooltip(function (layer) {
                   return(label);
@@ -553,11 +564,8 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
             lyr.bindTooltip(function (layer) {
               return layer.feature.properties[label].toString();
             }, {sticky: true});
-          } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
-            let lb = label[cntr];
-            lyr.bindTooltip(function (layer) {
-              return(lb);
-            }, {sticky: true});
+          } else if (typeof(label) === "function") {
+            lyr.bindTooltip(label, {sticky: true});
           } else {
             lyr.bindTooltip(function (layer) {
               return(label);

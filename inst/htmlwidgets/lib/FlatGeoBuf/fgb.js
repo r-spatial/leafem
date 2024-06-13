@@ -93,8 +93,6 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
     let geojson_array = [];
 
     function initializeShapesLayer(data) {
-        console.log("Initializing leaflet.glify with the first chunk or remaining features");
-
         let click_event = function(e, feature, addpopup, popup) {
           if (map.hasLayer(shapeslayer.layer)) {
             var idx = data.features.findIndex(k => k == feature);
@@ -126,9 +124,6 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
         let tooltip = new L.Tooltip();
         let hover_event = function(e, feature, addlabel, label) {
           if (map.hasLayer(shapeslayer.layer)) {
-            console.log("map.hasLayer(shapeslayer.layer)")
-            console.log("feature"); console.log(feature)
-            console.log("e"); console.log(e)
             if (highlightOptions && typeof highlightOptions === 'object' && Object.keys(highlightOptions).length > 0) {
               let hoveroverLayer = L.geoJSON(feature, {style: highlightOptions})
               map.layerManager.removeLayer("fgb_hover", "fgb_hover_rndid");
@@ -185,18 +180,15 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
         if (!result.done) {
           if (gl) {
             geojson_array.push(result.value);
-            console.log("Push Data");
             if (geojson_array.length === chunkSize) {
               if (!shapeslayer || !shapeslayer.layer) {
                 // Initialize leaflet.glify with the first chunk
-                console.log("Initializing leaflet.glify with the first chunk");
                 initializeShapesLayer({
-                        type: "FeatureCollection",
-                        features: geojson_array
-                    });
+                  type: "FeatureCollection",
+                  features: geojson_array
+                });
               } else {
                 // Insert the collected chunk into the shapeslayer
-                console.log("Inserting new chunk into shapeslayer");
                 shapeslayer.insert(geojson_array, cntr);
               }
               // Reset the array for the next chunk
@@ -285,6 +277,7 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
 
             it.next().then(handleResult);
           }
+
         } else if (geojson_array.length > 0) {
           if (gl) {
             console.log("Processing remaining features, geojson_array length:", geojson_array.length);
@@ -292,9 +285,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
             if (!shapeslayer || !shapeslayer.layer) {
               console.log("Draw single chunk");
               initializeShapesLayer({
-                        type: "FeatureCollection",
-                        features: geojson_array
-                    });
+                    type: "FeatureCollection",
+                    features: geojson_array
+                });
             } else {
               console.log("Inserting remaining chunk into shapeslayer");
               shapeslayer.insert(geojson_array, cntr);
@@ -308,10 +301,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
   }
 
   fetch(data_fl) //, {mode: 'no-cors'})
-  .then(handleResponse);
+    .then(handleResponse);
 
-  //map.fitBounds(lyr.getBounds());
-  //map.layerManager.addLayer(layer, null, null, group);
 };
 
 function makePopup(popup, className) {
@@ -444,24 +435,22 @@ function rescale(value, to_min, to_max, from_min, from_max) {
 
 
 LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
-                                                 group,
-                                                 url,
-                                                 popup,
-                                                 label,
-                                                 style,
-                                                 options,
-                                                 className,
-                                                 scale,
-                                                 scaleFields,
-                                                 minZoom,
-                                                 maxZoom,
-                                                 highlightOptions) {
+                                                        group,
+                                                        url,
+                                                        popup,
+                                                        label,
+                                                        style,
+                                                        options,
+                                                        className,
+                                                        scale,
+                                                        scaleFields,
+                                                        minZoom,
+                                                        maxZoom,
+                                                        highlightOptions) {
 
   const map = this;
   let gl = false;
   let pane;
-
-  console.log("addFlatGeoBufFiltered")
 
   if (options === null || options.pane === undefined) {
     pane = 'overlayPane';
@@ -500,24 +489,20 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
       };
   }
 
+  // Initialize previousResults/nextResults if not already initialized
   let previousResults = nextResults = {};
-
-   // Initialize previousResults if not already initialized
   if (!previousResults[group]) {
     previousResults[group] = L.layerGroup();
     map.layerManager.addLayer(previousResults[group], null, layerId, group);
   }
 
   async function updateResults() {
-    console.log("updateResults")
 
     // remove the old results
     map.layerManager.removeLayer(previousResults[group], layerId);
     previousResults[group].remove();
-
     nextResults[group] = L.layerGroup();
     map.layerManager.addLayer(nextResults[group], null, layerId, group);
-
     previousResults[group] = nextResults[group];
 
     // Use flatgeobuf JavaScript API to iterate features as geojson.
@@ -528,7 +513,6 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
     if (map.getZoom() >= minZoom & map.getZoom() <= maxZoom & map.hasLayer(previousResults[group])) {
 
       for await (let feature of iter) {
-
         if (popup) {
           pop = makePopup(popup, className);
         } else {
@@ -603,18 +587,14 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
   }
 
   // show results based on the initial map
-  console.log("init updateResults")
   updateResults();
 
   // ...and update the results whenever the map moves
   map.on("moveend", function(s) {
-    console.log("moveend triggers updateResults")
     updateResults();
   });
   map.on('layeradd', function(event) {
-    console.log("layeradd")
     if (event.layer == previousResults[group]) {
-      console.log("Trigger updateResults")
       updateResults();
     }
   });

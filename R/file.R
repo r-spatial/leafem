@@ -305,8 +305,6 @@ addTileFolder = function(map,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
 #' @param minZoom minimum zoom level at which data should be rendered.
 #' @param maxZoom maximum zoom level at which data should be rendered.
-#' @param useWebgl use `leafgl` if TRUE.
-#' @param chunkSize How many features should be drawn/updated at once. Default is 1000
 #' @inheritParams leaflet::highlightOptions
 #' @param ... currently not used.
 #'
@@ -361,8 +359,6 @@ addFgb = function(map,
                   scale = scaleOptions(),
                   minZoom = NULL,
                   maxZoom = 52,
-                  useWebgl = FALSE,
-                  chunkSize = 1000,
                   highlightOptions = NULL,
                   ...) {
 
@@ -430,8 +426,6 @@ addFgb = function(map,
       if (is.null(maxZoom)) {
         maxZoom = 19
       }
-      print("!is.null(file)")
-      print("addFlatGeoBufFiltered")
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -451,9 +445,6 @@ addFgb = function(map,
         , highlightOptions
       )
     } else {
-      print("!is.null(file)")
-      print("addFlatGeoBuf")
-
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -468,8 +459,6 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
-        , useWebgl
-        , chunkSize
         , highlightOptions
       )
     }
@@ -495,8 +484,6 @@ addFgb = function(map,
       if (is.null(maxZoom)) {
         maxZoom = 19
       }
-      print("file = NULL")
-      print("addFlatGeoBufFiltered")
       leaflet::invokeMethod(
         map
         , leaflet::getMapData(map)
@@ -530,8 +517,6 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
-        , useWebgl
-        , chunkSize
         , highlightOptions
       )
     }
@@ -556,7 +541,7 @@ fgbDependencies = function() {
   list(
     htmltools::htmlDependency(
       "FlatGeoBuf"
-      , '3.21.3'
+      , '3.31.1'
       , system.file("htmlwidgets/lib/FlatGeoBuf", package = "leafem")
       , script = c(
         'fgb.js'

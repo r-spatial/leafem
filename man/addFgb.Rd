@@ -26,6 +26,7 @@ addFgb(
   scale = scaleOptions(),
   minZoom = NULL,
   maxZoom = 52,
+  highlightOptions = NULL,
   ...
 )
 }
@@ -79,6 +80,8 @@ opacity, fillOpacity if those are to be mapped to an attribute column.}
 \item{minZoom}{minimum zoom level at which data should be rendered.}
 
 \item{maxZoom}{maximum zoom level at which data should be rendered.}
+
+\item{highlightOptions}{Options for highlighting the shape on mouse over.}
 
 \item{...}{currently not used.}
 }

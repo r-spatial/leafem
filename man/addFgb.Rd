@@ -27,6 +27,7 @@ addFgb(
   minZoom = NULL,
   maxZoom = 52,
   highlightOptions = NULL,
+  labelOptions = NULL,
   ...
 )
 }
@@ -82,6 +83,9 @@ opacity, fillOpacity if those are to be mapped to an attribute column.}
 \item{maxZoom}{maximum zoom level at which data should be rendered.}
 
 \item{highlightOptions}{Options for highlighting the shape on mouse over.}
+
+\item{labelOptions}{A Vector of \code{\link[leaflet]{labelOptions}} to provide label
+options for each label. Default \code{NULL}}
 
 \item{...}{currently not used.}
 }

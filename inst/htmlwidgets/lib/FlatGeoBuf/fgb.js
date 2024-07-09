@@ -34,7 +34,8 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                                                 className,
                                                 scale,
                                                 scaleFields,
-                                                highlightOptions) {
+                                                highlightOptions,
+                                                labelOptions) {
 
   const map = this;
   let gl = false;
@@ -118,18 +119,18 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
               if (Object.keys(result.value.properties).includes(label)) {
                 lyr.bindTooltip(function (layer) {
                   return layer.feature.properties[label].toString();
-                }, {sticky: true});
+                }, labelOptions);
               } else if (typeof(label) === Object || (typeof(label) === 'object' && label.length > 1)) {
                 let lb = label[cntr];
                 lyr.bindTooltip(function (layer) {
                   return(lb);
-                }, {sticky: true});
+                }, labelOptions);
               } else if (typeof(label) === "function") {
-                lyr.bindTooltip(label, {sticky: true});
+                lyr.bindTooltip(label, labelOptions);
               } else {
                 lyr.bindTooltip(function (layer) {
                   return(label);
-                }, {sticky: true});
+                }, labelOptions);
               }
             }
 
@@ -303,7 +304,8 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
                                                         scaleFields,
                                                         minZoom,
                                                         maxZoom,
-                                                        highlightOptions) {
+                                                        highlightOptions,
+                                                        labelOptions) {
 
   const map = this;
   let gl = false;
@@ -409,13 +411,13 @@ LeafletWidget.methods.addFlatGeoBufFiltered = function (layerId,
           if (Object.keys(feature.properties).includes(label)) {
             lyr.bindTooltip(function (layer) {
               return layer.feature.properties[label].toString();
-            }, {sticky: true});
+            }, labelOptions);
           } else if (typeof(label) === "function") {
-            lyr.bindTooltip(label, {sticky: true});
+            lyr.bindTooltip(label, labelOptions);
           } else {
             lyr.bindTooltip(function (layer) {
               return(label);
-            }, {sticky: true});
+            }, labelOptions);
           }
         }
 

@@ -305,7 +305,7 @@ addTileFolder = function(map,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
 #' @param minZoom minimum zoom level at which data should be rendered.
 #' @param maxZoom maximum zoom level at which data should be rendered.
-#' @inheritParams leaflet::highlightOptions
+#' @inheritParams leaflet::addPolylines
 #' @param ... currently not used.
 #'
 #' @examples
@@ -360,6 +360,7 @@ addFgb = function(map,
                   minZoom = NULL,
                   maxZoom = 52,
                   highlightOptions = NULL,
+                  labelOptions = NULL,
                   ...) {
 
 
@@ -377,10 +378,8 @@ addFgb = function(map,
 
   if (is.null(layerId)) layerId = group
   layerId = gsub("[[:punct:] ]", "_", layerId)
-  # layerId = gsub("\\.", "_", layerId)
-  # layerId = gsub(" ", "", layerId)
-  # layerId = gsub('\\"', '', layerId)
-  # layerId = gsub("\\'", "", layerId)
+
+  if (missing(labelOptions)) labelOptions <- leaflet::labelOptions()
 
   if (!is.null(file)) {
     if (!file.exists(file)) {
@@ -443,6 +442,7 @@ addFgb = function(map,
         , minZoom
         , maxZoom
         , highlightOptions
+        , labelOptions
       )
     } else {
       leaflet::invokeMethod(
@@ -460,6 +460,7 @@ addFgb = function(map,
         , scale
         , scaleFields
         , highlightOptions
+        , labelOptions
       )
     }
   } else {
@@ -501,6 +502,7 @@ addFgb = function(map,
         , minZoom
         , maxZoom
         , highlightOptions
+        , labelOptions
       )
     } else {
       leaflet::invokeMethod(
@@ -518,6 +520,7 @@ addFgb = function(map,
         , scale
         , scaleFields
         , highlightOptions
+        , labelOptions
       )
     }
   }

@@ -204,6 +204,8 @@ function makePopup(popup, className) {
         layer.bindPopup("");
       }
     };
+  } else if (typeof(popup) === "function") {
+    pop = popup
   } else {
     pop = function(feature, layer) {
       popUp = json2table(

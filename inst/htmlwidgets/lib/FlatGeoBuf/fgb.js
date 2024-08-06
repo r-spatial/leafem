@@ -147,6 +147,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 // remove highlight when hover stops
                 'mouseout': function(e) {
                     const layer = e.target;
+                    if (style.color === null && e.layer.feature.properties.color) {
+                      style.color = e.layer.feature.properties.color
+                    }
                     layer.setStyle(style);
                     if (highlightOptions.sendToBack) {
                       layer.bringToBack();

@@ -1,3 +1,76 @@
+function mouseHandler(map, georaster, layerId, group, eventName, options) {
+  return function(e) {
+
+    let outputWidget = getInfoLegend(layerId);
+
+    if (!(map.layerManager.getVisibleGroups().includes(group))) {
+      $(outputWidget).hide();
+      return;
+    }
+
+    let latLng = this.mouseEventToLatLng(e.originalEvent);
+
+    let val = geoblaze.identify(georaster, [latLng.lng, latLng.lat]);
+
+    let finaltype = "georaster_" + options.type;
+    let query = options.imagequery && finaltype == eventName;
+
+    if (val) {
+      if (query) {
+        outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix);
+      }
+      let eventInfo = $.extend({
+        id: layerId,
+        ".nonce": Math.random(),  // force reactivity
+        group: group ? group : null,
+        value: val[0]
+        },
+        e.latlng
+      );
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
+      }
+    } else {
+      if (query) {
+        $(outputWidget).hide();
+      }
+      if (HTMLWidgets.shinyMode) {
+        Shiny.onInputChange(map.id + "_" + eventName, null);
+      }
+    }
+  };
+}
+function renderInfo(val, layerId, digits, prefix) {
+  $(document.getElementById("rasterValues-" + layerId)).show();
+  let text = "";
+  if(digits === "null" || digits === null) {
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val + "</small>";
+  } else {
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val[0].toFixed(digits)+ "</small>";
+  }
+  return text;
+}
+function getInfoLegend(layerId) {
+  let element = window.document.getElementById("rasterValues-" + layerId);
+  if (element === null) {
+    console.log("leafem: No control widget found in Leaflet setup. Can't show layer info.");
+  }
+  return element;
+}
+function makeControl(layerId, options, map) {
+  info = L.control({
+    position: options.position ? options.position : "topright"
+  });
+  let ctrl_nm = "rasterValues-" + layerId;
+  info.onAdd = function(map) {
+    this._div = L.DomUtil.create('div', options.className + ' rastervals');
+    this._div.id = ctrl_nm;
+    this._div.innerHTML = "";
+    return this._div;
+  };
+  info.addTo(map);
+}
+
 LeafletWidget.methods.addGeotiff = function (url,
                                              group,
                                              layerId,
@@ -9,7 +82,8 @@ LeafletWidget.methods.addGeotiff = function (url,
                                              colorOptions,
                                              rgb,
                                              pixelValuesToColorFn,
-                                             autozoom) {
+                                             autozoom,
+                                             imagequeryOptions) {
 
   var map = this;
 
@@ -28,6 +102,11 @@ LeafletWidget.methods.addGeotiff = function (url,
     pane = 'tilePane';
   } else {
     pane = options.pane;
+  }
+
+  // Create a container div for the control
+  if (imagequeryOptions && imagequeryOptions.imagequery == true) {
+    makeControl(layerId, imagequeryOptions, map)
   }
 
   // fetch data and add to map
@@ -122,14 +201,19 @@ LeafletWidget.methods.addGeotiff = function (url,
           opacity: opacity,
           pane: pane
         });
-        map.layerManager.addLayer(layer, null, layerId, group);
 
+        map.layerManager.addLayer(layer, "image", layerId, group);
         if (autozoom) {
           map.fitBounds(layer.getBounds());
         }
+
+        map.on("click", mouseHandler(map, georaster, layerId,
+          group, "georaster_click", imagequeryOptions), this);
+        map.on("mousemove", mouseHandler(map, georaster, layerId,
+          group, "georaster_mousemove", imagequeryOptions), this);
+
       });
     });
-
 };
 
 
@@ -142,7 +226,8 @@ LeafletWidget.methods.addCOG = function (url,
                                          colorOptions,
                                          pixelValuesToColorFn,
                                          autozoom,
-                                         rgb) {
+                                         rgb,
+                                         imagequeryOptions) {
 
   var map = this;
   var pane;  // could also use let
@@ -152,23 +237,36 @@ LeafletWidget.methods.addCOG = function (url,
     pane = options.pane;
   }
 
+  // Create a container div for the control
+  if (imagequeryOptions && imagequeryOptions.imagequery == true) {
+    makeControl(layerId, imagequeryOptions, map)
+  }
+
   var layers = layers || {};
 
-  parseGeoraster(url).then(georaster => {
-    console.log("georaster:", georaster);
+  fetch(url).then((response) => {
+    response.arrayBuffer().then((arrayBuffer) => {
+      var georaster = parseGeoraster(arrayBuffer).then((georaster) => {
 
-    layers[layerId] = new GeoRasterLayer({
-      georaster,
-      resolution: resolution,
-      opacity: opacity,
-      pixelValuesToColorFn: pixelValuesToColorFn,
-      pane: pane
+        layers[layerId] = new GeoRasterLayer({
+          georaster,
+          resolution: resolution,
+          opacity: opacity,
+          pixelValuesToColorFn: pixelValuesToColorFn,
+          pane: pane
+        });
+        map.layerManager.addLayer(layers[layerId], null, layerId, group);
+        if (autozoom) {
+          map.fitBounds(layers[layerId].getBounds());
+        }
+
+        map.on("click", mouseHandler(map, layers[layerId].georasters[0], layerId,
+          group, "georaster_click", imagequeryOptions), this);
+        map.on("mousemove", mouseHandler(map, layers[layerId].georasters[0], layerId,
+          group, "georaster_mousemove", imagequeryOptions), this);
+
+      });
     });
-    map.layerManager.addLayer(layers[layerId], null, layerId, group);
-
-    if (autozoom) {
-      map.fitBounds(layers[layerId].getBounds());
-    }
   });
 };
 

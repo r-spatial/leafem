@@ -16,6 +16,8 @@ addCOG(
   pixelValuesToColorFn = NULL,
   autozoom = TRUE,
   rgb = FALSE,
+  imagequery = TRUE,
+  imagequeryOptions = NULL,
   ...
 )
 }
@@ -24,17 +26,18 @@ addCOG(
 
 \item{url}{url to the COG file to render.}
 
-\item{group}{he name of the group this COG should belong to.}
+\item{group}{he name of the group this raster image should belong to.}
 
 \item{layerId}{the layerId.}
 
-\item{resolution}{the target resolution for the simple nearest neighbor
-interpolation. Larger values will result in more detailed rendering,
-but may impact performance. Default is 96 (pixels).}
+\item{resolution}{the target resolution for the simple nearest neighbor interpolation.
+Larger values will result in more detailed rendering, but may impact performance.
+Default is 96 (pixels).}
 
-\item{opacity}{image opacity.}
+\item{opacity}{opacity of the rendered layer.}
 
-\item{options}{see [leaflet](tileOptions).}
+\item{options}{options to be passed to the layer.
+See \code{\link[leaflet]{tileOptions}} for details.}
 
 \item{colorOptions}{list defining the palette, breaks and na.color to be used.
 Currently not used.}
@@ -45,9 +48,14 @@ See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
 some examples. Currently not used.}
 
 \item{autozoom}{whether to automatically zoom to the full extent of the layer.
-Default is \code{TRUE}.}
+Default is \code{TRUE}}
 
 \item{rgb}{logical, whether to render Geotiff as RGB. Currently not used.}
+
+\item{imagequery}{If \code{TRUE} a leaflet control with the hovered/clicked
+value will appear on the map.}
+
+\item{imagequeryOptions}{additional options for the control panel.}
 
 \item{...}{currently not used.}
 }

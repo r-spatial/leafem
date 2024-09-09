@@ -8,7 +8,8 @@ addLayerViewControl(
   map,
   view_settings,
   home_btns = FALSE,
-  home_btn_options = list()
+  home_btn_options = list(),
+  setviewonselect = TRUE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ Possible options include:
 - `cursor`: CSS cursor style for the button (default is 'pointer').
 - `class`: CSS class name for the button (default is 'leaflet-home-btn').
 - `styles`: Semicolon separated CSS-string (default is 'float: inline-end;').}
+
+\item{setviewonselect}{Logical. If `TRUE` (default) sets the view when the layer is selected.}
 }
 \value{
 A modified `leaflet` map object with view controls and home buttons.

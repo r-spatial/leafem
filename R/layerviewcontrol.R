@@ -15,6 +15,7 @@
 #'   }
 #' @param home_btns Logical. If `TRUE`, adds a "home" button next to each layer name in the layer control.
 #' Clicking the home button zooms the map to the view specified for that layer in \code{view_settings}.
+#' @param setviewonselect Logical. If `TRUE` (default) sets the view when the layer is selected.
 #' @param home_btn_options A list of options to customize the home button appearance and behavior.
 #'   Possible options include:
 #'   - `text`: The text or emoji to display on the button (default is '🏠').
@@ -95,7 +96,8 @@
 #'   )
 #'
 #' @export
-addLayerViewControl <- function(map, view_settings, home_btns = FALSE, home_btn_options = list()) {
+addLayerViewControl <- function(map, view_settings, home_btns = FALSE,
+                                home_btn_options = list(), setviewonselect = TRUE) {
 
   # Initialize data structures for view settings and home buttons
   view_data <- list()
@@ -136,7 +138,8 @@ addLayerViewControl <- function(map, view_settings, home_btns = FALSE, home_btn_
     NULL,
     'addLayerViewControl',
     view_data,
-    home_data
+    home_data,
+    setviewonselect
   )
 }
 

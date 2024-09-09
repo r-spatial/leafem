@@ -1,26 +1,12 @@
-LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings, fixLegends) {
+LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings, setviewonselect) {
   const map = this;
 
   // Handle view settings for each layer on 'overlayadd' or 'baselayerchange'
   map.on('overlayadd baselayerchange', function(e) {
     let layerName = e.name;
     let setting = viewSettings[layerName];
-
-    if (setting) {
-      if (setting.coords) {
-        if (setting.fly) {
-          map.flyTo([setting.coords[1], setting.coords[0]], setting.zoom, setting.options);
-        } else {
-          map.setView([setting.coords[1], setting.coords[0]], setting.zoom, setting.options);
-        }
-      } else if (setting.bounds) {
-        let bounds = [[setting.bounds[1], setting.bounds[0]], [setting.bounds[3], setting.bounds[2]]];
-        if (setting.fly) {
-          map.flyToBounds(bounds, setting.options);
-        } else {
-          map.fitBounds(bounds, setting.options);
-        }
-      }
+    if (setting && setviewonselect) {
+      handleView(map, setting);
     }
   });
 
@@ -32,11 +18,9 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
         let homeButton = document.createElement('span');
         homeButton.innerHTML = homeButtonOptions.text || '🏠';
         homeButton.style.cursor = homeButtonOptions.cursor || 'pointer';
+        homeButton.style.cssText += homeButtonOptions.styles || 'float: inline-end;';
         homeButton.className = homeButtonOptions.class || 'leaflet-home-btn';
         homeButton.dataset.layer = layer;
-        console.log("homeButtonOptions.styles"); console.log(homeButtonOptions.styles)
-        homeButton.style.cssText += homeButtonOptions.styles || 'float: inline-end;';
-
         // Find the corresponding label for the layer
         let labels = document.querySelectorAll('.leaflet-control-layers label');
         labels.forEach(function(label) {
@@ -49,19 +33,8 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
           event.stopPropagation();
           let layerName = this.dataset.layer;
           let setting = viewSettings[layerName];
-          if (setting && setting.coords) {
-            if (setting.fly) {
-              map.flyTo([setting.coords[1], setting.coords[0]], setting.zoom, setting.options);
-            } else {
-              map.setView([setting.coords[1], setting.coords[0]], setting.zoom, setting.options);
-            }
-          } else if (setting && setting.bounds) {
-            let bounds = [[setting.bounds[1], setting.bounds[0]], [setting.bounds[3], setting.bounds[2]]];
-            if (setting.fly) {
-              map.flyToBounds(bounds, setting.options);
-            } else {
-              map.fitBounds(bounds, setting.options);
-            }
+          if (setting) {
+            handleView(map, setting)
           }
         });
       }
@@ -69,3 +42,15 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
   }
 
 };
+
+// Helper function to handle setting view or bounds
+function handleView(map, setting) {
+  if (setting.coords) {
+    const method = setting.fly ? 'flyTo' : 'setView';
+    map[method]([setting.coords[1], setting.coords[0]], setting.zoom, setting.options);
+  } else if (setting.bounds) {
+    const method = setting.fly ? 'flyToBounds' : 'fitBounds';
+    const bounds = [[setting.bounds[1], setting.bounds[0]], [setting.bounds[3], setting.bounds[2]]];
+    map[method](bounds, setting.options);
+  }
+}

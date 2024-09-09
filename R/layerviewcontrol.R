@@ -110,13 +110,13 @@ addLayerViewControl <- function(map, view_settings, home_btns = FALSE, home_btn_
       view_data[[layer]] <- list(
         coords = setting$coords,
         zoom = setting$zoom,
-        fly = setting[["fly"]] %||% FALSE,
+        fly = ifelse(is.null(setting[["fly"]]), FALSE, setting[["fly"]]),
         options = setting$options
       )
     } else if (length(setting$coords) == 4) {
       view_data[[layer]] <- list(
         bounds = setting$coords,
-        fly = setting[["fly"]] %||% FALSE,
+        fly = ifelse(is.null(setting[["fly"]]), FALSE, setting[["fly"]]),
         options = setting$options
       )
     }

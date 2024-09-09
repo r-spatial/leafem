@@ -31,7 +31,8 @@ Clicking the home button zooms the map to the view specified for that layer in \
 Possible options include:
 - `text`: The text or emoji to display on the button (default is '🏠').
 - `cursor`: CSS cursor style for the button (default is 'pointer').
-- `class`: CSS class name for the button (default is 'leaflet-home-btn').}
+- `class`: CSS class name for the button (default is 'leaflet-home-btn').
+- `styles`: Semicolon separated CSS-string (default is 'float: inline-end;').}
 }
 \value{
 A modified `leaflet` map object with view controls and home buttons.
@@ -48,7 +49,6 @@ When clicked, it zooms the map to the predefined view of that layer.
 }
 \examples{
 library(sf)
-library(shiny)
 library(leaflet)
 library(leafem)
 

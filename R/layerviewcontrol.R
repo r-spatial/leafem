@@ -1,9 +1,10 @@
-#' Add Custom View Controls to Leaflet Map
+#' Extend Layers Control in Leaflet Map
 #'
-#' This function adds custom views per group and optional home buttons for zooming to specific layers
-#' or bounding boxes in a `leaflet` map.
+#' This function extends an existing layers control in a `leaflet` map by adding custom views, home buttons,
+#' opacity controls, and legends. It enhances the functionality of a layers control created with `leaflet`
+#' or `leaflet.extras`.
 #'
-#' @param map A `leaflet` or `mapview` object to which view controls will be added.
+#' @param map A `leaflet` or `mapview` object to which the extended layers control will be added.
 #' @param view_settings A list specifying the view settings for each layer. Each list element should contain
 #'   either:
 #'   \itemize{
@@ -23,13 +24,28 @@
 #'   - `class`: CSS class name for the button (default is 'leaflet-home-btn').
 #'   - `styles`: Semicolon separated CSS-string (default is 'float: inline-end;').
 #'
-#' @return A modified `leaflet` map object with view controls and home buttons.
+#' @param opacityControl A list specifying the opacity control settings for each layer. Each list element should contain:
+#'   \itemize{
+#'     \item \code{min}: Minimum opacity value (default is 0).
+#'     \item \code{max}: Maximum opacity value (default is 1).
+#'     \item \code{step}: Step size for the opacity slider (default is 0.1).
+#'     \item \code{default}: Default opacity value (default is 1).
+#'     \item \code{width}: Width of the opacity slider (default is '100%').
+#'     \item \code{class}: CSS class name for the slider (default is 'leaflet-opacity-slider').
+#'   }
+#'
+#' @param includelegends Logical. If `TRUE` (default), appends legends to the layer control. Legends are matched
+#'   to layers by their group name. The legends need to be added with corresponding layer IDs.
+#'
+#' @return A modified `leaflet` map object with extended layers control including view controls, home buttons, opacity controls, and legends.
 #'
 #' @details
 #' This function generates JavaScript that listens for `overlayadd` or `baselayerchange` events
 #' and automatically sets the view or zoom level according to the specified \code{view_settings}.
 #' If `home_btns` is enabled, a home button is added next to each layer in the layer control.
 #' When clicked, it zooms the map to the predefined view of that layer.
+#' The opacity control slider allows users to adjust the opacity of layers. The legend will be appended
+#' to the corresponding layer control, matched by the layer's group name.
 #'
 #' @examples
 #' library(sf)
@@ -44,26 +60,43 @@
 #' # View settings ##########
 #' view_settings <- list(
 #'   "Base_tiles1" = list(
-#'     coords = c(20, 50)
-#'     , zoom = 3
+#'     coords = c(20, 50),
+#'     zoom = 3
 #'   ),
 #'   "Base_tiles2" = list(
-#'     coords = c(-110, 50)
-#'     , zoom = 5
+#'     coords = c(-110, 50),
+#'     zoom = 5
 #'   ),
 #'   "breweries91" = list(
-#'     coords = as.numeric(st_coordinates(st_centroid(st_union(breweries91))))
-#'     , zoom = 8
+#'     coords = as.numeric(st_coordinates(st_centroid(st_union(breweries91)))),
+#'     zoom = 8
 #'   ),
 #'   "atlStorms2005" = list(
-#'     coords = as.numeric(st_bbox(lines))
-#'     , options = list(padding = c(110, 110))
+#'     coords = as.numeric(st_bbox(lines)),
+#'     options = list(padding = c(110, 110))
 #'   ),
 #'   "gadmCHE" = list(
-#'     coords = as.numeric(st_bbox(polys))
-#'     , options = list(padding = c(2, 2))
-#'     , fly = TRUE
+#'     coords = as.numeric(st_bbox(polys)),
+#'     options = list(padding = c(2, 2)),
+#'     fly = TRUE
 #'   )
+#' )
+#'
+#' # Opacity control settings ##########
+#' opacityControl <- list(
+#'   "breweries91" = list(
+#'     min = 0,
+#'     max = 1,
+#'     step = 0.1,
+#'     default = 1,
+#'     width = '100%',
+#'     class = 'opacity-slider'
+#'   )
+#' )
+#'
+#' # Legends ##########
+#' legends <- list(
+#'   "breweries91" = "<div>Legend for breweries</div>"
 #' )
 #'
 #' leaflet() %>%
@@ -76,8 +109,8 @@
 #'   addPolylines(data = lines, group = "atlStorms2005") %>%
 #'   addPolygons(data = polys, group = "gadmCHE") %>%
 #'
-#'   ## LayerViewControl
-#'   addLayerViewControl(
+#'   ## Extend Layers Control
+#'   extendLayersControl(
 #'     view_settings, home_btns = TRUE,
 #'     home_btn_options = list(
 #'       "Base_tiles1" = list(text = '🏡', cursor = 'ns-resize', class = 'homebtn'),
@@ -85,7 +118,9 @@
 #'       "atlStorms2005" = list(text = '🌎', cursor = 'all-scroll'),
 #'       "breweries91" = list(text = '🌎', styles = 'background-color: red'),
 #'       "gadmCHE" = list(text = '🌎', styles = 'float: none;')
-#'      )
+#'     ),
+#'     opacityControl = opacityControl,
+#'     includelegends = TRUE
 #'   ) %>%
 #'
 #'   ## LayersControl
@@ -97,7 +132,9 @@
 #'
 #' @export
 addLayerViewControl <- function(map, view_settings, home_btns = FALSE,
-                                home_btn_options = list(), setviewonselect = TRUE) {
+                                home_btn_options = list(), setviewonselect = TRUE,
+                                opacityControl = list(),
+                                includelegends = TRUE) {
 
   # Initialize data structures for view settings and home buttons
   view_data <- list()
@@ -139,7 +176,9 @@ addLayerViewControl <- function(map, view_settings, home_btns = FALSE,
     'addLayerViewControl',
     view_data,
     home_data,
-    setviewonselect
+    setviewonselect,
+    opacityControl,
+    includelegends
   )
 }
 
@@ -150,6 +189,7 @@ layerViewControlDependencies <- function() {
       "layerViewControl",
       '0.0.1',
       system.file("htmlwidgets/lib/layerviewcontrol", package = "leafem"),
-      script = c("layerviewcontrol.js")
+      script = "layerviewcontrol.js",
+      stylesheet = "layerviewcontrol.css"
     ))
 }

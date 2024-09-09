@@ -1,0 +1,6 @@
+.leaflet-control-layers-overlays .legend {
+  width: 55% !important;
+  margin: 0px 68px !important;
+  padding: 0 !important;
+  box-shadow: unset !important;
+}

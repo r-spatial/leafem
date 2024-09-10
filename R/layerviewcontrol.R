@@ -110,7 +110,7 @@
 #'   addPolygons(data = polys, group = "gadmCHE") %>%
 #'
 #'   ## Extend Layers Control
-#'   extendLayersControl(
+#'   extendLayerControl(
 #'     view_settings, home_btns = TRUE,
 #'     home_btn_options = list(
 #'       "Base_tiles1" = list(text = '🏡', cursor = 'ns-resize', class = 'homebtn'),
@@ -131,7 +131,7 @@
 #'   )
 #'
 #' @export
-addLayerViewControl <- function(map, view_settings, home_btns = FALSE,
+extendLayerControl <- function(map, view_settings, home_btns = FALSE,
                                 home_btn_options = list(), setviewonselect = TRUE,
                                 opacityControl = list(),
                                 includelegends = TRUE) {
@@ -173,7 +173,7 @@ addLayerViewControl <- function(map, view_settings, home_btns = FALSE,
   leaflet::invokeMethod(
     map,
     NULL,
-    'addLayerViewControl',
+    'extendLayerControl',
     view_data,
     home_data,
     setviewonselect,

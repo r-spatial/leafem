@@ -1,27 +1,5 @@
-LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings, setviewonselect, opacityControl, includelegends) {
+LeafletWidget.methods.extendLayerControl = function(viewSettings, homeSettings, setviewonselect, opacityControl, includelegends) {
   const map = this;
-
-  // Utility function to find the correct label element
-  function findLabel(layerName) {
-    return Array.from(document.querySelectorAll('.leaflet-control-layers label:not([class])')).find(label =>
-      $(label).find("span")[0].textContent.trim() === layerName
-    );
-  }
-
-  // Utility function to append a child to the label element
-  function appendToLabel(layer, childElement) {
-    const label = findLabel(layer);
-    if (label) {
-      let labelDiv = label.querySelector('div') || document.createElement('div');
-      labelDiv.appendChild(childElement);
-      label.appendChild(labelDiv);
-    }
-  }
-
-  // Helper function to check if the layer is active
-  function isLayerActive(layerName) {
-    return !!map.layerManager._groupContainers[layerName];
-  }
 
   // Handle view settings for each layer on 'overlayadd' or 'baselayerchange'
   map.on('overlayadd baselayerchange', function(e) {
@@ -51,11 +29,18 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
           if (setting) handleView(map, setting);
         });
       });
-    }, 100);
+    }, 20);
   }
 
   // Handle opacity control
   if (opacityControl) {
+    // Helper function to check if the layer is active
+    function isLayerActive(layerName) {
+      return Object.keys(map.layerManager._groupContainers).some(function(layer) {
+        return layer === layerName;
+      });
+    }
+
     setTimeout(() => {
       Object.entries(opacityControl).forEach(([layer, options]) => {
         let sliderContainer = document.createElement('div');
@@ -85,14 +70,20 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
           });
         });
 
-        // Show/hide the slider based on layer visibility
-        function updateSliderVisibility() {
-          sliderContainer.style.display = isLayerActive(layer) ? 'block' : 'none';
+        // Initialize slider visibility based on the current state of the layer
+        if (isLayerActive(layer)) {
+          sliderContainer.style.display = 'block';
         }
-        map.on('overlayadd overlayremove baselayerchange', updateSliderVisibility);
-        updateSliderVisibility();
+
+        // Handle layer visibility
+        map.on('overlayadd overlayremove baselayerchange', function(e) {
+          if (e.name === layer) {
+            sliderContainer.style.display = (e.type === 'overlayadd' || e.type === 'baselayerchange') ? 'block' : 'none';
+          }
+        });
+
       });
-    }, 100);
+    }, 30);
   }
 
   // Handle legends
@@ -105,12 +96,14 @@ LeafletWidget.methods.addLayerViewControl = function(viewSettings, homeSettings,
         }
       });
     }
-    setTimeout(moveLegends, 20);
+    setTimeout(moveLegends, 40);
     map.on('overlayadd baselayerchange', () => setTimeout(moveLegends, 20));
   }
 };
 
-// Helper function to handle setting view or bounds
+
+
+// function to handle setting view or bounds
 function handleView(map, setting) {
   if (setting.coords) {
     const method = setting.fly ? 'flyTo' : 'setView';
@@ -119,5 +112,22 @@ function handleView(map, setting) {
     const method = setting.fly ? 'flyToBounds' : 'fitBounds';
     const bounds = [[setting.bounds[1], setting.bounds[0]], [setting.bounds[3], setting.bounds[2]]];
     map[method](bounds, setting.options);
+  }
+}
+
+// function to find the correct label element
+function findLabel(layerName) {
+  return Array.from(document.querySelectorAll('.leaflet-control-layers label:not([class])')).find(label =>
+    $(label).find("span")[0].textContent.trim() === layerName
+  );
+}
+
+// function to append a child to the label element
+function appendToLabel(layer, childElement) {
+  const label = findLabel(layer);
+  if (label) {
+    let labelDiv = label.querySelector('div') || document.createElement('div');
+    labelDiv.appendChild(childElement);
+    label.appendChild(labelDiv);
   }
 }

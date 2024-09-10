@@ -95,6 +95,20 @@ LeafletWidget.methods.extendLayerControl = function(viewSettings, homeSettings, 
           appendToLabel(controlId, legendContainer)
         }
       });
+
+      // Fix for leaflegend package
+      let elements = document.querySelectorAll('[class*="leaflegend-group"]');
+      elements.forEach(function(element) {
+        // Find the class that starts with 'leaflegend-group-'
+        let groupClass = Array.from(element.classList).find(cls => cls.startsWith('leaflegend-group-'));
+
+        if (groupClass) {
+          // Extract everything after 'leaflegend-group-'
+          let groupName = groupClass.split('leaflegend-group-')[1];
+          appendToLabel(groupName, element)
+        }
+      });
+
     }
     setTimeout(moveLegends, 40);
     map.on('overlayadd baselayerchange', () => setTimeout(moveLegends, 20));

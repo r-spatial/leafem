@@ -2,13 +2,16 @@ library(sf)
 library(shiny)
 library(leaflet)
 library(leaflet.extras)
+library(leaflegend)
 library(leafem)
 options("shiny.autoreload" = TRUE)
 
 # Example data ##########
 breweries91 <- st_as_sf(breweries91)
 lines <- st_as_sf(atlStorms2005)
-polys <- st_as_sf(leaflet::gadmCHE)
+data("gadmCHE")
+gadmCHE@data$x <- sample(c('A', 'B', 'C'), nrow(gadmCHE@data), replace = TRUE)
+polys <- st_as_sf(gadmCHE)
 overlay1 <- "Overlay with Legend (orange)"
 overlay2 <- "Overlay with Legend (blue)"
 
@@ -96,8 +99,14 @@ ui <- fluidPage(
   leafletOutput("map", height = 800)
 )
 
+## Server ##################
 server <- function(input, output, session) {
   output$map <- renderLeaflet({
+
+    factorPal <- colorFactor(c('#1f77b4', '#ff7f0e' , '#2ca02c'), gadmCHE@data$x)
+    binPal <- colorBin('Set1', lines$MaxWind, bins = 4)
+    quantPal <- colorQuantile('Reds', lines$MaxWind, n = 3)
+
     m <- leaflet() %>%
       ## Baselayer ##########
       addTiles(group = "Base_tiles1") %>%
@@ -105,12 +114,24 @@ server <- function(input, output, session) {
 
       ## Overlays ##########
       addCircleMarkers(data = breweries91, group = "breweries91") %>%
-      addCircleMarkers(data = pts, group = "random_points", color = "red", weight = 1) %>%
-      addPolylines(data = lines, group = "atlStorms2005") %>%
-      addPolygons(data = polys, group = "gadmCHE") %>%
-      addCircleMarkers(data = dfnew, ~x, ~y, color = ~palnew(z), group = overlay1) %>%
-      addCircleMarkers(data = dfnew, ~x, ~y, color = ~palnew2(z), group = overlay2) %>%
-      addLegend(data = dfnew, pal = palnew, layerId = overlay1, values = ~z,  group = overlay1, position = "bottomleft") %>%
+      addCircleMarkers(data = pts, opacity = 1, fillOpacity = .4,
+                       group = "random_points", color = "red", weight = 1) %>%
+      # addLegendSize(values = 1, color = 'red', shape  = 'circle', breaks = 1, group = "random_points", layerId="random_points") %>%
+      addLegendImage(images = makeSymbol(shape="circle", color = "red", opacity = 1, fillOpacity = .4, width = 10),
+                     labels = "", group = "random_points", layerId="random_points",
+                     orientation = 'horizontal') %>%
+      addPolylines(data = lines, color = ~quantPal(MaxWind), label=~MaxWind, group = "atlStorms2005") %>%
+      addLegendQuantile(data = lines, pal = quantPal, values = ~MaxWind, numberFormat = NULL,
+                        group = "atlStorms2005", position = 'topright') %>%
+      addPolygons(data = polys, color = ~factorPal(x), label=~x, group = "gadmCHE") %>%
+      addLegendFactor(pal = factorPal, shape = 'polygon', fillOpacity = .5,
+                      opacity = 0, values = ~x,
+                      position = 'topright', data = gadmCHE, group = 'gadmCHE') %>%
+      addCircleMarkers(data = dfnew, ~x, ~y, color = ~palnew(z), label=~z, group = overlay1) %>%
+      addCircleMarkers(data = dfnew, ~x, ~y, color = ~palnew2(z), label=~z, group = overlay2) %>%
+      addLegendNumeric(orientation = "horizontal", width = 180, height = 20,
+                       data = dfnew, pal = palnew, layerId = overlay1,
+                       values = ~z,  group = overlay1, position = "bottomleft") %>%
       addLegend(data = dfnew, pal = palnew2, layerId = overlay2, values = ~z, group = overlay2, position = "bottomleft") %>%
 
       ## extendLayerControl ##########

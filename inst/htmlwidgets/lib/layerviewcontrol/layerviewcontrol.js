@@ -20,7 +20,7 @@ LeafletWidget.methods.extendLayerControl = function(viewSettings, homeSettings, 
         homeButton.dataset.layer = layer;
         homeButton.innerHTML = options.text || '🏠';
 
-        appendToLabel(layer, homeButton);
+        appendToLabelHome(layer, homeButton);
 
         homeButton.addEventListener('click', function(event) {
           event.preventDefault();
@@ -129,5 +129,18 @@ function appendToLabel(layer, childElement) {
     let labelDiv = label.querySelector('div') || document.createElement('div');
     labelDiv.appendChild(childElement);
     label.appendChild(labelDiv);
+  }
+}
+
+// function to append a child to the label element
+function appendToLabelHome(layer, childElement) {
+  const label = findLabel(layer);
+  if (label) {
+    let labelDiv = label.querySelector('div')
+    if (labelDiv) {
+      labelDiv.appendChild(childElement);
+    } else {
+      label.appendChild(childElement);
+    }
   }
 }

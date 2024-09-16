@@ -305,6 +305,7 @@ addTileFolder = function(map,
 #'   opacity, fillOpacity if those are to be mapped to an attribute column.
 #' @param minZoom minimum zoom level at which data should be rendered.
 #' @param maxZoom maximum zoom level at which data should be rendered.
+#' @inheritParams leaflet::addPolylines
 #' @param ... currently not used.
 #'
 #' @examples
@@ -358,6 +359,8 @@ addFgb = function(map,
                   scale = scaleOptions(),
                   minZoom = NULL,
                   maxZoom = 52,
+                  highlightOptions = NULL,
+                  labelOptions = NULL,
                   ...) {
 
 
@@ -375,10 +378,8 @@ addFgb = function(map,
 
   if (is.null(layerId)) layerId = group
   layerId = gsub("[[:punct:] ]", "_", layerId)
-  # layerId = gsub("\\.", "_", layerId)
-  # layerId = gsub(" ", "", layerId)
-  # layerId = gsub('\\"', '', layerId)
-  # layerId = gsub("\\'", "", layerId)
+
+  if (missing(labelOptions)) labelOptions <- leaflet::labelOptions()
 
   if (!is.null(file)) {
     if (!file.exists(file)) {
@@ -392,7 +393,7 @@ addFgb = function(map,
     }
     path_layer = tempfile()
     dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", layerId, "_layer.fgb")
+    path_layer = paste0(path_layer, "/", group, "_layer.fgb")
 
     file.copy(file, path_layer, overwrite = TRUE)
 
@@ -407,7 +408,7 @@ addFgb = function(map,
 
     scale = utils::modifyList(scaleOptions(), scale)
 
-    options = options[!(options %in% style_list)]
+    options = options[!(names(options) %in% names(style_list))]
 
     map$dependencies = c(
       map$dependencies
@@ -417,7 +418,7 @@ addFgb = function(map,
 
     map$dependencies = c(
       map$dependencies
-      , fileAttachment(path_layer, layerId)
+      , fileAttachment(path_layer, group)
     )
 
     if (!is.null(minZoom)) {
@@ -440,6 +441,8 @@ addFgb = function(map,
         , scaleFields
         , minZoom
         , maxZoom
+        , highlightOptions
+        , labelOptions
       )
     } else {
       leaflet::invokeMethod(
@@ -456,6 +459,8 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
+        , highlightOptions
+        , labelOptions
       )
     }
   } else {
@@ -496,6 +501,8 @@ addFgb = function(map,
         , scaleFields
         , minZoom
         , maxZoom
+        , highlightOptions
+        , labelOptions
       )
     } else {
       leaflet::invokeMethod(
@@ -512,6 +519,8 @@ addFgb = function(map,
         , className
         , scale
         , scaleFields
+        , highlightOptions
+        , labelOptions
       )
     }
   }
@@ -535,7 +544,7 @@ fgbDependencies = function() {
   list(
     htmltools::htmlDependency(
       "FlatGeoBuf"
-      , '3.21.3'
+      , '3.31.1'
       , system.file("htmlwidgets/lib/FlatGeoBuf", package = "leafem")
       , script = c(
         'fgb.js'

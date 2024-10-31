@@ -132,7 +132,7 @@ addGeoRaster = function(map,
 #'   if FALSE, it's the caller's responsibility to ensure that \code{file} is already projected.
 #' @param method character defining the resampling method to be used when
 #' \code{project} is \code{TRUE}.
-#' See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+#' See \url{https://gdal.org/en/latest/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
 #' possible values.
 #' @param opacity opacity of the rendered layer.
 #' @param options options to be passed to the layer.

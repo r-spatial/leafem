@@ -181,7 +181,7 @@ addLocalFile = function(map,
 #'
 #' @description
 #'   Add tiled raster data pyramids from a local folder that was created with
-#'   gdal2tiles.py (see \url{https://gdal.org/programs/gdal2tiles.html} for details).
+#'   gdal2tiles.py (see \url{https://gdal.org/en/latest/programs/gdal2tiles.html} for details).
 #'
 #' @param map a mapview or leaflet object.
 #' @param folder the (top level) folder where the tiles (folders) reside.
@@ -266,7 +266,7 @@ addTileFolder = function(map,
 #'   serving large data. For more details see
 #'   \url{https://github.com/flatgeobuf/flatgeobuf} and the respective
 #'   documentation for the GDAL/OGR driver at
-#'   \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
+#'   \url{https://gdal.org/en/latest/drivers/vector/flatgeobuf.html}. \cr
 #'   \cr
 #'   In contrast to classical ways of serving data from R onto a leaflet map,
 #'   flatgeobuf can stream the data chunk by chunk so that rendering of the map

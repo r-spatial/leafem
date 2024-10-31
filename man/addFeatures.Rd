@@ -14,8 +14,9 @@ addFeatures(map, data, pane = "overlayPane", ...)
 \item{pane}{The name of the map pane for the features to be rendered in.}
 
 \item{...}{Further arguments passed to the respective \code{leaflet::add*}
-functions. See \code{\link{addCircleMarkers}}, \code{\link{addPolylines}}
-and \code{\link{addPolygons}}.}
+functions. See \link[leaflet:addControl]{addCircleMarkers},
+\link[leaflet:addControl]{addPolylines}
+and \link[leaflet:addControl]{addPolygons}.}
 }
 \value{
 A leaflet \code{map} object.

@@ -9,8 +9,9 @@
 #' @param data A \code{sf} object to be added to the \code{map}.
 #' @param pane The name of the map pane for the features to be rendered in.
 #' @param ... Further arguments passed to the respective \code{leaflet::add*}
-#' functions. See \code{\link{addCircleMarkers}}, \code{\link{addPolylines}}
-#' and \code{\link{addPolygons}}.
+#' functions. See \link[leaflet:addControl]{addCircleMarkers},
+#' \link[leaflet:addControl]{addPolylines}
+#' and \link[leaflet:addControl]{addPolygons}.
 #'
 #' @return
 #' A leaflet \code{map} object.

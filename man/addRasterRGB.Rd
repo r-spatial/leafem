@@ -57,7 +57,7 @@ based on min-max values.}
 \code{"ngb"} - nearest neighbor - is appropriate for categorical data.
 Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
 
-\item{...}{additional arguments passed on to \code{\link{addRasterImage}}}
+\item{...}{additional arguments passed on to \code{\link[leaflet]{addRasterImage}}}
 }
 \description{
 Create a Red-Green-Blue image overlay from a \code{RasterStack} /
@@ -66,9 +66,9 @@ Three layers (sometimes referred to as "bands" because they may represent
 different bandwidths in the electromagnetic spectrum) are combined such
 that they represent the red, green and blue channel. This function can
 be used to make 'true (or false) color images' from Landsat and other
-multi-band satellite images. Note, this text is plagirized, i.e. copied
-from \code{\link{plotRGB}}.
-\code{AddRasterRGB} and \code{addStarsRGB} are aliases.
+multi-band satellite images. Note, this text is plagiarized, i.e. copied
+from \code{\link[raster]{plotRGB}}.
+\code{addRasterRGB} and \code{addStarsRGB} are aliases.
 }
 \examples{
 \donttest{

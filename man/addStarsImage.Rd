@@ -70,7 +70,7 @@ initially, but can be overridden.}
 Add stars layer to a leaflet map
 }
 \details{
-This is an adaption of \code{\link{addRasterImage}}. See that documentation
+This is an adaption of \code{\link[leaflet]{addRasterImage}}. See that documentation
 for details.
 }
 \examples{

@@ -11,7 +11,6 @@ checks](https://badges.cranchecks.info/worst/leafem.svg)](https://cran.r-project
 ![monthly](http://cranlogs.r-pkg.org/badges/leafem)
 ![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)
 [![CRAN](http://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)
-[![status](https://tinyverse.netlify.com/badge/leafem)](https://CRAN.R-project.org/package=leafem)
 <!-- badges: end -->
 
 `leafem` provides extensions for package `leaflet` many of which are
@@ -38,7 +37,7 @@ library(leaflet)
 leaflet() %>% addProviderTiles("OpenStreetMap") %>% addFeatures(data = breweries91)
 ```
 
-![](man/figures/README-features.png)
+![](figures/README-features.png)
 
 #### addMouseCoordinates
 
@@ -48,7 +47,7 @@ leaflet() %>%
   addMouseCoordinates()
 ```
 
-![](man/figures/README-garnish.png)
+![](figures/README-garnish.png)
 
 #### garnishMap
 
@@ -59,7 +58,7 @@ m <- leaflet() %>% addProviderTiles("OpenStreetMap")
 garnishMap(m, addMouseCoordinates)
 ```
 
-![](man/figures/README-garnish.png)
+![](figures/README-garnish.png)
 
 #### addHomeButton
 
@@ -74,7 +73,7 @@ m <- leaflet() %>%
 m
 ```
 
-![](man/figures/README-home.png)
+![](figures/README-home.png)
 
 #### addImageQuery
 
@@ -91,7 +90,7 @@ leaflet() %>%
   addLayersControl(overlayGroups = "poppendorf")
 ```
 
-![](man/figures/README-query.png)
+![](figures/README-query.png)
 
 #### addLogo
 
@@ -101,7 +100,7 @@ img <- "https://www.r-project.org/logo/Rlogo.svg"
 leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/")
 ```
 
-![](man/figures/README-logo.png)
+![](figures/README-logo.png)
 
 ### Code of Conduct
 

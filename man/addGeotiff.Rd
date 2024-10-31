@@ -52,7 +52,7 @@ if FALSE, it's the caller's responsibility to ensure that \code{file} is already
 
 \item{method}{character defining the resampling method to be used when
 \code{project} is \code{TRUE}.
-See \url{https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r} for
+See \url{https://gdal.org/en/latest/programs/gdalwarp.html} for
 possible values.}
 
 \item{opacity}{opacity of the rendered layer.}

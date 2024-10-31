@@ -94,7 +94,7 @@ flatgeobuf is a performant binary geo-spatial file format suitable for
   serving large data. For more details see
   \url{https://github.com/flatgeobuf/flatgeobuf} and the respective
   documentation for the GDAL/OGR driver at
-  \url{https://gdal.org/drivers/vector/flatgeobuf.html}. \cr
+  \url{https://gdal.org/en/latest/drivers/vector/flatgeobuf.html}. \cr
   \cr
   In contrast to classical ways of serving data from R onto a leaflet map,
   flatgeobuf can stream the data chunk by chunk so that rendering of the map

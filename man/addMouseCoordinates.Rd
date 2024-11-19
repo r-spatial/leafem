@@ -6,7 +6,15 @@
 \alias{clip2sfc}
 \title{Add mouse coordinate information at top of map.}
 \usage{
-addMouseCoordinates(map, epsg = NULL, proj4string = NULL, native.crs = FALSE)
+addMouseCoordinates(
+  map,
+  epsg = NULL,
+  proj4string = NULL,
+  native.crs = FALSE,
+  align = "left",
+  size = "9px",
+  opacity = 0.7
+)
 
 removeMouseCoordinates(map)
 
@@ -20,6 +28,12 @@ clip2sfc(x, clipboard = TRUE)
 \item{proj4string}{the proj4string to be shown.}
 
 \item{native.crs}{logical. whether to use the native crs in the coordinates box.}
+
+\item{align}{CSS 'text-align' property for the coordinates div. One of
+'left', 'center', 'right'. See \url{https://www.w3schools.com/cssref/pr_text_text-align.php}
+for more details.}
+
+\item{size}{numeric/integer. Text size of the coordinates div in pixels.}
 
 \item{x}{a charcter string with valid longitude and latitude values. Order
 matters! If missing and \code{clipboard = TRUE} (the default) contents

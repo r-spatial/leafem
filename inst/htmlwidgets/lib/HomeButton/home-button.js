@@ -1,5 +1,6 @@
 LeafletWidget.methods.addHomeButton = function (xmin, ymin, xmax, ymax, useext,
-                                                group, label, icon, position) {
+                                                group, label, icon, position,
+                                                css, hover_css) {
 
   if (this.easyButton) {
 		this.easyButton.removeFrom(this);
@@ -24,6 +25,20 @@ LeafletWidget.methods.addHomeButton = function (xmin, ymin, xmax, ymax, useext,
             }
     }]
   });
+
+  let keys = Object.keys(css);
+  let vals = Object.values(css);
+
+  for (let i = 0; i < keys.length; i++) {
+    easyButton.button.style.setProperty(keys[i].toString(), vals[i].toString());
+  }
+
+  // FIXME: need to figure out how to insert hover_css here!!!
+  let hvr_css = '.leaflet-bar button:hover{ background-color: #00ff00 }';
+  // let hvr_css = '.leaflet-bar button:hover' + JSON.stringify(hover_css);
+  let style = document.createElement('style');
+  style.appendChild(document.createTextNode(hvr_css));
+  document.getElementsByTagName('head')[0].appendChild(style);
 
   easyButton.addTo(this);
 

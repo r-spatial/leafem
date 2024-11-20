@@ -42,7 +42,8 @@
 #' @rdname addHomeButton
 #' @aliases addHomeButton
 addHomeButton <- function(map, ext, group = "layer",
-                          position = 'bottomright', add = TRUE) {
+                          position = 'bottomright', add = TRUE,
+                          css = list(), hover_css = list()) {
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy")))
 
@@ -72,10 +73,43 @@ addHomeButton <- function(map, ext, group = "layer",
 
     txt <- paste('<strong>', group, '</strong>')
 
+    css_dflt = list(
+      # "background-color" = "#ffffff95",
+      # "border" = "none",
+      # "width" = "100%",
+      # "height" = "20px",
+      # "line-height" = "15px",
+      # "font-size" = "85%",
+      # "text-align" = "center",
+      # "text-decoration" = "none",
+      # "color" = "black",
+      # "cursor" = "pointer",
+      # "overflow-x" = "visible",
+      # "overflow-y" = "hidden",
+      # "opacity" = "0.25",
+      # "filter" = "alpha(opacity = 25)",
+      # "background-position" = "50% 50%",
+      # "background-repeat" = "no-repeat",
+      # "display" = "inline-block"
+    )
+
+    hover_css_dflt = list(
+      'background-color' =  '#00ffff'
+      , 'text-decoration' =  'underline'
+      , 'opacity' = '0.9'
+    )
+
+    css = utils::modifyList(css_dflt, css)
+    hover_css = jsonlite::toJSON(
+      utils::modifyList(hover_css_dflt, hover_css)
+      , auto_unbox = TRUE
+    )
+
     map$dependencies <- c(map$dependencies, leafletHomeButtonDependencies())
     leaflet::invokeMethod(map, leaflet::getMapData(map), 'addHomeButton',
                           ext[1], ext[2], ext[3], ext[4],
-                          useext, group, label, txt, position)
+                          useext, group, label, txt, position,
+                          css, hover_css)
   }
 
   else map

@@ -20,12 +20,14 @@
   display: inline-block;
 }
 
+
 .leaflet-bar button:hover {
-  background-color: #00ffff; /* #909090 */;
+  background-color: #00ffff;;
   text-decoration: underline;
   opacity: 0.9;
   filter: alpha(opacity=90);
 }
+
 
 /* uncomment this to get rid of button borders, this also removes border from zoom buttons
 .leaflet-touch .leaflet-bar {

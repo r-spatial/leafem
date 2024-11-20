@@ -74,6 +74,7 @@ Imports:
     geojsonsf,
     htmltools (>= 0.3),
     htmlwidgets,
+    jsonlite,
     leaflet (>= 2.0.1),
     methods,
     raster,

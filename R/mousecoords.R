@@ -13,10 +13,8 @@
 #' @param epsg the epsg string to be shown.
 #' @param proj4string the proj4string to be shown.
 #' @param native.crs logical. whether to use the native crs in the coordinates box.
-#' @param align CSS 'text-align' property for the coordinates div. One of
-#' 'left', 'center', 'right'. See \url{https://www.w3schools.com/cssref/pr_text_text-align.php}
-#' for more details.
-#' @param size numeric/integer. Text size of the coordinates div in pixels.
+#' @param css list of valid CSS key-value pairs. See e.g.
+#' \url{https://www.w3schools.com/cssref/index.php} for possible values.
 #'
 #' @details
 #' If style is set to "detailed", the following information will be displayed:
@@ -49,6 +47,18 @@
 #'
 #' removeMouseCoordinates(m)
 #'
+#' # adjust css
+#' leaflet() %>%
+#'   addProviderTiles("OpenStreetMap") %>%
+#'   addMouseCoordinates(
+#'     css = list(
+#'      "font-size" = "30px",
+#'      "text-align" = "center",
+#'      "background-color" = "#ff000080",
+#'      "color" = "rgb(255, 255, 255)"
+#'    )
+#'  )
+#'
 #' @export addMouseCoordinates
 #' @name addMouseCoordinates
 #' @rdname addMouseCoordinates
@@ -58,9 +68,7 @@ addMouseCoordinates <- function(map,
                                 epsg = NULL,
                                 proj4string = NULL,
                                 native.crs = FALSE,
-                                align = 'left',
-                                size = '9px',
-                                opacity = 0.7) {
+                                css = list()) {
 
   if (inherits(map, "mapview")) map <- mapview2leaflet(map)
   stopifnot(inherits(map, c("leaflet", "leaflet_proxy", "mapdeck")))
@@ -93,6 +101,24 @@ addMouseCoordinates <- function(map,
     clipboardDependency()
   )
 
+  css_dflt = list(
+    'position' = 'relative'
+    , 'bottomleft' =  '0px'
+    , 'background-color' = 'rgba(255, 255, 255, 0.7)'
+    , 'box-shadow' = '0 0 2px #bbb'
+    , 'background-clip' = 'padding-box'
+    , 'margin' = '0'
+    , 'padding-left' = '5px'
+    , 'padding-right' = '5px'
+    , 'color' = '#333'
+    , 'font-size' = '9px'
+    , 'font-family' = '\"Helvetica Neue\", Arial, Helvetica, sans-serif'
+    , 'text-align' = 'left'
+    , 'z-index' = '700'
+  )
+
+  css = utils::modifyList(css_dflt, css)
+
   map <- htmlwidgets::onRender(
     map,
     paste0(
@@ -110,20 +136,7 @@ addMouseCoordinates <- function(map,
       $(el).append(newDiv);
       //provide ID and style
       newDiv.addClass('lnlt');
-      newDiv.css({
-      'position': 'relative',
-      'bottomleft':  '0px',
-      'background-color': 'rgba(255, 255, 255, ", opacity, ")',
-      'box-shadow': '0 0 2px #bbb',
-      'background-clip': 'padding-box',
-      'margin': '0',
-      'padding-left': '5px',
-      'padding-right': '5px',
-      'color': '#333',
-      'font': '", size, "px/1.5 \"Helvetica Neue\", Arial, Helvetica, sans-serif',
-      'text-align': '", align, "',
-      'z-index': '700',
-      });
+      newDiv.css(", jsonlite::toJSON(css, auto_unbox = TRUE), ");
       return newDiv;
       }
 

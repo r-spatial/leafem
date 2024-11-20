@@ -2,6 +2,8 @@
 
 #### ✨ features and improvements
 
+  * `addMouseCoordinates()` gained argument `css` to modify the layout of the div. #95
+
 #### 🐛 bug fixes
 
 #### 💬 documentation etc

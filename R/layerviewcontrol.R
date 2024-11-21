@@ -131,8 +131,11 @@
 #'   )
 #'
 #' @export
-extendLayerControl <- function(map, view_settings, home_btns = FALSE,
-                                home_btn_options = list(), setviewonselect = TRUE,
+extendLayersControl <- function(map,
+                                view_settings,
+                                home_btns = FALSE,
+                                home_btn_options = list(),
+                                setviewonselect = TRUE,
                                 opacityControl = list(),
                                 includelegends = TRUE) {
 
@@ -169,11 +172,22 @@ extendLayerControl <- function(map, view_settings, home_btns = FALSE,
   }
 
   # Add deps & Pass view and home button data using invokeMethod
-  map$dependencies <- c(map$dependencies, layerViewControlDependencies())
+  map$dependencies <- c(
+    map$dependencies
+    , layerViewControlDependencies()
+  )
+
+  if (requireNamespace("fontawesome")) {
+    map$dependencies <- c(
+      map$dependencies
+      , list(fontawesome::fa_html_dependency())
+    )
+  }
+
   leaflet::invokeMethod(
     map,
     NULL,
-    'extendLayerControl',
+    'extendLayersControl',
     view_data,
     home_data,
     setviewonselect,
@@ -190,6 +204,10 @@ layerViewControlDependencies <- function() {
       '0.0.1',
       system.file("htmlwidgets/lib/layerviewcontrol", package = "leafem"),
       script = "layerviewcontrol.js",
-      stylesheet = "layerviewcontrol.css"
-    ))
+      stylesheet = c(
+        "layerviewcontrol.css"
+        # , "fontawesome.min.css"
+      )
+    )
+  )
 }

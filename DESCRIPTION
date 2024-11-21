@@ -82,6 +82,7 @@ Imports:
     png
 Suggests:
     clipr,
+    fontawesome,
     leafgl,
     lwgeom,
     mapdeck,

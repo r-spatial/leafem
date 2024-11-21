@@ -1,4 +1,4 @@
-LeafletWidget.methods.extendLayerControl = function(viewSettings, homeSettings, setviewonselect, opacityControl, includelegends) {
+LeafletWidget.methods.extendLayersControl = function(viewSettings, homeSettings, setviewonselect, opacityControl, includelegends) {
   const map = this;
 
   // Handle view settings for each layer on 'overlayadd' or 'baselayerchange'
@@ -18,7 +18,7 @@ LeafletWidget.methods.extendLayerControl = function(viewSettings, homeSettings, 
         });
         homeButton.className = options.class || 'leaflet-home-btn';
         homeButton.dataset.layer = layer;
-        homeButton.innerHTML = options.text || '🏠';
+        homeButton.innerHTML = options.text || '<i class="fa fa-home"></i>'; //'🏠';
 
         appendToLabelHome(layer, homeButton);
 

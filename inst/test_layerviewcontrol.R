@@ -135,7 +135,7 @@ server <- function(input, output, session) {
       addLegend(data = dfnew, pal = palnew2, layerId = overlay2, values = ~z, group = overlay2, position = "bottomleft") %>%
 
       ## extendLayerControl ##########
-      extendLayerControl(view_settings
+      extendLayersControl(view_settings
                          , includelegends = input$includelegends
                          , home_btns = input$homebtns
                          , setviewonselect = input$setviewonselect

@@ -15,7 +15,7 @@ addCopyExtent(map, event.code = "KeyE")
 Add JavaScript functioality to enable copying of the current view bouding box
 to the clipboard. The \code{copy.btn} argument expects a valid keycode
 \code{event.code} such as "KeyE" (the default).
-Use \url{https://www.toptal.com/developers/keycode/} to find the
+Use \url{https://www.toptal.com/developers/keycode} to find the
 approprate codes for your keyboard.
 }
 \examples{

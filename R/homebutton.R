@@ -40,6 +40,8 @@
 #' @export addHomeButton
 #' @name addHomeButton
 #' @rdname addHomeButton
+#' @param css,hover_css list of valid CSS key-value pairs. See e.g.
+#' \url{https://www.w3schools.com/cssref/index.php} for possible values.
 #' @aliases addHomeButton
 addHomeButton <- function(map, ext, group = "layer",
                           position = 'bottomright', add = TRUE,

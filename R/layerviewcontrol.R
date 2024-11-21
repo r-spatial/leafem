@@ -110,7 +110,7 @@
 #'   addPolygons(data = polys, group = "gadmCHE") %>%
 #'
 #'   ## Extend Layers Control
-#'   extendLayerControl(
+#'   extendLayersControl(
 #'     view_settings, home_btns = TRUE,
 #'     home_btn_options = list(
 #'       "Base_tiles1" = list(text = '🏡', cursor = 'ns-resize', class = 'homebtn'),

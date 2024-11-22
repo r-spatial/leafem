@@ -29,6 +29,9 @@ string)}
 'bottomleft', 'bottomright'). Defaults to 'bottomright'.}
 
 \item{add}{logical. Whether to add the button to the map (mainly for internal use).}
+
+\item{css, hover_css}{list of valid CSS key-value pairs. See e.g.
+\url{https://www.w3schools.com/cssref/index.php} for possible values.}
 }
 \description{
 This function adds a button to the map that enables zooming to a

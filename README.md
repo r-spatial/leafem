@@ -5,12 +5,12 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/r-spatial/leafem/workflows/R-CMD-check/badge.svg)](https://github.com/r-spatial/leafem/actions)
+[![R-CMD-check](https://github.com/r-spatial/leafem/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/leafem/actions/workflows/R-CMD-check.yaml)
 [![cran
 checks](https://badges.cranchecks.info/worst/leafem.svg)](https://cran.r-project.org/web/checks/check_results_leafem.html)
-![monthly](http://cranlogs.r-pkg.org/badges/leafem)
-![total](http://cranlogs.r-pkg.org/badges/grand-total/leafem)
-[![CRAN](http://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)
+![monthly](https://cranlogs.r-pkg.org/badges/leafem)
+![total](https://cranlogs.r-pkg.org/badges/grand-total/leafem)
+[![CRAN](https://www.r-pkg.org/badges/version/leafem?color=009999)](https://cran.r-project.org/package=leafem)
 <!-- badges: end -->
 
 `leafem` provides extensions for package `leaflet` many of which are
@@ -37,7 +37,7 @@ library(leaflet)
 leaflet() %>% addProviderTiles("OpenStreetMap") %>% addFeatures(data = breweries91)
 ```
 
-![](figures/README-features.png)
+![](man/figures/README-features.png)
 
 #### addMouseCoordinates
 
@@ -47,7 +47,7 @@ leaflet() %>%
   addMouseCoordinates()
 ```
 
-![](figures/README-garnish.png)
+![](man/figures/README-garnish.png)
 
 #### garnishMap
 
@@ -58,7 +58,7 @@ m <- leaflet() %>% addProviderTiles("OpenStreetMap")
 garnishMap(m, addMouseCoordinates)
 ```
 
-![](figures/README-garnish.png)
+![](man/figures/README-garnish.png)
 
 #### addHomeButton
 
@@ -73,7 +73,7 @@ m <- leaflet() %>%
 m
 ```
 
-![](figures/README-home.png)
+![](man/figures/README-home.png)
 
 #### addImageQuery
 
@@ -90,7 +90,7 @@ leaflet() %>%
   addLayersControl(overlayGroups = "poppendorf")
 ```
 
-![](figures/README-query.png)
+![](man/figures/README-query.png)
 
 #### addLogo
 
@@ -100,7 +100,7 @@ img <- "https://www.r-project.org/logo/Rlogo.svg"
 leaflet() %>% addTiles() %>% addLogo(img, url = "https://www.r-project.org/logo/")
 ```
 
-![](figures/README-logo.png)
+![](man/figures/README-logo.png)
 
 ### Code of Conduct
 

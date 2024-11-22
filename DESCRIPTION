@@ -91,5 +91,4 @@ Suggests:
     terra,
     tools
 Encoding: UTF-8
-LazyData: false
 RoxygenNote: 7.3.2

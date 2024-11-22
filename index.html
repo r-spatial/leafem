@@ -69,7 +69,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rstudio.github.io/leaflet/reference/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="st">"OpenStreetMap"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/addFeatures.html">addFeatures</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">breweries91</span><span class="op">)</span></span></code></pre></div>
-<p><img src="figures/README-features.png"></p>
+<p><img src="reference/figures/README-features.png"></p>
 </div>
 <div class="section level4">
 <h4 id="addmousecoordinates">addMouseCoordinates<a class="anchor" aria-label="anchor" href="#addmousecoordinates"></a>
@@ -78,7 +78,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rstudio.github.io/leaflet/reference/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="st">"OpenStreetMap"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/addMouseCoordinates.html">addMouseCoordinates</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="figures/README-garnish.png"></p>
+<p><img src="reference/figures/README-garnish.png"></p>
 </div>
 <div class="section level4">
 <h4 id="garnishmap">garnishMap<a class="anchor" aria-label="anchor" href="#garnishmap"></a>
@@ -88,7 +88,7 @@
 <span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/addProviderTiles.html" class="external-link">addProviderTiles</a></span><span class="op">(</span><span class="st">"OpenStreetMap"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/garnishMap.html">garnishMap</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">addMouseCoordinates</span><span class="op">)</span></span></code></pre></div>
-<p><img src="figures/README-garnish.png"></p>
+<p><img src="reference/figures/README-garnish.png"></p>
 </div>
 <div class="section level4">
 <h4 id="addhomebutton">addHomeButton<a class="anchor" aria-label="anchor" href="#addhomebutton"></a>
@@ -102,7 +102,7 @@
 <span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-layers.html" class="external-link">addCircleMarkers</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">breweries91</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/addHomeButton.html">addHomeButton</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/extent.html" class="external-link">extent</a></span><span class="op">(</span><span class="va">breweries91</span><span class="op">)</span>, <span class="st">"breweries91"</span><span class="op">)</span></span>
 <span><span class="va">m</span></span></code></pre></div>
-<p><img src="figures/README-home.png"></p>
+<p><img src="reference/figures/README-home.png"></p>
 </div>
 <div class="section level4">
 <h4 id="addimagequery">addImageQuery<a class="anchor" aria-label="anchor" href="#addimagequery"></a>
@@ -118,7 +118,7 @@
 <span>  <span class="fu"><a href="reference/addImageQuery.html">addImageQuery</a></span><span class="op">(</span><span class="va">poppendorf</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                layerId <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/addLayersControl.html" class="external-link">addLayersControl</a></span><span class="op">(</span>overlayGroups <span class="op">=</span> <span class="st">"poppendorf"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="figures/README-query.png"></p>
+<p><img src="reference/figures/README-query.png"></p>
 </div>
 <div class="section level4">
 <h4 id="addlogo">addLogo<a class="anchor" aria-label="anchor" href="#addlogo"></a>
@@ -127,7 +127,7 @@
 <code class="sourceCode R"><span><span class="va">img</span> <span class="op">&lt;-</span> <span class="st">"https://www.r-project.org/logo/Rlogo.svg"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rstudio.github.io/leaflet/reference/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-layers.html" class="external-link">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/addLogo.html">addLogo</a></span><span class="op">(</span><span class="va">img</span>, url <span class="op">=</span> <span class="st">"https://www.r-project.org/logo/"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="figures/README-logo.png"></p>
+<p><img src="reference/figures/README-logo.png"></p>
 </div>
 <div class="section level3">
 <h3 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -179,9 +179,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/r-spatial/leafem/actions" class="external-link"><img src="https://github.com/r-spatial/leafem/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/r-spatial/leafem/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/r-spatial/leafem/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://cran.r-project.org/web/checks/check_results_leafem.html" class="external-link"><img src="https://badges.cranchecks.info/worst/leafem.svg" alt="cran checks"></a></li>
-<li><a href="https://cran.r-project.org/package=leafem" class="external-link"><img src="http://www.r-pkg.org/badges/version/leafem?color=009999" alt="CRAN"></a></li>
+<li><a href="https://cran.r-project.org/package=leafem" class="external-link"><img src="https://www.r-pkg.org/badges/version/leafem?color=009999" alt="CRAN"></a></li>
 </ul>
 </div>
 

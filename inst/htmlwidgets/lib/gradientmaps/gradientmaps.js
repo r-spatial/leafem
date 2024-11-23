@@ -1,12 +1,13 @@
 /*
-Downloaded from:
-https://github.com/awgreenblatt/gradientmaps
+NOTE - I got this code from here:
+https://github.com/awgreenblatt/gradientmaps/blob/master/gradientmaps.js
 
-I made some tiny changes. It didn't work properly with transparent sections
-of an image - when changing the color palette of an image with transparent
-areas, the transparent areas were filled in. I found that this could be prevented
-by commenting out a few lines. All the lines I changed are marked by "CHANGED_DF" - 
-search this document for that to find the three lines I changed.
+I made a few changes. I commented out a few lines that were causing NA areas
+(which should be transparent) to be re-colored. I added the comment "//CHANGED"
+to the lines I modified. I also added a function called
+'addSVGComponentTransferFilterToClass()', which is largely the same as
+'addSVGComponentTransferFilter()', that applys the color change to all elements
+with a given class.
 */
 
 
@@ -294,19 +295,19 @@ window.GradientMaps = function(scope) {
             var redTableValues = "";
             var greenTableValues = "";
             var blueTableValues = "";
-            // var alphaTableValues = "0 "; // CHANGED_DF
+            // var alphaTableValues = "0 "; //CHANGED
 
             colors.forEach(function(color, index, colors) {
                 redTableValues += (color[0] / 255.0 + " ");
                 greenTableValues += (color[1] / 255.0 + " ");
                 blueTableValues += (color[2] / 255.0 + " ");
-                // alphaTableValues += (color[3] + " "); // CHANGED_DF
+                // alphaTableValues += (color[3] + " "); //CHANGED
             });
 
             this.addElement(doc, componentTransfer, 'feFuncR', svgns, {'type': 'table', 'tableValues': redTableValues.trim()});
             this.addElement(doc, componentTransfer, 'feFuncG', svgns, {'type': 'table', 'tableValues': greenTableValues.trim()});
             this.addElement(doc, componentTransfer, 'feFuncB', svgns, {'type': 'table', 'tableValues': blueTableValues.trim()});
-            // this.addElement(doc, componentTransfer, 'feFuncA', svgns, {'type': 'table', 'tableValues': alphaTableValues.trim()}); // CHANGED_DF
+            // this.addElement(doc, componentTransfer, 'feFuncA', svgns, {'type': 'table', 'tableValues': alphaTableValues.trim()}); //CHANGED
 
             if (svgIsNew)
                 elem.parentElement.insertBefore(svg, elem);
@@ -325,6 +326,97 @@ window.GradientMaps = function(scope) {
 
             this.addSVGComponentTransferFilter(elem, colors);
         },
+
+        // I modified the original function ("addSVGComponentTransferFilter") to change The
+        // colors via a 'style' element that applies the filter to elements with a given
+        // class, rather than modifying the specific element we want to change the colors
+        // for.
+        addSVGComponentTransferFilterToClass: function(className, colors) { //CHANGED
+            var filter = null;
+            var svg = null;
+            var svgns = 'http://www.w3.org/2000/svg';
+
+            var style = document.getElementById('gradientmap-filter-' + className);
+            var styleIsNew = true;
+            var filterID = null;
+            var svgIsNew = false;
+
+            if(style){
+                styleIsNew = false;
+                filterID = style.getAttribute('data-gradientmap-filter');
+                filter = document.getElementById(filterID);
+                if (filter) {
+                    // Remove old component transfer function
+                    var componentTransfers = filter.getElementsByTagNameNS(svgns, 'feComponentTransfer');
+                    if (componentTransfers) {
+                        for (var i = componentTransfers.length-1; i >= 0; --i)
+                            filter.removeChild(componentTransfers[i]);
+
+                       svg = filter.parentElement;
+                    }
+                }
+            } else {
+              style = document.createElement("style");
+              style.type = "text/css";
+            }
+
+            // The last thing to be set previously is 'svg'.  If that is still null, that will handle any errors
+            if (!svg) {
+                var svg = this.addElement(document, null, 'svg', svgns, {
+                    'version': '1.1',
+                    'width': 0,
+                    'height': 0
+                });
+
+                filterID = 'filter-' + this.generateID();
+                filter = this.addElement(document, svg, 'filter', svgns, {'id': filterID});
+                style.setAttribute('data-gradientmap-filter', filterID);
+                // First, apply a color matrix to turn the source into a grayscale
+                var colorMatrix = this.addElement(document, filter, 'feColorMatrix', svgns, {
+                    'type': 'matrix',
+                    'values': '0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0',
+                    'result': 'gray'
+                });
+
+                svgIsNew = true;
+            }
+
+            // Now apply a component transfer to remap the colors
+            var componentTransfer = this.addElement(document, filter, 'feComponentTransfer', svgns, {'color-interpolation-filters': 'sRGB'});
+
+            var redTableValues = "";
+            var greenTableValues = "";
+            var blueTableValues = "";
+
+            colors.forEach(function(color, index, colors) {
+                redTableValues += (color[0] / 255.0 + " ");
+                greenTableValues += (color[1] / 255.0 + " ");
+                blueTableValues += (color[2] / 255.0 + " ");
+            });
+
+            this.addElement(document, componentTransfer, 'feFuncR', svgns, {'type': 'table', 'tableValues': redTableValues.trim()});
+            this.addElement(document, componentTransfer, 'feFuncG', svgns, {'type': 'table', 'tableValues': greenTableValues.trim()});
+            this.addElement(document, componentTransfer, 'feFuncB', svgns, {'type': 'table', 'tableValues': blueTableValues.trim()});
+
+            if (svgIsNew)
+                document.body.appendChild(svg);
+
+            var filterDecl = 'url(#' + filterID + ')';
+            style.innerHTML = "." + className + " { filter: " + filterDecl + "; }";
+            if (styleIsNew)
+                document.body.appendChild(style);
+        },
+
+        applyGradientMapToClass: function(className, gradient) {
+            debugger;
+            var stops = this.calcStopsArray(gradient);
+            var nSegs = this.findMatchingDistributedNSegs(stops);
+            var colors = this.calcDistributedColors(stops, nSegs);
+
+            this.addSVGComponentTransferFilterToClass(className, colors);
+        },
+
+
 
         removeGradientMap: function(elem) {
             var filterID = elem.getAttribute('data-gradientmap-filter');

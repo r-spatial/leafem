@@ -1,56 +1,71 @@
-# pulled from the gplots package: https://cran.r-project.org/web/packages/gplots/index.html
-col2hex <- function(cname)
-{
-  colMat <- col2rgb(cname)
-  rgb(
-    red=colMat[1,]/255,
-    green=colMat[2,]/255,
-    blue=colMat[3,]/255
+# pulled from the gplots package:
+# https://cran.r-project.org/web/packages/gplots/index.html
+col2hex <- function(cname) {
+  colMat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = colMat[1, ] / 255,
+    green = colMat[2, ] / 255,
+    blue = colMat[3, ] / 255
   )
 }
 
-changeColorsDependencies <- function(){
+changeColorsDependencies <- function() {
   list(
     htmltools::htmlDependency(
-      "changeColors",
+      "gradientmaps",
       "0.0.1",
-      system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
+      src = system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
+      package = "leafem",
       script = "gradientmaps.js"
+    ),
+    htmltools::htmlDependency(
+      "gradientmaps_r_binding",
+      utils::packageVersion("leafem"),
+      src = system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
+      package = "leafem",
+      script = "changeColors.js"
     )
   )
 }
-
 #' Change the color palette of a map layer
 
-#' @description Given a class name that corresponds to a map layer or layers, uses the
-#' 'gradientmap' JavaScript library to change the color scheme on the fly
+#' @description Given a class name that corresponds to a map layer or layers,
+#'   uses the 'gradientmap' JavaScript library to change the color scheme on the
+#'   fly
 #' @param map a mapview or leaflet object.
-#' @param className character; the class name to apply the color-change to. The layer(s)
-#'  must have had this class name assigned to it; see examples
-#' @param colors character vector; the colors that form the new color palette. Colors
-#'   can be either named colors in R (like "red" or "blue") or hexadecimal colors
+#' @param className character; the class name to apply the color-change to. The
+#'   layer(s) must have had this class name assigned to it; see examples
+#' @param colors character vector; the colors that form the new color palette.
+#'   Colors can be either named colors in R (like "red" or "blue") or
+#'   hexadecimal colors
 #' @examples
 #' if (interactive()) {
-#'   library(leafem)
 #'   library(leaflet)
 #'
-#'   leaflet() %>%
-#'     addTiles() %>%
-#'     addWMSTiles("https://www.mrlc.gov/geoserver/mrlc_display/NLCD_2016_Bare_Ground_Shrubland_Fractional_Component/ows?SERVICE=WMS&",
-#'                 layers = "NLCD_2016_Bare_Ground_Shrubland_Fractional_Component",
-#'                 options = WMSTileOptions(className = "bare_ground", transparent = TRUE, format = "image/png")) %>%
+#'   leaflet() |>
+#'     addTiles() |>
+#'     addWMSTiles(
+#'       paste0(
+#'         "https://www.mrlc.gov/geoserver/mrlc_display/",
+#'         "NLCD_2016_Bare_Ground_Shrubland_Fractional_Component/",
+#'         "ows?SERVICE=WMS&"
+#'       ),
+#'       layers = "NLCD_2016_Bare_Ground_Shrubland_Fractional_Component",
+#'       options = WMSTileOptions(className = "bare_ground",
+#'                                transparent = TRUE,
+#'                                format = "image/png")) |>
 #'     changeColors("bare_ground", terrain.colors(20))
 #'
-#'   leaflet() %>%
-#'     addTiles(options = tileOptions(className = "base")) %>%
+#'   leaflet() |>
+#'     addTiles(options = tileOptions(className = "base")) |>
 #'     changeColors("base", colorRampPalette(c("red", "white"))(50))
 #' }
 #' @export
-changeColors <- function(map, className, colors){
+changeColors <- function(map, className, colors) {
 
-  if (inherits(map, "mapview")) map = mapview2leaflet(map)
+  if (inherits(map, "mapview")) map <- mapview2leaflet(map)
 
-  map$dependencies = c(
+  map$dependencies <- c(
     map$dependencies,
     changeColorsDependencies()
   )

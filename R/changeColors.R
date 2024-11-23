@@ -56,14 +56,23 @@ changeColors <- function(map, className, colors){
   )
 
   cols <- paste0(col2hex(colors), collapse = ", ")
-  map <- htmlwidgets::onRender(
-    map,
-    sprintf("function(el, x){
-      el = document.getElementsByClassName('%s');
-      for(let i = 0; i < el.length; i++){
-        GradientMaps.applyGradientMap(el[i], '%s');
-      }
-    }", className, cols)
-  )
+  if (inherits(map, "leaflet_proxy")) {
+    leaflet::invokeMethod(map,
+                          leaflet::getMapData(map),
+                          "changeColors",
+                          className,
+                          cols)
+  } else {
+    map <- htmlwidgets::onRender(
+      map,
+      sprintf(
+        "function(el, x){
+          GradientMaps.applyGradientMapToClass('%s', '%s');
+        }",
+        className,
+        cols
+      )
+    )
+  }
   return(map)
 }

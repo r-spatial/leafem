@@ -55,6 +55,11 @@ changeColors <- function(map, className, colors){
     changeColorsDependencies()
   )
 
+  if (length(colors) > 201) {
+    inds <- round(seq(0, length(colors), length.out = 201))
+    colors <- colors[inds]
+  }
+
   cols <- paste0(col2hex(colors), collapse = ", ")
   if (inherits(map, "leaflet_proxy")) {
     leaflet::invokeMethod(map,

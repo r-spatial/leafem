@@ -1,3 +1,3 @@
-LeafletWidget.methods.changeColors = function(className, colors){
-  GradientMaps.applyGradientMapToClass(className, colors);
+LeafletWidget.methods.changeColors = function(selector, colors){
+  GradientMaps.applyGradientMapToSelector(selector, colors);
 }

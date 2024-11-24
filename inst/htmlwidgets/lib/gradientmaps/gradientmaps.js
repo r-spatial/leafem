@@ -5,9 +5,9 @@ https://github.com/awgreenblatt/gradientmaps/blob/master/gradientmaps.js
 I made a few changes. I commented out a few lines that were causing NA areas
 (which should be transparent) to be re-colored. I added the comment "//CHANGED"
 to the lines I modified. I also added a function called
-'addSVGComponentTransferFilterToClass()', which is largely the same as
+'addSVGComponentTransferFilterToSelector()', which is largely the same as
 'addSVGComponentTransferFilter()', that applys the color change to all elements
-with a given class.
+with a given selector.
 */
 
 
@@ -329,14 +329,15 @@ window.GradientMaps = function(scope) {
 
         // I modified the original function ("addSVGComponentTransferFilter") to change The
         // colors via a 'style' element that applies the filter to elements with a given
-        // class, rather than modifying the specific element we want to change the colors
+        // selector, rather than modifying the specific element we want to change the colors
         // for.
-        addSVGComponentTransferFilterToClass: function(className, colors) { //CHANGED
+        addSVGComponentTransferFilterToSelector: function(selector, colors) { //CHANGED
             var filter = null;
             var svg = null;
             var svgns = 'http://www.w3.org/2000/svg';
 
-            var style = document.getElementById('gradientmap-filter-' + className);
+
+            var style = document.getElementById('gradientmap-filter-' + selector.replace(/\s/g, ''));
             var styleIsNew = true;
             var filterID = null;
             var svgIsNew = false;
@@ -402,18 +403,18 @@ window.GradientMaps = function(scope) {
                 document.body.appendChild(svg);
 
             var filterDecl = 'url(#' + filterID + ')';
-            style.innerHTML = "." + className + " { filter: " + filterDecl + "; }";
+            style.innerHTML = selector + " { filter: " + filterDecl + "; }";
             if (styleIsNew)
                 document.body.appendChild(style);
         },
 
-        applyGradientMapToClass: function(className, gradient) {
+        applyGradientMapToSelector: function(selector, gradient) {
             debugger;
             var stops = this.calcStopsArray(gradient);
             var nSegs = this.findMatchingDistributedNSegs(stops);
             var colors = this.calcDistributedColors(stops, nSegs);
 
-            this.addSVGComponentTransferFilterToClass(className, colors);
+            this.addSVGComponentTransferFilterToSelector(selector, colors);
         },
 
 

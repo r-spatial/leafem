@@ -15,14 +15,12 @@ changeColorsDependencies <- function() {
       "gradientmaps",
       "0.0.1",
       src = system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
-      package = "leafem",
       script = "gradientmaps.js"
     ),
     htmltools::htmlDependency(
       "gradientmaps_r_binding",
       utils::packageVersion("leafem"),
       src = system.file("htmlwidgets/lib/gradientmaps", package = "leafem"),
-      package = "leafem",
       script = "changeColors.js"
     )
   )

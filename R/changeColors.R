@@ -71,8 +71,7 @@ changeColors <- function(map, className, colors) {
   )
 
   if (length(colors) > 201) {
-    inds <- round(seq(0, length(colors), length.out = 201))
-    colors <- colors[inds]
+    colors <- grDevices::colorRampPalette(colors)(201)
   }
 
   cols <- paste0(col2hex(colors), collapse = ", ")

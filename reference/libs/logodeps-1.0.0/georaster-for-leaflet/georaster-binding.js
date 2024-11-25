@@ -16,6 +16,9 @@ function mouseHandler(map, georaster, layerId, group, eventName, options) {
     let query = options.imagequery && finaltype == eventName;
 
     if (val) {
+      if (options.noData !== "NoData Value" & val[0] === georaster.noDataValue) {
+        val[0] = options.noData
+      }
       if (query) {
         outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix);
       }

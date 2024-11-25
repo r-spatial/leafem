@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">leafem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3.9014</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,8 @@
 <span>  position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"topleft"</span>, <span class="st">"bottomleft"</span>, <span class="st">"bottomright"</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mousemove"</span>, <span class="st">"click"</span><span class="op">)</span>,</span>
 <span>  digits <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  prefix <span class="op">=</span> <span class="st">"Layer"</span></span>
+<span>  prefix <span class="op">=</span> <span class="st">"Layer"</span>,</span>
+<span>  noData <span class="op">=</span> <span class="st">"NoData Value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -71,6 +72,12 @@ to 'mousemove'.</p></dd>
 
 <dt id="arg-prefix">prefix<a class="anchor" aria-label="anchor" href="#arg-prefix"></a></dt>
 <dd><p>a character string to be shown as prefix for the layerId.</p></dd>
+
+
+<dt id="arg-nodata">noData<a class="anchor" aria-label="anchor" href="#arg-nodata"></a></dt>
+<dd><p>the text shown when the mouse is over a `NoData Value` as
+defined by GDAL. The default "NoData Value" will use whatever is defined in the
+Geotif.</p></dd>
 
 </dl></div>
 

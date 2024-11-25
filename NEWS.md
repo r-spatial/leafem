@@ -3,6 +3,7 @@
 #### ✨ features and improvements
 
   * `addMouseCoordinates()` gained argument `css` to modify the layout of the div. #95
+  * `addHomeButton()` gained arguments `css` and `hover_css` to modify the layout. #92
 
 #### 🐛 bug fixes
 

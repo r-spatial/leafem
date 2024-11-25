@@ -432,12 +432,16 @@ addCOG = function(map,
 #' Imagequery options for addGeoRaster, addGeotiff and addCOG
 #'
 #' @inheritParams addImageQuery
+#' @param noData the text shown when the mouse is over a `NoData Value` as
+#' identified by GDAL. The default "NoData Value" will show whatever is defined by
+#' the Geotiff metadata.
 #' @export
 imagequeryOptions <- function(className = "info legend",
                               position = c("topright", "topleft", "bottomleft", "bottomright"),
                               type = c("mousemove", "click"),
                               digits = NULL,
-                              prefix = "Layer") {
+                              prefix = "Layer",
+                              noData = "NoData Value") {
   type = match.arg(type)
   position <- match.arg(position)
   list(
@@ -445,7 +449,8 @@ imagequeryOptions <- function(className = "info legend",
     position = position,
     type = type,
     digits = digits,
-    prefix = prefix
+    prefix = prefix,
+    noData = noData
   )
 }
 

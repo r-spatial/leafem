@@ -25,9 +25,9 @@ to 'mousemove'.}
 
 \item{prefix}{a character string to be shown as prefix for the layerId.}
 
-\item{noData}{the text shown when the mouse is over a `NoData Value` as
-defined by GDAL. The default "NoData Value" will use whatever is defined in the
-Geotif.}
+\item{noData}{the text shown when the mouse is over a \verb{NoData Value} as
+identified by GDAL. The default "NoData Value" will show whatever is defined by
+the Geotiff metadata.}
 }
 \description{
 Imagequery options for addGeoRaster, addGeotiff and addCOG

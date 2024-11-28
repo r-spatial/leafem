@@ -47,13 +47,13 @@ on the map.
 \details{
 If style is set to "detailed", the following information will be displayed:
 \itemize{
-  \item x: x-position of the mouse cursor in projected coordinates
-  \item y: y-position of the mouse cursor in projected coordinates
-  \item epsg: the epsg code of the coordinate reference system of the map
-  \item proj4: the proj4 definition of the coordinate reference system of the map
-  \item lat: latitude position of the mouse cursor
-  \item lon: longitude position of the mouse cursor
-  \item zoom: the current zoom level
+\item x: x-position of the mouse cursor in projected coordinates
+\item y: y-position of the mouse cursor in projected coordinates
+\item epsg: the epsg code of the coordinate reference system of the map
+\item proj4: the proj4 definition of the coordinate reference system of the map
+\item lat: latitude position of the mouse cursor
+\item lon: longitude position of the mouse cursor
+\item zoom: the current zoom level
 }
 
 By default, only 'lat', 'lon' and 'zoom' are shown. To show the details about

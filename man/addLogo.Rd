@@ -38,8 +38,8 @@ showLogo(map, layerId)
 
 \item{alpha}{opacity of the added image.}
 
-\item{src}{DEPRECATED. The function now automatically determines if `img` is
-a local or remote image using `file.exists(img)`.}
+\item{src}{DEPRECATED. The function now automatically determines if \code{img} is
+a local or remote image using \code{file.exists(img)}.}
 
 \item{url}{an optional URL to be opened when clicking on the image
 (e.g. company's homepage).}

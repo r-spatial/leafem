@@ -91,18 +91,46 @@ options for each label. Default \code{NULL}}
 }
 \description{
 flatgeobuf is a performant binary geo-spatial file format suitable for
-  serving large data. For more details see
-  \url{https://github.com/flatgeobuf/flatgeobuf} and the respective
-  documentation for the GDAL/OGR driver at
-  \url{https://gdal.org/en/latest/drivers/vector/flatgeobuf.html}. \cr
-  \cr
-  In contrast to classical ways of serving data from R onto a leaflet map,
-  flatgeobuf can stream the data chunk by chunk so that rendering of the map
-  is more or less instantaneous. The map is responsive while data is still
-  loading so that popup queries, zooming and panning will work even
-  though not all data has been rendered yet. This makes for a rather pleasant
-  user experience as we don't have to wait for all data to be added to the map
-  before interacting with it.
+serving large data. For more details see
+\url{https://github.com/flatgeobuf/flatgeobuf} and the respective
+documentation for the GDAL/OGR driver at
+\url{https://gdal.org/en/latest/drivers/vector/flatgeobuf.html}. \cr
+\cr
+In contrast to classical ways of serving data from R onto a leaflet map,
+flatgeobuf can stream the data chunk by chunk so that rendering of the map
+is more or less instantaneous. The map is responsive while data is still
+loading so that popup queries, zooming and panning will work even
+though not all data has been rendered yet. This makes for a rather pleasant
+user experience as we don't have to wait for all data to be added to the map
+before interacting with it.
+}
+\details{
+Styling options in \code{addFgb} offer flexibility by allowing
+users to either specify styles directly as function arguments or define them
+as attributes in the data object:
+\itemize{
+\item \strong{Direct Styling:} You can pass style arguments (e.g., \code{color}, \code{weight},
+\code{opacity}) directly to the function. These will apply uniformly to all features
+in the layer.
+\item \strong{Attribute-based Styling:} Alternatively, you can include styling properties
+(e.g., \code{color}, \code{fillColor}, \code{weight}) as columns in your data object before
+writing it to an FGB file. Set the corresponding arguments in \code{addFgb} to
+\code{NULL}, and the function will use these attributes for styling during map
+rendering.
+
+For example:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{## using custom `color`
+data$color <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+leafem::addFgb(file = "myfile.fgb", color = NULL)
+
+## using custom `fillColor`
+data$fillColor <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+leafem::addFgb(file = "myfile.fgb", fill = TRUE, fillColor = NULL)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
  if (interactive()) {

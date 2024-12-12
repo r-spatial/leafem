@@ -48,7 +48,7 @@ addPMPolylines(
 \item{group}{group name.}
 
 \item{pane}{the map pane to which the layer should be added. See
-[leaflet](addMapPane) for details.}
+\href{addMapPane}{leaflet} for details.}
 
 \item{attribution}{optional attribution character string.}
 }
@@ -61,12 +61,12 @@ Add polylines stored as PMTiles
 }
 \details{
 These functions can be used to add cloud optimized vector tiles data in
-  the `.pmtiles` format stored in an Amazon Web Services (AWS) S3 bucket to a
-  leaflet map. For instructions on how to create these files, see
-  \url{https://github.com/protomaps/PMTiles}.
+the \code{.pmtiles} format stored in an Amazon Web Services (AWS) S3 bucket to a
+leaflet map. For instructions on how to create these files, see
+\url{https://github.com/protomaps/PMTiles}.
 
-  NOTE: You may not see the tiles rendered in the RStudio viewer pane. Make
-  sure to open the map in a browser.
+NOTE: You may not see the tiles rendered in the RStudio viewer pane. Make
+sure to open the map in a browser.
 }
 \section{Functions}{
 \itemize{

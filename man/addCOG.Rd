@@ -67,8 +67,8 @@ Add Cloud Optimised Geotiff (COG) to a leaflet map.
 }
 \details{
 This function will overlay Cloud Optimised Geotiff data from a remote url on
-a leaflet map. Like `addGeotiff` it uses the leaflet plugin
-'georaster-layer-for-leaflet' to render the data. See `addGeotiff` for a bit
+a leaflet map. Like \code{addGeotiff} it uses the leaflet plugin
+'georaster-layer-for-leaflet' to render the data. See \code{addGeotiff} for a bit
 more detail what that means.
 }
 \examples{

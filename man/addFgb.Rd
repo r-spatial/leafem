@@ -116,11 +116,19 @@ in the layer.
 (e.g., \code{color}, \code{fillColor}, \code{weight}) as columns in your data object before
 writing it to an FGB file. Set the corresponding arguments in \code{addFgb} to
 \code{NULL}, and the function will use these attributes for styling during map
-rendering. For example:
+rendering.
 
-\if{html}{\out{<div class="sourceCode R">}}\preformatted{data$color <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+For example:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{## using custom `color`
+data$color <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
 sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
 leafem::addFgb(file = "myfile.fgb", color = NULL)
+
+## using custom `fillColor`
+data$fillColor <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+leafem::addFgb(file = "myfile.fgb", fill = TRUE, fillColor = NULL)
 }\if{html}{\out{</div>}}
 }
 }

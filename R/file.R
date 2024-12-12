@@ -316,11 +316,19 @@ addTileFolder = function(map,
 #'     (e.g., `color`, `fillColor`, `weight`) as columns in your data object before
 #'     writing it to an FGB file. Set the corresponding arguments in `addFgb` to
 #'     `NULL`, and the function will use these attributes for styling during map
-#'     rendering. For example:
+#'     rendering.
+#'
+#'     For example:
 #'      ```R
+#'      ## using custom `color`
 #'      data$color <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
 #'      sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
 #'      leafem::addFgb(file = "myfile.fgb", color = NULL)
+#'
+#'      ## using custom `fillColor`
+#'      data$fillColor <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+#'      sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+#'      leafem::addFgb(file = "myfile.fgb", fill = TRUE, fillColor = NULL)
 #'      ```
 #'
 #' @examples

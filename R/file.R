@@ -152,15 +152,11 @@ addLocalFile = function(map,
 
   map$dependencies <- c(
     map$dependencies,
+    leafletFileDependencies(),
     fileDependency(
       fn = path_outfile,
       layerId = layerId
     )
-  )
-
-  map$dependencies <- c(
-    map$dependencies,
-    leafletFileDependencies()
   )
 
   leaflet::invokeMethod(
@@ -308,6 +304,33 @@ addTileFolder = function(map,
 #' @inheritParams leaflet::addPolylines
 #' @param ... currently not used.
 #'
+#' @details
+#'   Styling options in `addFgb` offer flexibility by allowing
+#'   users to either specify styles directly as function arguments or define them
+#'   as attributes in the data object:
+#'
+#'   - **Direct Styling:** You can pass style arguments (e.g., `color`, `weight`,
+#'     `opacity`) directly to the function. These will apply uniformly to all features
+#'     in the layer.
+#'   - **Attribute-based Styling:** Alternatively, you can include styling properties
+#'     (e.g., `color`, `fillColor`, `weight`) as columns in your data object before
+#'     writing it to an FGB file. Set the corresponding arguments in `addFgb` to
+#'     `NULL`, and the function will use these attributes for styling during map
+#'     rendering.
+#'
+#'     For example:
+#'      ```R
+#'      ## using custom `color`
+#'      data$color <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+#'      sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+#'      leafem::addFgb(file = "myfile.fgb", color = NULL)
+#'
+#'      ## using custom `fillColor`
+#'      data$fillColor <- colorNumeric(palette = "viridis", domain = data$var)(data$var)
+#'      sf::st_write(obj = data, dsn = "myfile.fgb", driver = "FlatGeobuf")
+#'      leafem::addFgb(file = "myfile.fgb", fill = TRUE, fillColor = NULL)
+#'      ```
+#'
 #' @examples
 #'  if (interactive()) {
 #'    library(leaflet)
@@ -414,10 +437,6 @@ addFgb = function(map,
       map$dependencies
       , fgbDependencies()
       , chromaJsDependencies()
-    )
-
-    map$dependencies = c(
-      map$dependencies
       , fileAttachment(path_layer, group)
     )
 

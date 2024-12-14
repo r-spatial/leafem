@@ -33,9 +33,9 @@ paintRules(
 
 \item{opacity}{point opacity}
 
-\item{dash}{either `NULL` (default) for a solid line or a numeric vector
+\item{dash}{either \code{NULL} (default) for a solid line or a numeric vector
 of length 2 denoting segment length and spce between segments (in pixels),
-e.g. `c(5, 3)`}
+e.g. \code{c(5, 3)}}
 }
 \description{
 Styling options for PMTiles

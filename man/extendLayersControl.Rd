@@ -15,55 +15,57 @@ extendLayersControl(
 )
 }
 \arguments{
-\item{map}{A `leaflet` or `mapview` object to which the extended layers control will be added.}
+\item{map}{A \code{leaflet} or \code{mapview} object to which the extended layers control will be added.}
 
 \item{view_settings}{A list specifying the view settings for each layer. Each list element should contain
 either:
 \itemize{
-  \item \code{coords}: A vector of length 2 (latitude, longitude) for setting the view, or length 4
-  (bounding box: lat1, lng1, lat2, lng2) for fitting the bounds.
-  \item \code{zoom}: The zoom level (used for `setView`).
-  \item \code{fly} (optional): A logical indicating whether to use `flyTo` or `flyToBounds` instead of `setView` or `fitBounds`.
-  \item \code{options} (optional): Additional options to pass to `setView`, `fitBounds`, or `flyTo`.
+\item \code{coords}: A vector of length 2 (latitude, longitude) for setting the view, or length 4
+(bounding box: lat1, lng1, lat2, lng2) for fitting the bounds.
+\item \code{zoom}: The zoom level (used for \code{setView}).
+\item \code{fly} (optional): A logical indicating whether to use \code{flyTo} or \code{flyToBounds} instead of \code{setView} or \code{fitBounds}.
+\item \code{options} (optional): Additional options to pass to \code{setView}, \code{fitBounds}, or \code{flyTo}.
 }}
 
-\item{home_btns}{Logical. If `TRUE`, adds a "home" button next to each layer name in the layer control.
+\item{home_btns}{Logical. If \code{TRUE}, adds a "home" button next to each layer name in the layer control.
 Clicking the home button zooms the map to the view specified for that layer in \code{view_settings}.}
 
 \item{home_btn_options}{A list of options to customize the home button appearance and behavior.
 Possible options include:
-- `text`: The text or emoji to display on the button (default is '🏠').
-- `cursor`: CSS cursor style for the button (default is 'pointer').
-- `class`: CSS class name for the button (default is 'leaflet-home-btn').
-- `styles`: Semicolon separated CSS-string (default is 'float: inline-end;').}
+\itemize{
+\item \code{text}: The text or emoji to display on the button (default is '🏠').
+\item \code{cursor}: CSS cursor style for the button (default is 'pointer').
+\item \code{class}: CSS class name for the button (default is 'leaflet-home-btn').
+\item \code{styles}: Semicolon separated CSS-string (default is 'float: inline-end;').
+}}
 
-\item{setviewonselect}{Logical. If `TRUE` (default) sets the view when the layer is selected.}
+\item{setviewonselect}{Logical. If \code{TRUE} (default) sets the view when the layer is selected.}
 
 \item{opacityControl}{A list specifying the opacity control settings for each layer. Each list element should contain:
 \itemize{
-  \item \code{min}: Minimum opacity value (default is 0).
-  \item \code{max}: Maximum opacity value (default is 1).
-  \item \code{step}: Step size for the opacity slider (default is 0.1).
-  \item \code{default}: Default opacity value (default is 1).
-  \item \code{width}: Width of the opacity slider (default is '100%').
-  \item \code{class}: CSS class name for the slider (default is 'leaflet-opacity-slider').
+\item \code{min}: Minimum opacity value (default is 0).
+\item \code{max}: Maximum opacity value (default is 1).
+\item \code{step}: Step size for the opacity slider (default is 0.1).
+\item \code{default}: Default opacity value (default is 1).
+\item \code{width}: Width of the opacity slider (default is '100\%').
+\item \code{class}: CSS class name for the slider (default is 'leaflet-opacity-slider').
 }}
 
-\item{includelegends}{Logical. If `TRUE` (default), appends legends to the layer control. Legends are matched
+\item{includelegends}{Logical. If \code{TRUE} (default), appends legends to the layer control. Legends are matched
 to layers by their group name. The legends need to be added with corresponding layer IDs.}
 }
 \value{
-A modified `leaflet` map object with extended layers control including view controls, home buttons, opacity controls, and legends.
+A modified \code{leaflet} map object with extended layers control including view controls, home buttons, opacity controls, and legends.
 }
 \description{
-This function extends an existing layers control in a `leaflet` map by adding custom views, home buttons,
-opacity controls, and legends. It enhances the functionality of a layers control created with `leaflet`
-or `leaflet.extras`.
+This function extends an existing layers control in a \code{leaflet} map by adding custom views, home buttons,
+opacity controls, and legends. It enhances the functionality of a layers control created with \code{leaflet}
+or \code{leaflet.extras}.
 }
 \details{
-This function generates JavaScript that listens for `overlayadd` or `baselayerchange` events
+This function generates JavaScript that listens for \code{overlayadd} or \code{baselayerchange} events
 and automatically sets the view or zoom level according to the specified \code{view_settings}.
-If `home_btns` is enabled, a home button is added next to each layer in the layer control.
+If \code{home_btns} is enabled, a home button is added next to each layer in the layer control.
 When clicked, it zooms the map to the predefined view of that layer.
 The opacity control slider allows users to adjust the opacity of layers. The legend will be appended
 to the corresponding layer control, matched by the layer's group name.

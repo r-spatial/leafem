@@ -146,11 +146,9 @@ LeafletWidget.methods.addFlatGeoBuf = function (layerId,
                 },
                 // remove highlight when hover stops
                 'mouseout': function(e) {
-                    const layer = e.target;
-                    if (e.layer.feature.properties.color) {
-                      style.color = e.layer.feature.properties.color
-                    }
-                    layer.setStyle(style);
+                    const layer = e.layer;
+                    let oldstyle = updateStyleFromProperties(structuredClone(style), layer.feature.properties);
+                    layer.setStyle(oldstyle);
                     if (highlightOptions.sendToBack) {
                       layer.bringToBack();
                     }
@@ -221,7 +219,6 @@ function makePopup(popup, className) {
   return pop;
 }
 
-
 function json2table(json, cls) {
   let cols = Object.keys(json);
   let vals = Object.values(json);
@@ -286,6 +283,18 @@ function updateStyle(style_obj, feature, scale, scaleValues) {
 
   return out;
 }
+function updateStyleFromProperties(style, props) {
+  const keysToUpdate = ['stroke', 'color', 'weight', 'opacity',
+                        'fill', 'fillColor', 'fillOpacity', 'dashArray'];
+  // Create a shallow copy of style to avoid mutating the original object
+  const updatedStyle = { ...style };
+  keysToUpdate.forEach(key => {
+    if (updatedStyle[key] === null && props[key]) {
+      updatedStyle[key] = props[key];
+    }
+  });
+  return updatedStyle
+}
 
 
 function rescale(value, to_min, to_max, from_min, from_max) {
@@ -294,6 +303,7 @@ function rescale(value, to_min, to_max, from_min, from_max) {
   }
   return (value - from_min) / (from_max - from_min) * (to_max - to_min) + to_min;
 }
+
 
 
 

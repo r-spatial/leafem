@@ -50,14 +50,14 @@ See \code{\link[leaflet]{addControl}} for details.}
 }
 \description{
 This function adds a layer to a map that is dependent on another layer.
-  The reactive layer will be shown/hidden when holding the Ctrl-button on your
-  keyboard and performing the action defined by \code{on}. \code{on} can be
-  either "click" (default) or "mouseover".
+The reactive layer will be shown/hidden when holding the Ctrl-button on your
+keyboard and performing the action defined by \code{on}. \code{on} can be
+either "click" (default) or "mouseover".
 
-  Note: \code{srcLayer} needs to be added to the map using \code{\link[leaflet]{addGeoJSON}}
-  because we need to be able to link the two layers by a common attribute
-  defined by argument \code{by}. Linking will be done via \code{group} name
-  of \code{srcLayer}.
+Note: \code{srcLayer} needs to be added to the map using \code{\link[leaflet]{addGeoJSON}}
+because we need to be able to link the two layers by a common attribute
+defined by argument \code{by}. Linking will be done via \code{group} name
+of \code{srcLayer}.
 }
 \examples{
 library(leaflet)

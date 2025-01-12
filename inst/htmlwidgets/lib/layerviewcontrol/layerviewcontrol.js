@@ -1,4 +1,11 @@
-LeafletWidget.methods.extendLayersControl = function(viewSettings, homeSettings, setviewonselect, opacityControl, includelegends) {
+LeafletWidget.methods.customizeLayersControl = function(viewSettings,
+                                                        homeSettings,
+                                                        setviewonselect,
+                                                        opacityControl,
+                                                        includelegends,
+                                                        addCollapseButton,
+                                                        layersControlCSS,
+                                                        increaseOpacityOnHover) {
   const map = this;
 
   // Handle view settings for each layer on 'overlayadd' or 'baselayerchange'
@@ -113,6 +120,86 @@ LeafletWidget.methods.extendLayersControl = function(viewSettings, homeSettings,
     setTimeout(moveLegends, 40);
     map.on('overlayadd baselayerchange', () => setTimeout(moveLegends, 20));
   }
+
+  if (addCollapseButton) {
+
+    /*
+    let ctrl_collapsed = document.getElementsByClassName("leaflet-control-layers");
+
+    ctrl_collapsed[0].addEventListener("mouseover", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }, true);
+
+    let ctrl_expanded = document.getElementsByClassName("leaflet-control-layers-expanded");
+
+    ctrl_expanded[0].addEventListener("mouseover", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }, true);
+    */
+    let pinCSS = {
+      "background-color": "#eeeeee",
+      "text-align": "center",
+      "text-size": "small",
+      "cursor": "pointer"
+    };
+
+    divPin = document.createElement("div");
+    divPin.id ="divPin";
+    if (map.currentLayersControl._container.className === "leaflet-control-layers leaflet-control") {
+      divPin.innerHTML = '<i class="fa-solid fa-ellipsis"></i>'; //'<i class="fa fa-chevron-down"></i>';
+    } else {
+      divPin.innerHTML = '<i class="fa-solid fa-ellipsis"></i>'; //'<i class="fa fa-chevron-up"></i>';
+    }
+
+    divPinClick = function(e) {
+      if (map.currentLayersControl._container.className === "leaflet-control-layers leaflet-control") {
+        map.currentLayersControl.expand();
+        divPin.innerHTML = '<i class="fa-solid fa-ellipsis"></i>'; //'<i class="fa fa-chevron-up"></i>'
+      } else {
+        map.currentLayersControl.collapse();
+        divPin.innerHTML = '<i class="fa-solid fa-ellipsis"></i>'; //'<i class="fa fa-chevron-down"></i>';
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      //ctrl.setAttribute("class", "leaflet-control-layers leaflet-control");
+    };
+
+    divPin.addEventListener("click", divPinClick);
+
+    Object.assign(divPin.style, pinCSS);
+    Object.assign(map.currentLayersControl._container.style, layersControlCSS);
+
+    let opcty;
+
+    if (increaseOpacityOnHover) {
+      opcty = map.currentLayersControl._container.style.opacity;
+    }
+
+    map.currentLayersControl._container.prepend(divPin);
+    divPin.parentElement.addEventListener("mouseover", function(e) {
+      if (increaseOpacityOnHover) {
+        Object.assign(map.currentLayersControl._container.style, {"opacity": 1});
+      }
+      e.stopPropagation();
+      e.preventDefault();
+    }, true);
+    divPin.parentElement.addEventListener("mouseout", function(e) {
+      Object.assign(map.currentLayersControl._container.style, {"opacity": opcty});
+      e.stopPropagation();
+      e.preventDefault();
+    }, true);
+/*
+    if (map.currentLayersControl._container.className === "leaflet-control-layers leaflet-control leaflet-control-layers-expanded") {
+      divPin.parentElement.addEventListener("click", function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }, true);
+    }
+*/
+  }
+
 };
 
 

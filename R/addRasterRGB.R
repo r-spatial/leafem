@@ -23,7 +23,11 @@
 #'   If both `domain` and `quantiles` are set to NULL, stretching is applied
 #'   based on min-max values.
 #' @param na.color the color to be used for NA pixels
-#' @inheritParams leaflet::addRasterImage
+#' @param method the method used for computing values of the new, projected raster image.
+#'   `"auto"` (the default) automatically chooses `"near"` for categorical rasters (with factor levels or color tables) and `"bilinear"` for continuous data,
+#'   `"bilinear"` is appropriate for continuous data,
+#'   `"near"` - nearest neighbor - is appropriate for categorical data.
+#'   Ignored if `project = FALSE`. See \code{\link[raster]{projectRaster}} for details.
 #' @param ... additional arguments passed on to \code{\link[leaflet]{addRasterImage}}
 #'
 #' @author
@@ -99,7 +103,7 @@ addRasterRGB <- function(
 
     if (!terra::same.crs(x, "EPSG:3857")) {
       if (isRaster) {
-        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"))
+        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"), method = method)
       }
       if (isTerra) {
         x = terra::project(x, y = "EPSG:3857", method = method)

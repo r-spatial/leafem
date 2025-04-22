@@ -53,9 +53,10 @@ based on min-max values.}
 \item{na.color}{the color to be used for NA pixels}
 
 \item{method}{the method used for computing values of the new, projected raster image.
-\code{"bilinear"} (the default) is appropriate for continuous data,
-\code{"ngb"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
+`"auto"` (the default) automatically chooses `"near"` for categorical rasters (with factor levels or color tables) and `"bilinear"` for continuous data,
+`"bilinear"` is appropriate for continuous data,
+`"near"` - nearest neighbor - is appropriate for categorical data.
+Ignored if `project = FALSE`. See \code{\link[raster]{projectRaster}} for details.}
 
 \item{...}{additional arguments passed on to \code{\link[leaflet]{addRasterImage}}}
 }

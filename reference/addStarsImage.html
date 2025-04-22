@@ -49,7 +49,8 @@
 <span>  layerId <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  project <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"bilinear"</span>, <span class="st">"near"</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"bilinear"</span>, <span class="st">"near"</span>, <span class="st">"average"</span>, <span class="st">"mode"</span>, <span class="st">"cubic"</span>, <span class="st">"cubicspline"</span>,</span>
+<span>    <span class="st">"lanczos"</span>, <span class="st">"sum"</span>, <span class="st">"min"</span>, <span class="st">"q1"</span>, <span class="st">"median"</span>, <span class="st">"q3"</span>, <span class="st">"max"</span>, <span class="st">"rms"</span><span class="op">)</span>,</span>
 <span>  maxBytes <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">1024</span> <span class="op">*</span> <span class="fl">1024</span>,</span>
 <span>  options <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-options.html" class="external-link">gridOptions</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/getMapData.html" class="external-link">getMapData</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span>,</span>
@@ -107,10 +108,17 @@ coordinates</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>the method used for computing values of the new, projected raster image.
-<code>"bilinear"</code> (the default) is appropriate for continuous data,
-<code>"ngb"</code> - nearest neighbor - is appropriate for categorical data.
-Ignored if <code>project = FALSE</code>. See <code><a href="https://rdrr.io/pkg/raster/man/projectRaster.html" class="external-link">projectRaster</a></code> for details.</p></dd>
+<dd><p>character. Method used for estimating the new cell values of a SpatRaster. One of:</p>
+<p><code>bilinear</code>: bilinear interpolation (3x3 cell window). This is used by default if the first layer of <code>x</code> is not categorical</p>
+<p><code>average</code>:  This can be a good choice with continuous variables if the output cells overlap with multiple input cells.</p>
+<p><code>near</code>: nearest neighbor. This is used by default if the first layer of <code>x</code> is categorical. This method is not a good choice for continuous values.</p>
+<p><code>mode</code>: The modal value. This can be a good choice for categrical rasters, if the output cells overlap with multiple input cells.</p>
+<p><code>cubic</code>: cubic interpolation (5x5 cell window).</p>
+<p><code>cubicspline</code>: cubic B-spline interpolation. (5x5 cell window).</p>
+<p><code>lanczos</code>: Lanczos windowed sinc resampling. (7x7 cell window).</p>
+<p><code>sum</code>: the weighted sum of all non-NA contributing grid cells.</p>
+<p><code>min, q1, median, q3, max</code>: the minimum, first quartile, median, third quartile, or maximum value.</p>	
+<p><code>rms</code>: the root-mean-square value of all non-NA contributing grid cells.</p></dd>
 
 
 <dt id="arg-maxbytes">maxBytes<a class="anchor" aria-label="anchor" href="#arg-maxbytes"></a></dt>

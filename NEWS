@@ -1,9 +1,10 @@
-leafem 0.2.3.9017 (2025-02-27)
+leafem 0.2.3.9018 (2025-04-22)
 
 features and improvements
 
   * addMouseCoordinates() gained argument css to modify the layout of the div. #95
   * addHomeButton() gained arguments css and hover_css to modify the layout. #92
+  * addRasterRGB() and addStarsImage() now support more interpolation options. #106
 
 leafem 0.2.3 (2023-09-17)
 

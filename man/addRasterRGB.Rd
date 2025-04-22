@@ -34,7 +34,7 @@ addStarsRGB(
 \arguments{
 \item{map}{a map widget object created from `leaflet()``}
 
-\item{x}{a  `RasterBrick`, `RasterStack` or `stars`` raster object}
+\item{x}{a  \code{RasterBrick}, \code{RasterStack} or `stars`` raster object}
 
 \item{r}{integer. Index of the Red channel/band, between 1 and nlayers(x)}
 
@@ -43,20 +43,20 @@ addStarsRGB(
 \item{b}{integer. Index of the Blue channel/band, between 1 and nlayers(x)}
 
 \item{quantiles}{the upper and lower quantiles used for color stretching.
-If set to NULL, stretching is performed basing on `domain` argument.}
+If set to NULL, stretching is performed basing on \code{domain} argument.}
 
 \item{domain}{the upper and lower values used for color stretching.
-This is used only if `quantiles` is NULL.
-If both `domain` and `quantiles` are set to NULL, stretching is applied
+This is used only if \code{quantiles} is NULL.
+If both \code{domain} and \code{quantiles} are set to NULL, stretching is applied
 based on min-max values.}
 
 \item{na.color}{the color to be used for NA pixels}
 
 \item{method}{the method used for computing values of the new, projected raster image.
-`"auto"` (the default) automatically chooses `"near"` for categorical rasters (with factor levels or color tables) and `"bilinear"` for continuous data,
-`"bilinear"` is appropriate for continuous data,
-`"near"` - nearest neighbor - is appropriate for categorical data.
-Ignored if `project = FALSE`. See \code{\link[raster]{projectRaster}} for details.}
+\code{"auto"} (the default) automatically chooses \code{"near"} for categorical rasters (with factor levels or color tables) and \code{"bilinear"} for continuous data,
+\code{"bilinear"} is appropriate for continuous data,
+\code{"near"} - nearest neighbor - is appropriate for categorical data.
+Ignored if \code{project = FALSE}. See \code{\link[raster]{projectRaster}} for details.}
 
 \item{...}{additional arguments passed on to \code{\link[leaflet]{addRasterImage}}}
 }

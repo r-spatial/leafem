@@ -1,5 +1,5 @@
 Version: 1.0
-ProjectId: a2cce78f-b118-47fb-83fb-d62c6c6506d5
+ProjectId: 8fe37ac1-befa-4250-bf8a-70b327f7cd01
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
@@ -16,6 +16,8 @@ LaTeX: pdfLaTeX
 StripTrailingWhitespace: Yes
 
 BuildType: Package
+PackageUseDevtools: Yes
+PackageCleanBeforeInstall: No
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageBuildArgs: --no-manual
 PackageCheckArgs: --as-cran --no-manual

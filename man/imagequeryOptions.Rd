@@ -25,7 +25,7 @@ to 'mousemove'.}
 
 \item{prefix}{a character string to be shown as prefix for the layerId.}
 
-\item{noData}{the text shown when the mouse is over a `NoData Value` as
+\item{noData}{the text shown when the mouse is over a \verb{NoData Value} as
 identified by GDAL. The default "NoData Value" will show whatever is defined by
 the Geotiff metadata.}
 }

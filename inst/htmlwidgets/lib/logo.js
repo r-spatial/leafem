@@ -8,12 +8,22 @@ LeafletWidget.methods.addLogo = function(img, layerId, options) {
       map.logos = [];
     }
 
+    var imgElement = document.createElement('img');
+    imgElement.src = img;
+    imgElement.class = options.class;
+    if (options.width !== undefined) {
+      imgElement.width = options.width;
+    }
+    if (options.height !== undefined) {
+      imgElement.height = options.height;
+    }
+
     // Create a new div for the logo
     var logoDiv = L.DomUtil.create('div', options.class);
     logoDiv.id = layerId;
     logoDiv.style.position = 'absolute';
-    logoDiv.style.width = options.width + 'px';
-    logoDiv.style.height = options.height + 'px';
+    //logoDiv.style.width = options.width + 'px';
+    //logoDiv.style.height = options.height + 'px';
     logoDiv.style.opacity = options.alpha;
     logoDiv.style.background = 'transparent';
 
@@ -37,11 +47,6 @@ LeafletWidget.methods.addLogo = function(img, layerId, options) {
     }
 
     // Create img-tag and append to document
-    var imgElement = document.createElement('img');
-    imgElement.src = img;
-    imgElement.class = options.class;
-    imgElement.width = options.width;
-    imgElement.height = options.height;
     if (options.url) {
       var linkElement = document.createElement('a');
       linkElement.href = options.url;

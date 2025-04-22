@@ -1,8 +1,8 @@
-#' Extend Layers Control in Leaflet Map
+#' Customize Layers Control of a Leaflet Map
 #'
-#' This function extends an existing layers control in a `leaflet` map by adding custom views, home buttons,
+#' This function enables customization of an existing layers control in a `leaflet` map by adding custom views, home buttons,
 #' opacity controls, and legends. It enhances the functionality of a layers control created with `leaflet`
-#' or `leaflet.extras`.
+#' or `leaflet.extras`. It also allows to customize the layersControl appearance via CSS.
 #'
 #' @param map A `leaflet` or `mapview` object to which the extended layers control will be added.
 #' @param view_settings A list specifying the view settings for each layer. Each list element should contain
@@ -19,7 +19,7 @@
 #' @param setviewonselect Logical. If `TRUE` (default) sets the view when the layer is selected.
 #' @param home_btn_options A list of options to customize the home button appearance and behavior.
 #'   Possible options include:
-#'   - `text`: The text or emoji to display on the button (default is '🏠').
+#'   - `text`: The text or emoji to display on the button (default is `fontawesome::fa("home")`).
 #'   - `cursor`: CSS cursor style for the button (default is 'pointer').
 #'   - `class`: CSS class name for the button (default is 'leaflet-home-btn').
 #'   - `styles`: Semicolon separated CSS-string (default is 'float: inline-end;').
@@ -36,6 +36,16 @@
 #'
 #' @param includelegends Logical. If `TRUE` (default), appends legends to the layer control. Legends are matched
 #'   to layers by their group name. The legends need to be added with corresponding layer IDs.
+#'
+#' @param addCollapseButton Logical. If True a button will be added on top of the
+#'   LayersControl which, when clicked, will expand/collapse the view. This is mainly
+#'   relevant when the original Control was set to `collapsed = FALSE`.
+#'
+#' @param layersControlCSS a list of valid CSS key-value pairs to modify the appearance
+#'   of the layersControl.
+#'
+#' @param increaseOpacityOnHover Logical. If `TRUE` the layersControl will be fully opaque
+#'   when hovered. Mainly relevant if `opacity` was adjusted in `layersControlCSS`.
 #'
 #' @return A modified `leaflet` map object with extended layers control including view controls, home buttons, opacity controls, and legends.
 #'
@@ -99,19 +109,27 @@
 #'   "breweries91" = "<div>Legend for breweries</div>"
 #' )
 #'
-#' leaflet() %>%
+#' leaflet() |>
 #'   ## Baselayer
-#'   addTiles(group = "Base_tiles1") %>%
-#'   addProviderTiles("CartoDB", group = "Base_tiles2") %>%
+#'   addTiles(group = "Base_tiles1") |>
+#'   addProviderTiles("CartoDB", group = "Base_tiles2") |>
 #'
 #'   ## Overlays
-#'   addCircleMarkers(data = breweries91, group = "breweries91") %>%
-#'   addPolylines(data = lines, group = "atlStorms2005") %>%
-#'   addPolygons(data = polys, group = "gadmCHE") %>%
+#'   addCircleMarkers(data = breweries91, group = "breweries91") |>
+#'   addPolylines(data = lines, group = "atlStorms2005") |>
+#'   addPolygons(data = polys, group = "gadmCHE") |>
 #'
-#'   ## Extend Layers Control
-#'   extendLayersControl(
-#'     view_settings, home_btns = TRUE,
+#'   ## LayersControl
+#'   addLayersControl(
+#'     baseGroups = c("Base_tiles1", "Base_tiles2"),
+#'     overlayGroups = c("breweries91", "atlStorms2005", "gadmCHE"),
+#'     options = layersControlOptions(collapsed = FALSE, autoZIndex = TRUE)
+#'   ) |>
+#'
+#'   ## Customize Layers Control
+#'   customizeLayersControl(
+#'     view_settings = view_settings,
+#'     home_btns = TRUE,
 #'     home_btn_options = list(
 #'       "Base_tiles1" = list(text = '🏡', cursor = 'ns-resize', class = 'homebtn'),
 #'       "Base_tiles2" = list(text = '❤️', cursor = 'pointer'),
@@ -120,24 +138,24 @@
 #'       "gadmCHE" = list(text = '🌎', styles = 'float: none;')
 #'     ),
 #'     opacityControl = opacityControl,
-#'     includelegends = TRUE
-#'   ) %>%
-#'
-#'   ## LayersControl
-#'   addLayersControl(
-#'     baseGroups = c("Base_tiles1", "Base_tiles2"),
-#'     overlayGroups = c("breweries91", "atlStorms2005", "gadmCHE"),
-#'     options = layersControlOptions(collapsed = FALSE, autoZIndex = TRUE)
+#'     includelegends = TRUE,
+#'     addCollapseButton = TRUE,
+#'     layersControlCSS = list("opacity" = 0.6),
+#'     increaseOpacityOnHover = TRUE
 #'   )
 #'
+#'
 #' @export
-extendLayersControl <- function(map,
-                                view_settings,
-                                home_btns = FALSE,
-                                home_btn_options = list(),
-                                setviewonselect = TRUE,
-                                opacityControl = list(),
-                                includelegends = TRUE) {
+customizeLayersControl <- function(map,
+                                   view_settings,
+                                   home_btns = FALSE,
+                                   home_btn_options = list(),
+                                   setviewonselect = TRUE,
+                                   opacityControl = list(),
+                                   includelegends = TRUE,
+                                   addCollapseButton = FALSE,
+                                   layersControlCSS = list(),
+                                   increaseOpacityOnHover = FALSE) {
 
   # Initialize data structures for view settings and home buttons
   view_data <- list()
@@ -187,12 +205,15 @@ extendLayersControl <- function(map,
   leaflet::invokeMethod(
     map,
     NULL,
-    'extendLayersControl',
+    'customizeLayersControl',
     view_data,
     home_data,
     setviewonselect,
     opacityControl,
-    includelegends
+    includelegends,
+    addCollapseButton,
+    layersControlCSS,
+    increaseOpacityOnHover
   )
 }
 

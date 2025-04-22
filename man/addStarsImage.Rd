@@ -50,9 +50,10 @@ and that \code{extent(x)} is expressed in WGS84 latitude/longitude
 coordinates}
 
 \item{method}{the method used for computing values of the new, projected raster image.
-\code{"bilinear"} (the default) is appropriate for continuous data,
-\code{"ngb"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
+\code{"auto"} (the default) automatically chooses \code{"near"} for categorical rasters (with factor levels or color tables) and \code{"bilinear"} for continuous data,
+\code{"bilinear"} is appropriate for continuous data,
+\code{"near"} - nearest neighbor - is appropriate for categorical data.
+Ignored if \code{project = FALSE}. See \code{\link[raster]{projectRaster}} for details.}
 
 \item{maxBytes}{the maximum number of bytes to allow for the projected image
 (before base64 encoding); defaults to 4MB.}

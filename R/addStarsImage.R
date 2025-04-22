@@ -42,7 +42,8 @@ addStarsImage <- function(
   , layerId = NULL
   , group = NULL
   , project = FALSE
-  , method = c("auto", "bilinear", "near")
+  , method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+               "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms")
   , maxBytes = 4 * 1024 * 1024
   , options = gridOptions()
   , data = getMapData(map)

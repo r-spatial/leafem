@@ -14,7 +14,8 @@ addRasterRGB(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
-  method = c("auto", "bilinear", "near"),
+  method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+    "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms"),
   ...
 )
 
@@ -27,7 +28,8 @@ addStarsRGB(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
-  method = c("auto", "bilinear", "near"),
+  method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+    "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms"),
   ...
 )
 }
@@ -52,11 +54,28 @@ based on min-max values.}
 
 \item{na.color}{the color to be used for NA pixels}
 
-\item{method}{the method used for computing values of the new, projected raster image.
-\code{"auto"} (the default) automatically chooses \code{"near"} for categorical rasters (with factor levels or color tables) and \code{"bilinear"} for continuous data,
-\code{"bilinear"} is appropriate for continuous data,
-\code{"near"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link[raster]{projectRaster}} for details.}
+\item{method}{character. Method used for estimating the new cell values of a SpatRaster. One of: 
+  
+	\code{bilinear}: bilinear interpolation (3x3 cell window). This is used by default if the first layer of \code{x} is not categorical
+
+	\code{average}:  This can be a good choice with continuous variables if the output cells overlap with multiple input cells. 
+
+	\code{near}: nearest neighbor. This is used by default if the first layer of \code{x} is categorical. This method is not a good choice for continuous values.
+
+	\code{mode}: The modal value. This can be a good choice for categrical rasters, if the output cells overlap with multiple input cells. 
+  
+	\code{cubic}: cubic interpolation (5x5 cell window).
+
+	\code{cubicspline}: cubic B-spline interpolation. (5x5 cell window).
+
+	\code{lanczos}: Lanczos windowed sinc resampling. (7x7 cell window).
+
+	\code{sum}: the weighted sum of all non-NA contributing grid cells.
+
+	\code{min, q1, median, q3, max}: the minimum, first quartile, median, third quartile, or maximum value. 
+	
+	\code{rms}: the root-mean-square value of all non-NA contributing grid cells.
+  }
 
 \item{...}{additional arguments passed on to \code{\link[leaflet]{addRasterImage}}}
 }

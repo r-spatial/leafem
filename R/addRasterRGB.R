@@ -23,11 +23,7 @@
 #'   If both `domain` and `quantiles` are set to NULL, stretching is applied
 #'   based on min-max values.
 #' @param na.color the color to be used for NA pixels
-#' @param method the method used for computing values of the new, projected raster image.
-#'   `"auto"` (the default) automatically chooses `"near"` for categorical rasters (with factor levels or color tables) and `"bilinear"` for continuous data,
-#'   `"bilinear"` is appropriate for continuous data,
-#'   `"near"` - nearest neighbor - is appropriate for categorical data.
-#'   Ignored if `project = FALSE`. See \code{\link[raster]{projectRaster}} for details.
+#' @inheritParams terra::project
 #' @param ... additional arguments passed on to \code{\link[leaflet]{addRasterImage}}
 #'
 #' @author
@@ -64,7 +60,8 @@ addRasterRGB <- function(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
-  method = c("auto", "bilinear", "near"),
+  method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+             "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms"),
   ...
 ) {
 
@@ -103,6 +100,8 @@ addRasterRGB <- function(
 
     if (!terra::same.crs(x, "EPSG:3857")) {
       if (isRaster) {
+        if (!method %in% c("bilinear", "near")) stop("invalid method for raster objects")
+        if (method == "near") method <- "ngb"
         x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"), method = method)
       }
       if (isTerra) {

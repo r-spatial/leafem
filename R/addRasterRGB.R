@@ -23,7 +23,7 @@
 #'   If both `domain` and `quantiles` are set to NULL, stretching is applied
 #'   based on min-max values.
 #' @param na.color the color to be used for NA pixels
-#' @inheritParams leaflet::addRasterImage
+#' @inheritParams terra::project
 #' @param ... additional arguments passed on to \code{\link[leaflet]{addRasterImage}}
 #'
 #' @author
@@ -60,7 +60,8 @@ addRasterRGB <- function(
   quantiles = c(0, 1),
   domain = NULL,
   na.color = "#BEBEBE80",
-  method = c("auto", "bilinear", "near"),
+  method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+             "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms"),
   ...
 ) {
 
@@ -99,7 +100,9 @@ addRasterRGB <- function(
 
     if (!terra::same.crs(x, "EPSG:3857")) {
       if (isRaster) {
-        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"))
+        if (!method %in% c("bilinear", "near")) stop("invalid method for raster objects")
+        if (method == "near") method <- "ngb"
+        x = raster::projectRaster(x, raster::projectExtent(x, "EPSG:3857"), method = method)
       }
       if (isTerra) {
         x = terra::project(x, y = "EPSG:3857", method = method)

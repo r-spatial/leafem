@@ -14,7 +14,8 @@ addStarsImage(
   layerId = NULL,
   group = NULL,
   project = FALSE,
-  method = c("auto", "bilinear", "near"),
+  method = c("auto", "bilinear", "near", "average", "mode", "cubic", "cubicspline",
+    "lanczos", "sum", "min", "q1", "median", "q3", "max", "rms"),
   maxBytes = 4 * 1024 * 1024,
   options = gridOptions(),
   data = getMapData(map),
@@ -49,10 +50,28 @@ the caller's responsibility to ensure that \code{x} is already projected,
 and that \code{extent(x)} is expressed in WGS84 latitude/longitude
 coordinates}
 
-\item{method}{the method used for computing values of the new, projected raster image.
-\code{"bilinear"} (the default) is appropriate for continuous data,
-\code{"ngb"} - nearest neighbor - is appropriate for categorical data.
-Ignored if \code{project = FALSE}. See \code{\link{projectRaster}} for details.}
+\item{method}{character. Method used for estimating the new cell values of a SpatRaster. One of: 
+  
+	\code{bilinear}: bilinear interpolation (3x3 cell window). This is used by default if the first layer of \code{x} is not categorical
+
+	\code{average}:  This can be a good choice with continuous variables if the output cells overlap with multiple input cells. 
+
+	\code{near}: nearest neighbor. This is used by default if the first layer of \code{x} is categorical. This method is not a good choice for continuous values.
+
+	\code{mode}: The modal value. This can be a good choice for categrical rasters, if the output cells overlap with multiple input cells. 
+  
+	\code{cubic}: cubic interpolation (5x5 cell window).
+
+	\code{cubicspline}: cubic B-spline interpolation. (5x5 cell window).
+
+	\code{lanczos}: Lanczos windowed sinc resampling. (7x7 cell window).
+
+	\code{sum}: the weighted sum of all non-NA contributing grid cells.
+
+	\code{min, q1, median, q3, max}: the minimum, first quartile, median, third quartile, or maximum value. 
+	
+	\code{rms}: the root-mean-square value of all non-NA contributing grid cells.
+  }
 
 \item{maxBytes}{the maximum number of bytes to allow for the projected image
 (before base64 encoding); defaults to 4MB.}

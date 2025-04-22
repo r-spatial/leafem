@@ -5,14 +5,9 @@
   * `addMouseCoordinates()` gained argument `css` to modify the layout of the div. #95
   * `addHomeButton()` gained arguments `css` and `hover_css` to modify the layout. #92
 
-#### 🐛 bug fixes
-
-#### 💬 documentation etc
-
-#### 🍬 miscellaneous
-
-
 # leafem 0.2.3 (2023-09-17)
+
+  * fix CRAN Note (character too long)
 
 # leafem 0.2.2 (2023-09-16)
 
@@ -94,4 +89,4 @@ miscellaneous:
 
 ## leafem 0.0.1
 
-initial commit
+  * initial commit

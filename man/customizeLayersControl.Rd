@@ -135,22 +135,22 @@ legends <- list(
   "breweries91" = "<div>Legend for breweries</div>"
 )
 
-leaflet() |>
+leaflet() \%>\%
   ## Baselayer
-  addTiles(group = "Base_tiles1") |>
-  addProviderTiles("CartoDB", group = "Base_tiles2") |>
+  addTiles(group = "Base_tiles1") \%>\%
+  addProviderTiles("CartoDB", group = "Base_tiles2") \%>\%
 
   ## Overlays
-  addCircleMarkers(data = breweries91, group = "breweries91") |>
-  addPolylines(data = lines, group = "atlStorms2005") |>
-  addPolygons(data = polys, group = "gadmCHE") |>
+  addCircleMarkers(data = breweries91, group = "breweries91") \%>\%
+  addPolylines(data = lines, group = "atlStorms2005") \%>\%
+  addPolygons(data = polys, group = "gadmCHE") \%>\%
 
   ## LayersControl
   addLayersControl(
     baseGroups = c("Base_tiles1", "Base_tiles2"),
     overlayGroups = c("breweries91", "atlStorms2005", "gadmCHE"),
     options = layersControlOptions(collapsed = FALSE, autoZIndex = TRUE)
-  ) |>
+  ) \%>\%
 
   ## Customize Layers Control
   customizeLayersControl(

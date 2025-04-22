@@ -14,6 +14,9 @@
 #' This is an adaption of \code{\link[leaflet]{addRasterImage}}. See that documentation
 #' for details.
 #'
+#' Note, method `auto`, the default, will choose between `near` for factorial and
+#' `bilinear` for numeric data. All other methods need to be set manually.
+#'
 #' @examples
 #' \donttest{
 #' library(stars)

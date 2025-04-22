@@ -4,6 +4,7 @@
 
   * `addMouseCoordinates()` gained argument `css` to modify the layout of the div. #95
   * `addHomeButton()` gained arguments `css` and `hover_css` to modify the layout. #92
+  * `addRasterRGB()` and `addStarsImage()` now support more interpolation options. #106
 
 # leafem 0.2.3 (2023-09-17)
 

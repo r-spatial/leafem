@@ -1,4 +1,4 @@
-# leafem 0.2.3.9019 (2025-04-30)
+# leafem 0.2.4 (2025-04-30)
 
 #### ✨ features and improvements
 
@@ -6,9 +6,11 @@
   * `addHomeButton()` gained arguments `css` and `hover_css` to modify the layout. #92
   * `addRasterRGB()` and `addStarsImage()` now support more interpolation options. #106
 
+
 # leafem 0.2.3 (2023-09-17)
 
   * fix CRAN Note (character too long)
+
 
 # leafem 0.2.2 (2023-09-16)
 

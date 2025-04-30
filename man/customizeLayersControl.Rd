@@ -91,7 +91,7 @@ library(leafem)
 # Example data ##########
 breweries91 <- st_as_sf(breweries91)
 lines <- st_as_sf(atlStorms2005)
-polys <- st_as_sf(leaflet::gadmCHE)
+polys <- st_as_sf(gadmCHE)
 
 # View settings ##########
 view_settings <- list(
@@ -157,11 +157,27 @@ leaflet() \%>\%
     view_settings = view_settings,
     home_btns = TRUE,
     home_btn_options = list(
-      "Base_tiles1" = list(text = '🏡', cursor = 'ns-resize', class = 'homebtn'),
-      "Base_tiles2" = list(text = '❤️', cursor = 'pointer'),
-      "atlStorms2005" = list(text = '🌎', cursor = 'all-scroll'),
-      "breweries91" = list(text = '🌎', styles = 'background-color: red'),
-      "gadmCHE" = list(text = '🌎', styles = 'float: none;')
+      "Base_tiles1" = list(
+        text = fontawesome::fa("home"),
+        cursor = 'ns-resize',
+        class = 'homebtn'
+      ),
+      "Base_tiles2" = list(
+        text = fontawesome::fa("home"),
+        cursor = 'pointer'
+      ),
+      "atlStorms2005" = list(
+        text = fontawesome::fa("wind"),
+        cursor = 'all-scroll'
+      ),
+      "breweries91" = list(
+        text = fontawesome::fa("beer-mug-empty"),
+        styles = 'background-color: lightgreen; float: inline-end'
+      ),
+      "gadmCHE" = list(
+        text = fontawesome::fa("mountain"),
+        styles = 'float: none;'
+      )
     ),
     opacityControl = opacityControl,
     includelegends = TRUE,

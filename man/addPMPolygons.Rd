@@ -48,7 +48,7 @@ addPMPolylines(
 \item{group}{group name.}
 
 \item{pane}{the map pane to which the layer should be added. See
-\href{addMapPane}{leaflet} for details.}
+\link[leaflet]{addMapPane} for details.}
 
 \item{attribution}{optional attribution character string.}
 }

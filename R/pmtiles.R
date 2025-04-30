@@ -15,7 +15,7 @@
 #' @param layerId the layer id.
 #' @param group group name.
 #' @param pane the map pane to which the layer should be added. See
-#'   [leaflet](addMapPane) for details.
+#'   \link[leaflet]{addMapPane} for details.
 #' @param attribution optional attribution character string.
 #'
 #' @examples

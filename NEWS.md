@@ -4,6 +4,8 @@
 
 #### 🐛 bug fixes
 
+  * use layerId instead of group for fgb files. Adresses https://github.com/r-spatial/mapview/issues/505
+
 #### 💬 documentation etc
 
 #### 🍬 miscellaneous

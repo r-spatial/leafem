@@ -118,7 +118,9 @@ addHomeButton <- function(map, ext, group = "layer",
 
     path_layer = tempfile()
     dir.create(path_layer)
-    path_layer = paste0(path_layer, "/", group, "_home-button.css")
+    path_layer = paste0(
+      path_layer, "/", gsub("[[:punct:] ]", "_", group), "_home-button.css"
+    )
     writeLines(css_txt, path_layer)
 
 

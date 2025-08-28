@@ -1,14 +1,8 @@
-# leafem 0.2.4.9001 (2025-08-27)
-
-#### ✨ features and improvements
+# leafem 0.2.5 (2025-08-28)
 
 #### 🐛 bug fixes
 
   * use layerId instead of group for fgb files. Adresses https://github.com/r-spatial/mapview/issues/505
-
-#### 💬 documentation etc
-
-#### 🍬 miscellaneous
 
 
 # leafem 0.2.4 (2025-04-30)

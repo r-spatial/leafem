@@ -28,7 +28,7 @@ rasterPicker.old = function(e, x, data) {
     }
 };
 
-rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
+rasterPicker.pick = function(event, layerId, bounds, digits, prefix, suffix, visible) {
   var outputWidget = this.getInfoLegend(layerId);
   if (!visible) {
     $(outputWidget).hide();
@@ -49,7 +49,7 @@ rasterPicker.pick = function(event, layerId, bounds, digits, prefix, visible) {
     pickedLayerData[rasterHitInfo.layerId] = this.getLayerData(rasterHitInfo, event.latlng /*, event.zoom?*/);
   }
   // render collected hit values
-  outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix);
+  outputWidget.innerHTML = this.renderInfo(pickedLayerData, digits, prefix, suffix);
 };
 
 rasterPicker.getInfoLegend = function(layerId) {
@@ -116,7 +116,7 @@ rasterPicker.getLayerData = function(rasterHitInfo, latlng, zoom) {
   return layerData;
 };
 
-rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
+rasterPicker.renderInfo = function(pickedLayerData, digits, prefix, suffix) {
   var text = "";
   for (var layer_key in pickedLayerData) {
     var layer = pickedLayerData[layer_key];
@@ -126,9 +126,9 @@ rasterPicker.renderInfo = function(pickedLayerData, digits, prefix) {
       $(document.getElementById("imageValues" + "-" + layer_key)).show();
     }
     if(digits === "null" || digits === null) {
-      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ "</small>";
+      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value+ (suffix.startsWith(" ") ? suffix : " " + suffix) + "</small>";
     } else {
-      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ "</small>";
+      text += "<small>"+ prefix+ " <strong>"+ layer.layerId + ": </strong>"+ layer.value.toFixed(digits)+ (suffix.startsWith(" ") ? suffix : " " + suffix) + "</small>";
     }
   }
   return text;

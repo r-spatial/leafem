@@ -16,7 +16,8 @@ addImageQuery(
   position = "topright",
   prefix = "Layer",
   className = "",
-  ...
+  ...,
+  suffix = ""
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ to 'mousemove'.}
 \item{className}{a character string to append to the control legend.}
 
 \item{...}{currently not used.}
+
+\item{suffix}{a character string to be shown as suffix for the layerId values.}
 }
 \value{
 A leaflet map object.

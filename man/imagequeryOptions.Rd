@@ -10,7 +10,8 @@ imagequeryOptions(
   type = c("mousemove", "click"),
   digits = NULL,
   prefix = "Layer",
-  noData = "NoData Value"
+  noData = "NoData Value",
+  suffix = ""
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ to 'mousemove'.}
 \item{noData}{the text shown when the mouse is over a \verb{NoData Value} as
 identified by GDAL. The default "NoData Value" will show whatever is defined by
 the Geotiff metadata.}
+
+\item{suffix}{a character string to be shown as suffix for the layerId values.}
 }
 \description{
 Imagequery options for addGeoRaster, addGeotiff and addCOG

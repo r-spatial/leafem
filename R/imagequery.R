@@ -27,6 +27,7 @@
 #' @param prefix a character string to be shown as prefix for the layerId.
 #' @param className a character string to append to the control legend.
 #' @param ... currently not used.
+#' @param suffix a character string to be shown as suffix for the layerId values.
 #'
 #' @return
 #' A leaflet map object.
@@ -63,7 +64,8 @@ addImageQuery = function(map,
                          position = 'topright',
                          prefix = 'Layer',
                          className = "",
-                         ...) {
+                         ...,
+                         suffix = "") {
 
   if (inherits(map, "mapview")) map = mapview2leaflet(map)
 
@@ -157,6 +159,7 @@ addImageQuery = function(map,
     , type
     , digits
     , prefix
+    , suffix
   )
 }
 

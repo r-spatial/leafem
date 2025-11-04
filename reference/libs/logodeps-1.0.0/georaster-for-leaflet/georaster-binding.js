@@ -20,7 +20,7 @@ function mouseHandler(map, georaster, layerId, group, eventName, options) {
         val[0] = options.noData
       }
       if (query) {
-        outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix);
+        outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix, options.suffix);
       }
       let eventInfo = $.extend({
         id: layerId,
@@ -43,13 +43,13 @@ function mouseHandler(map, georaster, layerId, group, eventName, options) {
     }
   };
 }
-function renderInfo(val, layerId, digits, prefix) {
+function renderInfo(val, layerId, digits, prefix, suffix) {
   $(document.getElementById("rasterValues-" + layerId)).show();
   let text = "";
   if(digits === "null" || digits === null) {
-    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val + "</small>";
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val + (suffix.startsWith(" ") ? suffix : " " + suffix) + "</small>";
   } else {
-    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val[0].toFixed(digits)+ "</small>";
+    text = "<small>"+ prefix+ " <strong>"+ layerId + ": </strong>"+ val[0].toFixed(digits) + (suffix.startsWith(" ") ? suffix : " " + suffix) + "</small>";
   }
   return text;
 }

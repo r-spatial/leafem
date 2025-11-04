@@ -1,5 +1,5 @@
 /* global LeafletWidget, $, L */
-LeafletWidget.methods.addImageQuery = function(layerId, bounds, type, digits, prefix) {
+LeafletWidget.methods.addImageQuery = function(layerId, bounds, type, digits, prefix, suffix) {
   (function(){
     var map = this;
 
@@ -29,7 +29,7 @@ LeafletWidget.methods.addImageQuery = function(layerId, bounds, type, digits, pr
       if (!(map.layerManager.getVisibleGroups().includes(layerId))) {
         visible = false;
       }
-      rasterPicker.pick(e, layerId, boundsarr, digits, prefix, visible);
+      rasterPicker.pick(e, layerId, boundsarr, digits, prefix, suffix, visible);
     });
   }).call(this);
 };

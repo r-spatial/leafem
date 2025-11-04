@@ -441,7 +441,8 @@ imagequeryOptions <- function(className = "info legend",
                               type = c("mousemove", "click"),
                               digits = NULL,
                               prefix = "Layer",
-                              noData = "NoData Value") {
+                              noData = "NoData Value",
+                              suffix = "") {
   type = match.arg(type)
   position <- match.arg(position)
   list(
@@ -450,7 +451,8 @@ imagequeryOptions <- function(className = "info legend",
     type = type,
     digits = digits,
     prefix = prefix,
-    noData = noData
+    noData = noData,
+    suffix = suffix
   )
 }
 

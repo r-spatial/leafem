@@ -1,3 +1,14 @@
+# leafem (development version)
+
+#### ✨ features and improvements
+
+  * `addCOG()` streams the COG again: only the tiles and overview level needed for the view are read (HTTP range requests), instead of downloading the whole file. Values on mouse click / move are read one pixel at a time. `colorOptions` is now used.
+
+#### 🐛 bug fixes
+
+  * `addCOG()` used the georaster bundled in geoblaze.js, which fails on some overview reads ("No image at index n").
+
+
 # leafem 0.2.5 (2025-08-28)
 
 #### 🐛 bug fixes

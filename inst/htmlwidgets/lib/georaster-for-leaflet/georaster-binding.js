@@ -245,33 +245,145 @@ LeafletWidget.methods.addCOG = function (url,
     makeControl(layerId, imagequeryOptions, map)
   }
 
-  var layers = layers || {};
+  // Pass the url (not a downloaded buffer) so that georaster streams the COG:
+  // only the tiles and overview level needed for the current view are read
+  // with HTTP range requests.
+  parseGeorasterCOG(url).then(georaster => {
 
-  fetch(url).then((response) => {
-    response.arrayBuffer().then((arrayBuffer) => {
-      var georaster = parseGeoraster(arrayBuffer).then((georaster) => {
+    cogColorFn(georaster, colorOptions, pixelValuesToColorFn).then(colorFn => {
 
-        layers[layerId] = new GeoRasterLayer({
-          georaster,
-          resolution: resolution,
-          opacity: opacity,
-          pixelValuesToColorFn: pixelValuesToColorFn,
-          pane: pane
-        });
-        map.layerManager.addLayer(layers[layerId], null, layerId, group);
-        if (autozoom) {
-          map.fitBounds(layers[layerId].getBounds());
-        }
-
-        map.on("click", mouseHandler(map, layers[layerId].georasters[0], layerId,
-          group, "georaster_click", imagequeryOptions), this);
-        map.on("mousemove", mouseHandler(map, layers[layerId].georasters[0], layerId,
-          group, "georaster_mousemove", imagequeryOptions), this);
-
+      var layer = new GeoRasterLayer({
+        georaster: georaster,
+        resolution: resolution,
+        opacity: opacity,
+        pixelValuesToColorFn: colorFn,
+        pane: pane
       });
+      map.layerManager.addLayer(layer, "image", layerId, group);
+      if (autozoom) {
+        map.fitBounds(layer.getBounds());
+      }
+
+      map.on("click", cogMouseHandler(map, georaster, layerId,
+        group, "georaster_click", imagequeryOptions), this);
+      map.on("mousemove", cogMouseHandler(map, georaster, layerId,
+        group, "georaster_mousemove", imagequeryOptions), this);
+
     });
   });
 };
+
+// Pixel value -> colour function for a streamed (COG) georaster. A streamed
+// georaster has no values in memory, so mins/maxs are unknown; when
+// colorOptions gives no domain, it is taken from the smallest overview.
+function cogColorFn(georaster, colorOptions, pixelValuesToColorFn) {
+  if (pixelValuesToColorFn !== null) {
+    return Promise.resolve(pixelValuesToColorFn);
+  }
+  if (colorOptions === null) {
+    return Promise.resolve(undefined);  // georaster-layer-for-leaflet default
+  }
+  let scale = chroma.scale(colorOptions.palette);
+  if (colorOptions.breaks !== null) {
+    scale = scale.classes(colorOptions.breaks);
+  }
+  let nacol = colorOptions["na.color"];
+  let domain = colorOptions.domain;
+  let getDomain;
+  if (domain !== null) {
+    getDomain = Promise.resolve(domain);
+  } else {
+    getDomain = georaster.getValues({
+      left: 0, top: 0, right: georaster.width, bottom: georaster.height,
+      width: 256, height: 256, resampleMethod: "nearest"
+    }).then(bands => {
+      let min = Infinity, max = -Infinity;
+      bands[0].forEach(row => row.forEach(v => {
+        if (!isNaN(v) && v !== georaster.noDataValue) {
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+      }));
+      return [min, max];
+    });
+  }
+  return getDomain.then(d => {
+    let clr = scale.domain(d);
+    return values => {
+      let v = values[0];
+      if (v === null || isNaN(v) || v === georaster.noDataValue) return nacol;
+      return clr(v).hex();
+    };
+  });
+}
+
+// Like mouseHandler(), but for a streamed georaster: read just the one pixel
+// under the mouse (geotiff.js caches the tile, so moving within it is cheap).
+// Mouse position -> pixel needs the raster CRS; EPSG:4326 and EPSG:3857 are
+// supported (the ones proj4 knows without a definition).
+function cogMouseHandler(map, georaster, layerId, group, eventName, options) {
+  return function(e) {
+
+    let outputWidget = getInfoLegend(layerId);
+
+    if (!(map.layerManager.getVisibleGroups().includes(group))) {
+      $(outputWidget).hide();
+      return;
+    }
+
+    let latLng = this.mouseEventToLatLng(e.originalEvent);
+    let finaltype = "georaster_" + options.type;
+    let query = options.imagequery && finaltype == eventName;
+
+    let xy;
+    if (georaster.projection === 4326) {
+      xy = [latLng.lng, latLng.lat];
+    } else if (georaster.projection === 3857) {
+      xy = proj4("EPSG:4326", "EPSG:3857", [latLng.lng, latLng.lat]);
+    } else {
+      return;
+    }
+    let col = Math.floor((xy[0] - georaster.xmin) / georaster.pixelWidth);
+    let row = Math.floor((georaster.ymax - xy[1]) / georaster.pixelHeight);
+
+    let show = function(val) {
+      if (val !== null) {
+        if (options.noData !== "NoData Value" & val[0] === georaster.noDataValue) {
+          val[0] = options.noData
+        }
+        if (query) {
+          outputWidget.innerHTML = renderInfo(val, layerId, options.digits, options.prefix, options.suffix);
+        }
+        let eventInfo = $.extend({
+          id: layerId,
+          ".nonce": Math.random(),  // force reactivity
+          group: group ? group : null,
+          value: val[0]
+          },
+          e.latlng
+        );
+        if (HTMLWidgets.shinyMode) {
+          Shiny.onInputChange(map.id + "_" + eventName, eventInfo);
+        }
+      } else {
+        if (query) {
+          $(outputWidget).hide();
+        }
+        if (HTMLWidgets.shinyMode) {
+          Shiny.onInputChange(map.id + "_" + eventName, null);
+        }
+      }
+    };
+
+    if (col < 0 || row < 0 || col >= georaster.width || row >= georaster.height) {
+      show(null);
+      return;
+    }
+    georaster.getValues({
+      left: col, top: row, right: col + 1, bottom: row + 1, width: 1, height: 1
+    }).then(bands => show(bands.map(b => b[0][0])));
+  };
+}
 
 /*
     if (colorOptions !== null) {

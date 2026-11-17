@@ -339,14 +339,21 @@ addGeotiff = function(map,
 #' 'georaster-layer-for-leaflet' to render the data. See `addGeotiff` for a bit
 #' more detail what that means.
 #'
+#' The file is streamed: only the tiles and overview level needed for the
+#' current view are read, with HTTP range requests, so the server must allow
+#' them (and CORS, if the file is on another domain). Values shown on mouse
+#' click / move are read one pixel at a time; this needs the COG to be in
+#' EPSG:4326 or EPSG:3857.
+#'
 #' @param map the map to add the COG to.
 #' @param url url to the COG file to render.
-#' @param colorOptions list defining the palette, breaks and na.color to be used.
-#'   Currently not used.
+#' @param colorOptions list defining the palette, breaks, domain and na.color
+#'   to be used, see [colorOptions()]. If `domain` is `NULL`, it is taken from
+#'   the smallest overview of the COG.
 #' @param pixelValuesToColorFn optional JS function to be passed to the browser.
 #'   Can be used to fine tune and manipulate the color mapping.
 #'   See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
-#'   some examples. Currently not used.
+#'   some examples. Overrides `colorOptions`.
 #' @param rgb logical, whether to render Geotiff as RGB. Currently not used.
 #' @param ... currently not used.
 #'
@@ -491,6 +498,7 @@ leafletGeoRasterDependencies = function() {
       system.file("htmlwidgets/lib/georaster-for-leaflet", package = "leafem"),
       script = c(
         "georaster.min.js"
+        , "georaster-keep.js"
         , "geoblaze.js"
         , "georaster-layer-for-leaflet.min.js"
         , "georaster-binding.js"

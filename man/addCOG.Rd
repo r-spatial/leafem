@@ -39,13 +39,14 @@ Default is 96 (pixels).}
 \item{options}{options to be passed to the layer.
 See \code{\link[leaflet]{tileOptions}} for details.}
 
-\item{colorOptions}{list defining the palette, breaks and na.color to be used.
-Currently not used.}
+\item{colorOptions}{list defining the palette, breaks, domain and na.color
+to be used, see \code{\link[=colorOptions]{colorOptions()}}. If \code{domain} is \code{NULL}, it is taken from
+the smallest overview of the COG.}
 
 \item{pixelValuesToColorFn}{optional JS function to be passed to the browser.
 Can be used to fine tune and manipulate the color mapping.
 See examples & \url{https://github.com/r-spatial/leafem/issues/25} for
-some examples. Currently not used.}
+some examples. Overrides \code{colorOptions}.}
 
 \item{autozoom}{whether to automatically zoom to the full extent of the layer.
 Default is \code{TRUE}}
@@ -70,6 +71,12 @@ This function will overlay Cloud Optimised Geotiff data from a remote url on
 a leaflet map. Like \code{addGeotiff} it uses the leaflet plugin
 'georaster-layer-for-leaflet' to render the data. See \code{addGeotiff} for a bit
 more detail what that means.
+
+The file is streamed: only the tiles and overview level needed for the
+current view are read, with HTTP range requests, so the server must allow
+them (and CORS, if the file is on another domain). Values shown on mouse
+click / move are read one pixel at a time; this needs the COG to be in
+EPSG:4326 or EPSG:3857.
 }
 \examples{
 if (interactive()) {

@@ -210,10 +210,19 @@ LeafletWidget.methods.addGeotiff = function (url,
           map.fitBounds(layer.getBounds());
         }
 
-        map.on("click", mouseHandler(map, georaster, layerId,
-          group, "georaster_click", imagequeryOptions), this);
-        map.on("mousemove", mouseHandler(map, georaster, layerId,
-          group, "georaster_mousemove", imagequeryOptions), this);
+        // Each handler holds the whole raster, so remove them with the layer.
+        // Otherwise a layer replaced under the same layerId stays in memory.
+        var ctx = this;
+        var onClick = mouseHandler(map, georaster, layerId,
+          group, "georaster_click", imagequeryOptions);
+        var onMousemove = mouseHandler(map, georaster, layerId,
+          group, "georaster_mousemove", imagequeryOptions);
+        map.on("click", onClick, ctx);
+        map.on("mousemove", onMousemove, ctx);
+        layer.on("remove", function () {
+          map.off("click", onClick, ctx);
+          map.off("mousemove", onMousemove, ctx);
+        });
 
       });
     });
